@@ -1,0 +1,34 @@
+import type { Metadata } from "next";
+import { Fraunces, Geist } from "next/font/google";
+import { AppShell } from "@/components/ui/AppShell";
+import "./globals.css";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+export const metadata: Metadata = {
+  title: "Gigi — Une action. Aucun bruit.",
+  description: "Ton système d'exploitation personnel pour builders. Sache quoi faire aujourd'hui.",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="fr" className={`${geistSans.variable} ${fraunces.variable} h-full antialiased`}>
+      <body className="min-h-full">
+        <AppShell>{children}</AppShell>
+      </body>
+    </html>
+  );
+}

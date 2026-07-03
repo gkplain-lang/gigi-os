@@ -1,0 +1,60 @@
+import type { HistoryEvent } from "@/modules/history/historyTypes";
+
+export const mockHistory: HistoryEvent[] = [
+  {
+    id: "h1",
+    type: "decision_created",
+    title: "Prototype statique V0.2 généré",
+    description: "Gigi OS a enfin un vrai écran d'accueil — mission d'abord, calme et focalisé.",
+    date: "2026-07-03",
+    group: "today",
+  },
+  {
+    id: "h2",
+    type: "decision_created",
+    title: "Buildy Clear sélectionné comme priorité revenu court terme",
+    description: "La page de vente est le chemin le plus rapide vers le lancement.",
+    date: "2026-07-03",
+    group: "today",
+  },
+  {
+    id: "h3",
+    type: "project_updated",
+    title: "Projets cartographiés et classés",
+    description: "Six projets organisés par urgence, statut et rôle stratégique.",
+    date: "2026-07-02",
+    group: "yesterday",
+  },
+  {
+    id: "h4",
+    type: "decision_created",
+    title: "Projets de dispersion mis en pause ou repoussés",
+    description: "Linko, 1Millimètre et Le Dernier Souvenir peuvent attendre.",
+    date: "2026-07-02",
+    group: "yesterday",
+  },
+  {
+    id: "h5",
+    type: "decision_created",
+    title: "Moteur de décision préparé",
+    description: "Gigi peut maintenant expliquer pourquoi une mission passe avant les autres.",
+    date: "2026-06-28",
+    group: "earlier",
+  },
+  {
+    id: "h6",
+    type: "decision_created",
+    title: "Système de mission défini",
+    description: "Une mission par jour — pas de todo list, pas de chaos.",
+    date: "2026-06-28",
+    group: "earlier",
+  },
+  {
+    id: "h7",
+    type: "document_created",
+    title: "Documentation Gigi OS terminée",
+    description: "Vision produit, parcours et direction design verrouillés.",
+    date: "2026-06-28",
+    group: "earlier",
+  },
+];

@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+:root {
+  --bg-base: #050807;
+  --bg-mid: #07100f;
+  --bg-surface: #0b1110;
+  --surface-1: rgba(12, 18, 17, 0.78);
+  --surface-2: rgba(18, 26, 24, 0.6);
+  --text-primary: #f7f3ea;
+  --text-secondary: #b8c0ba;
+  --text-muted: #7e8a84;
+  --copper: #b87333;
+  --copper-soft: #c48a4a;
+  --gold: #d1a85b;
+  --cyan: #38bdf8;
+}
+
+@theme inline {
+  --color-bg-base: var(--bg-base);
+  --color-bg-mid: var(--bg-mid);
+  --color-bg-surface: var(--bg-surface);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-copper: var(--copper);
+  --color-copper-soft: var(--copper-soft);
+  --color-gold: var(--gold);
+  --color-cyan: var(--cyan);
+  --font-sans: var(--font-geist-sans);
+  --font-family-display: var(--font-fraunces), ui-serif, Georgia, serif;
+}
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Warm atelier ambient — deep, soft, almost imperceptible glow */
+.gigi-app-bg {
+  background:
+    radial-gradient(115% 75% at 50% -18%, rgba(184, 115, 51, 0.1), transparent 55%),
+    radial-gradient(70% 45% at 100% 5%, rgba(196, 138, 74, 0.05), transparent 50%),
+    radial-gradient(95% 60% at 0% 105%, rgba(22, 42, 38, 0.4), transparent 55%),
+    linear-gradient(180deg, #07100f 0%, #050807 58%, #040706 100%);
+  background-color: #050807;
+}
+
+/* Very light surface — used sparingly, almost no frame */
+.gigi-surface {
+  background: rgba(20, 28, 26, 0.4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+  backdrop-filter: blur(10px);
+}
+
+/* Barely-there secondary surface */
+.gigi-surface-soft {
+  background: rgba(18, 26, 24, 0.28);
+}
+
+/* Diffuse copper halo — light behind content, fades to nothing, no edges */
+.gigi-halo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    70% 85% at 18% 22%,
+    rgba(184, 115, 51, 0.17),
+    rgba(184, 115, 51, 0.05) 42%,
+    transparent 70%
+  );
+}
+
+/* Softer, smaller halo for secondary featured zones */
+.gigi-halo-soft {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    65% 80% at 20% 25%,
+    rgba(184, 115, 51, 0.1),
+    transparent 62%
+  );
+}
+
+/* Premium dark-glass copper CTA — depth + soft reflection, never flashy */
+.gigi-cta {
+  background: linear-gradient(180deg, rgba(196, 138, 74, 0.24), rgba(184, 115, 51, 0.11));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 235, 205, 0.28),
+    inset 0 0 0 1px rgba(184, 115, 51, 0.34),
+    0 14px 32px -14px rgba(184, 115, 51, 0.3);
+  transition: all 0.22s ease;
+}
+
+.gigi-cta:hover {
+  background: linear-gradient(180deg, rgba(200, 145, 80, 0.32), rgba(184, 115, 51, 0.18));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 235, 205, 0.38),
+    inset 0 0 0 1px rgba(184, 115, 51, 0.5),
+    0 18px 40px -14px rgba(184, 115, 51, 0.42);
+}
+
+/* Gigi presence orb — warm, calm, slow breathing */
+.gigi-orb {
+  position: relative;
+  background:
+    radial-gradient(circle at 34% 30%, rgba(255, 226, 184, 0.95), rgba(196, 138, 74, 0.55) 44%, rgba(120, 70, 30, 0.25) 74%, transparent 80%);
+  box-shadow:
+    0 0 22px -4px rgba(196, 138, 74, 0.5),
+    inset 0 0 8px -2px rgba(255, 220, 180, 0.45);
+}
+
+.gigi-orb::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(196, 138, 74, 0.22), transparent 68%);
+  animation: gigi-breathe 4.5s ease-in-out infinite;
+}
+
+@keyframes gigi-breathe {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.18);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
