@@ -6,18 +6,28 @@ import { ProgressBar } from "@/components/ui/ProgressBar";
 interface ProjectCardProps {
   project: Project;
   featured?: boolean;
+  missionStatusLabel?: string;
 }
 
-export function ProjectCard({ project, featured }: ProjectCardProps) {
-  const contextLabel = PROJECT_CONTEXT_LABELS[project.id] ?? project.status;
+export function ProjectCard({ project, featured, missionStatusLabel }: ProjectCardProps) {
+  const contextLabel =
+    missionStatusLabel ?? PROJECT_CONTEXT_LABELS[project.id] ?? project.status;
 
   if (featured) {
+    const featuredPill =
+      missionStatusLabel === "Mission en cours"
+        ? "Mission en cours"
+        : missionStatusLabel ?? "Priorité active";
+
     return (
       <section className="relative">
         <div className="gigi-halo-soft" aria-hidden />
         <div className="relative z-10 max-w-xl">
           <div className="flex items-center gap-3">
-            <StatusPill label="Priorité active" variant="warm" />
+            <StatusPill
+              label={featuredPill}
+              variant={missionStatusLabel ? "muted" : "warm"}
+            />
             <span className="text-sm text-text-muted">{contextLabel}</span>
           </div>
           <h3 className="mt-5 font-display text-3xl font-medium text-text-primary md:text-[2.5rem]">

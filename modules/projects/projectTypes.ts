@@ -1,4 +1,10 @@
-export type ProjectStatus = "active" | "paused" | "future" | "archived" | "completed";
+export type ProjectStatus =
+  | "active"
+  | "paused"
+  | "completed"
+  | "postponed"
+  | "future"
+  | "archived";
 export type ProjectPriority = "critical" | "high" | "medium" | "low";
 export type ProjectHealth = "ready_to_launch" | "healthy" | "unclear" | "paused" | "blocked";
 

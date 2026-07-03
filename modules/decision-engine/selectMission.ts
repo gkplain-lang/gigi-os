@@ -1,5 +1,5 @@
-import { mockMissions } from "@/data/mockMissions";
+import type { GigiLocalState } from "../storage/gigiStateTypes";
 
-export function selectMission() {
-  return mockMissions.find((m) => m.status === "recommended") ?? mockMissions[0];
+export function selectMission(state: GigiLocalState) {
+  return state.mission;
 }

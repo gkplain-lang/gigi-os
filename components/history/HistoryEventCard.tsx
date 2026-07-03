@@ -6,14 +6,20 @@ interface HistoryEventCardProps {
 }
 
 export function HistoryEventCard({ event }: HistoryEventCardProps) {
-  const isDecision = event.type === "decision_created";
+  const isHighlighted =
+    event.type === "decision_created" ||
+    event.type === "mission_started" ||
+    event.type === "mission_completed" ||
+    event.type === "mission_postponed" ||
+    event.type === "mission_rejected" ||
+    event.type === "data_reset";
 
   return (
     <div className="relative">
       <span
         className={cn(
           "absolute -left-[27px] top-2 h-2.5 w-2.5 rounded-full",
-          isDecision ? "bg-copper-soft shadow-[0_0_10px_rgba(196,138,74,0.5)]" : "bg-white/20"
+          isHighlighted ? "bg-copper-soft shadow-[0_0_10px_rgba(196,138,74,0.5)]" : "bg-white/20"
         )}
         aria-hidden
       />

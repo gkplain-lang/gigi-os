@@ -1,5 +1,10 @@
 export type MissionImpact = "Élevé" | "Moyen" | "Faible";
-export type MissionStatus = "recommended" | "started" | "completed" | "postponed" | "rejected";
+export type MissionStatus =
+  | "recommended"
+  | "in_progress"
+  | "completed"
+  | "postponed"
+  | "rejected_for_now";
 
 export interface Mission {
   id: string;

@@ -5,7 +5,8 @@ export type HistoryEventType =
   | "mission_rejected"
   | "decision_created"
   | "project_updated"
-  | "document_created";
+  | "document_created"
+  | "data_reset";
 
 export interface HistoryEvent {
   id: string;

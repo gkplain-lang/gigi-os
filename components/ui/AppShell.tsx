@@ -7,6 +7,8 @@ import { APP_NAME, APP_TAGLINE, NAV_ITEMS } from "@/lib/constants";
 import { GigiOrb } from "./GigiOrb";
 import { GigiPresence } from "./GigiPresence";
 import { BottomNav } from "./BottomNav";
+import { LocalResetButton } from "./LocalResetButton";
+import { useGigi } from "@/components/providers/GigiProvider";
 import { cn } from "@/lib/utils";
 
 const iconMap = {
@@ -22,6 +24,7 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
+  const { resetLocalData } = useGigi();
 
   return (
     <div className="gigi-app-bg min-h-screen">
@@ -60,8 +63,9 @@ export function AppShell({ children }: AppShellProps) {
             })}
           </nav>
 
-          <div className="mt-auto px-2 pt-8">
+          <div className="mt-auto space-y-4 px-2 pt-8">
             <GigiPresence />
+            <LocalResetButton onReset={resetLocalData} />
           </div>
         </aside>
 
