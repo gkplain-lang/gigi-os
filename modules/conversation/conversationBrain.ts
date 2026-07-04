@@ -24,6 +24,11 @@ import {
   findApprovedQueuedActions,
   saveExecutionPlan,
 } from "@/modules/executionPlans";
+import {
+  EXECUTION_LOG_GUIDANCE_MESSAGE,
+  EXECUTION_LOG_MANUAL_DISCLAIMER,
+  detectExecutionLogIntent,
+} from "@/modules/executionLogs";
 import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions/types";
 import type {
   ConversationContext,
@@ -327,6 +332,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   action_plan: "Plan d'action",
   prepared_action: "Action préparée",
   execution_plan: "Plan d'exécution",
+  execution_log: "Journal d'exécution",
 };
 
 function clarificationResponse(): GigiConversationResponse {
@@ -363,6 +369,44 @@ function allDoneResponse(
 }
 
 // ---------------------------------------------------------------- main
+
+function buildExecutionLogResponse(objective: string): GigiConversationResponse {
+  const norm = objective.toLowerCase();
+  const hints: string[] = [
+    "Ouvre /actions et affiche le plan d'exécution de l'action validée.",
+    "Section « Suivi manuel » : clique le bouton qui correspond à ton retour.",
+  ];
+
+  if (/build/.test(norm)) {
+    hints.push("Pour « build OK » ou « build échoué », utilise les boutons Build OK / Build échoué.");
+  }
+  if (/bloque|bloqué|echoue|échoué|fail/.test(norm)) {
+    hints.push("Signale le blocage avec « Signaler blocage » et ajoute une note décrivant le problème.");
+  }
+  if (/termine|terminé|fait|faite/.test(norm)) {
+    hints.push("Quand tout est bon, remplis le rapport final et clique « Terminé manuellement ».");
+  }
+  if (/cursor/.test(norm)) {
+    hints.push("Note ce que Cursor a modifié via « Ajouter une note » — Gigi ne lit pas le diff automatiquement.");
+  }
+  if (/ui|interface|page/.test(norm)) {
+    hints.push("Marque « UI vérifiée » après ton test manuel du parcours.");
+  }
+  if (/commit/.test(norm)) {
+    hints.push("Utilise « Commit manuel » pour noter que tu as commité toi-même.");
+  }
+
+  return {
+    intent: "execution_log",
+    intentLabel: INTENT_LABELS.execution_log,
+    listen:
+      "Je note ton retour — mais je ne peux pas vérifier automatiquement ce qui s'est passé. Enregistre-le toi-même dans le journal.",
+    needsClarification: false,
+    executionLogGuidance: hints,
+    executionLogBlockedMessage: EXECUTION_LOG_MANUAL_DISCLAIMER,
+    finalMessage: EXECUTION_LOG_GUIDANCE_MESSAGE,
+  };
+}
 
 function buildExecutionPlanResponse(
   projectId: string | null
@@ -486,6 +530,11 @@ export function askGigi(
   _projects: unknown,
   context: ConversationContext = {}
 ): GigiConversationResponse {
+  const executionLogIntent = detectExecutionLogIntent(objective);
+  if (executionLogIntent.isExecutionLog) {
+    return buildExecutionLogResponse(objective);
+  }
+
   const executionIntent = detectExecutionPlanIntent(objective);
   if (executionIntent.isExecutionPlan) {
     const projectId =
@@ -663,6 +712,7 @@ export function askGigi(
     action_plan: "Valide chaque étape avant d'exécuter.",
     prepared_action: "Valide, copie, puis exécute toi-même.",
     execution_plan: "Exécute manuellement — Gigi ne lance rien.",
+    execution_log: "Enregistre ton retour dans /actions — Gigi ne vérifie pas automatiquement.",
   };
 
   return {

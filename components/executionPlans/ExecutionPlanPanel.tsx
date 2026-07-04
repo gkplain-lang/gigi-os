@@ -10,6 +10,7 @@ import {
   EXECUTION_STATUS_LABELS,
   formatExecutionPlanForCopy,
 } from "@/modules/executionPlans";
+import { ExecutionLogPanel } from "@/components/executionLogs/ExecutionLogPanel";
 import { cn } from "@/lib/utils";
 
 const ACTOR_LABELS: Record<ExecutionPlan["steps"][0]["actor"], string> = {
@@ -29,6 +30,7 @@ interface ExecutionPlanPanelProps {
   compact?: boolean;
   className?: string;
   onMarkCompleted?: (planId: string) => void;
+  showManualTracking?: boolean;
 }
 
 function CopyableCommand({ command, description }: { command: string; description: string }) {
@@ -80,6 +82,7 @@ export function ExecutionPlanPanel({
   compact = false,
   className,
   onMarkCompleted,
+  showManualTracking = true,
 }: ExecutionPlanPanelProps) {
   const [copiedAll, setCopiedAll] = useState(false);
 
@@ -294,6 +297,13 @@ export function ExecutionPlanPanel({
           </div>
         )}
 
+        {showManualTracking && (
+          <ExecutionLogPanel
+            plan={plan}
+            onPlanCompleted={onMarkCompleted}
+          />
+        )}
+
         <div className="flex flex-wrap gap-2 border-t border-border pt-4">
           <button
             type="button"
@@ -312,7 +322,7 @@ export function ExecutionPlanPanel({
               </>
             )}
           </button>
-          {onMarkCompleted && plan.status !== "completed_manually" && (
+          {onMarkCompleted && !showManualTracking && plan.status !== "completed_manually" && (
             <button
               type="button"
               onClick={() => onMarkCompleted(plan.id)}
