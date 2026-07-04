@@ -51,6 +51,7 @@
   --color-text-muted: var(--text-muted);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-dim: var(--accent-dim);
   --color-accent-strong: var(--accent-strong);
   --color-accent-2: var(--accent-2);
   --color-accent-2-soft: var(--accent-2-soft);
