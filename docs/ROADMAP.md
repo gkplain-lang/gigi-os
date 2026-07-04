@@ -742,49 +742,50 @@ See [PRIVATE_BETA_READINESS.md](./PRIVATE_BETA_READINESS.md) for full details.
 
 ## Goal
 
-Release the first stable version.
+Release the first stable version for daily use — clarity and reliability, not new external powers.
 
 ## Core Question
 
 ```text
-Can Gigi OS become part of the user’s daily routine?
+Can the user open Gigi every morning and know what to do next?
+```
+
+## Promise
+
+```text
+Ouvre Gigi. Sache quoi faire. Exécute.
 ```
 
 ## Features
 
 ```text
-stable mission system
-project management
-decision explanations
-mission history
-memory
-daily review
-AI-assisted summaries
-clean design
-basic settings
-secure user data
+Release module (modules/release/)
+Daily use checklist (18 items)
+/dev/release readiness page
+DailyUseStrip on home (/)
+All V0.6–V0.9 guardrails preserved
+Documentation (V1_DAILY_USE_RELEASE.md)
 ```
 
-## V1.0 Must Feel
+## Not in V1.0
 
 ```text
-simple
-reliable
-focused
-premium
-useful every day
+Real integrations, n8n, public landing, payment
+Auto Supabase sync/restore
+Major design redesign
 ```
 
 ## Acceptance Criteria
 
 V1.0 is complete when:
 
-- Gigi OS can be used every morning;
-- recommendations are useful;
-- project memory works;
-- missions are completed regularly;
-- the product feels stable;
-- the system does not feel overloaded.
+- / shows mission + daily use strip;
+- all critical routes work;
+- /dev/release documents checklist and guardrails;
+- dry-run guardrails remain enforced;
+- npm run build passes.
+
+See [V1_DAILY_USE_RELEASE.md](./V1_DAILY_USE_RELEASE.md) for full details.
 
 ---
 

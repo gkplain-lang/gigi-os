@@ -174,6 +174,9 @@ export function IntegrationsDevPanel() {
         <Link href="/dev/beta" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           Dev · Beta →
         </Link>
+        <Link href="/dev/release" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
+          Dev · Release →
+        </Link>
         <Link href="/conversation" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           /conversation →
         </Link>
