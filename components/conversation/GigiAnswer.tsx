@@ -6,8 +6,10 @@ import type { GigiConversationResponse } from "@/modules/conversation/conversati
 import { GigiOrb } from "@/components/ui/GigiOrb";
 import { ActionProposalCard } from "./ActionProposalCard";
 import { AutomationProposalCard } from "./AutomationProposalCard";
+import { IntegrationProposalCard } from "./IntegrationProposalCard";
 import { V062_NO_EXTERNAL_MESSAGE } from "@/modules/agents/confirmation";
 import { V07_NO_EXECUTION_MESSAGE } from "@/modules/automation";
+import { V08_NO_API_MESSAGE } from "@/modules/integrations";
 
 interface GigiAnswerProps {
   response: GigiConversationResponse;
@@ -17,6 +19,25 @@ interface GigiAnswerProps {
 function Label({ children }: { children: React.ReactNode }) {
   return (
     <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">{children}</p>
+  );
+}
+
+function IntegrationProposalsSection({ response }: { response: GigiConversationResponse }) {
+  if (!response.integrationProposals?.length) return null;
+
+  return (
+    <div className="gigi-panel mt-3 rounded-xl p-4">
+      <Label>Intégration proposée (dry-run)</Label>
+      {response.integrationBlockedMessage && (
+        <p className="mt-2 text-[12.5px] leading-relaxed text-amber-200/90">
+          {response.integrationBlockedMessage}
+        </p>
+      )}
+      {response.integrationProposals.map((proposal) => (
+        <IntegrationProposalCard key={proposal.id} proposal={proposal} />
+      ))}
+      <p className="mt-2.5 text-[11px] text-text-muted/70">V0.8 — {V08_NO_API_MESSAGE}</p>
+    </div>
   );
 }
 
@@ -134,6 +155,7 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
                 </p>
               )}
             </div>
+            <IntegrationProposalsSection response={response} />
             <AutomationProposalsSection response={response} />
             <ActionProposalsSection response={response} />
           </>
@@ -206,6 +228,23 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
                     ))}
                   </ul>
                 )}
+              </div>
+            )}
+
+            {response.integrationProposals && response.integrationProposals.length > 0 && (
+              <div className="p-4">
+                <Label>Intégration proposée (dry-run)</Label>
+                {response.integrationBlockedMessage && (
+                  <p className="mt-2 text-[12.5px] leading-relaxed text-amber-200/90">
+                    {response.integrationBlockedMessage}
+                  </p>
+                )}
+                {response.integrationProposals.map((proposal) => (
+                  <IntegrationProposalCard key={proposal.id} proposal={proposal} />
+                ))}
+                <p className="mt-2.5 text-[11px] text-text-muted/70">
+                  V0.8 — {V08_NO_API_MESSAGE}
+                </p>
               </div>
             )}
 

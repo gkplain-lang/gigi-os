@@ -100,3 +100,13 @@ export {
 } from "@/modules/automation";
 
 export type { AutomationProposal } from "@/modules/automation";
+
+export {
+  applyIntegrationProposals,
+  detectIntegrationProposals,
+  V08_BLOCKED_REAL_MESSAGE,
+  V08_NO_API_MESSAGE,
+  summarizeIntegrationFoundation,
+} from "@/modules/integrations";
+
+export type { IntegrationProposal } from "@/modules/integrations";

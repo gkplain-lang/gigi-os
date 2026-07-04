@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import {
-  DRY_RUN_AUTOMATION_LABELS,
-  FORBIDDEN_AUTOMATION_LABELS,
-  V07_NO_EXECUTION_MESSAGE,
-  V07_BLOCKED_REAL_MESSAGE,
-  confirmAutomationDryRunLocally,
+  GITHUB_DRY_RUN_LABELS,
+  GITHUB_FORBIDDEN_LABELS,
+  V08_BLOCKED_REAL_MESSAGE,
+  V08_NO_API_MESSAGE,
+  confirmIntegrationDryRunLocally,
+  formatIntegrationStatusLabel,
   formatPermissionsList,
-  summarizeAutomationFoundation,
-} from "@/modules/automation";
+  summarizeGitHubAlpha,
+  summarizeIntegrationFoundation,
+} from "@/modules/integrations";
 import { confirmationStatusLabel } from "@/modules/agents/confirmation";
 
 const panelStyle = {
@@ -20,10 +22,11 @@ const panelStyle = {
   padding: 20,
 } as const;
 
-export function AutomationDevPanel() {
-  const summary = summarizeAutomationFoundation();
+export function IntegrationsDevPanel() {
+  const summary = summarizeIntegrationFoundation();
+  const github = summarizeGitHubAlpha();
   const example = summary.exampleProposal;
-  const dryRun = confirmAutomationDryRunLocally(example);
+  const dryRun = confirmIntegrationDryRunLocally(example);
 
   return (
     <>
@@ -37,7 +40,7 @@ export function AutomationDevPanel() {
             marginBottom: 12,
           }}
         >
-          Statut V0.7
+          Statut global V0.8
         </p>
         <dl style={{ fontSize: 13, lineHeight: 1.8, color: "#a1a1aa" }}>
           <div style={{ display: "flex", gap: 8 }}>
@@ -49,16 +52,16 @@ export function AutomationDevPanel() {
             <dd>{summary.dryRunOnly ? "Oui" : "Non"}</dd>
           </div>
           <div style={{ display: "flex", gap: 8 }}>
-            <dt style={{ color: "#71767f", minWidth: 180 }}>n8n branché</dt>
-            <dd>{summary.n8nConnected ? "Oui" : "Non"}</dd>
+            <dt style={{ color: "#71767f", minWidth: 180 }}>Appels API externes</dt>
+            <dd>{summary.externalApiCallsBlocked ? "Bloqués" : "Autorisés"}</dd>
           </div>
           <div style={{ display: "flex", gap: 8 }}>
-            <dt style={{ color: "#71767f", minWidth: 180 }}>Exécution externe</dt>
-            <dd>{summary.externalExecutionBlocked ? "Bloquée" : "Autorisée"}</dd>
+            <dt style={{ color: "#71767f", minWidth: 180 }}>Intégrations</dt>
+            <dd>{summary.availableIntegrations.join(", ")}</dd>
           </div>
         </dl>
         <p style={{ marginTop: 12, fontSize: 12, color: "#71767f", fontStyle: "italic" }}>
-          {V07_NO_EXECUTION_MESSAGE}
+          {V08_NO_API_MESSAGE}
         </p>
       </div>
 
@@ -72,10 +75,30 @@ export function AutomationDevPanel() {
             marginBottom: 12,
           }}
         >
-          Automatisations disponibles (dry-run)
+          GitHub — statut
+        </p>
+        <dl style={{ fontSize: 13, lineHeight: 1.8, color: "#a1a1aa" }}>
+          <div style={{ display: "flex", gap: 8 }}>
+            <dt style={{ color: "#71767f", minWidth: 180 }}>Statut</dt>
+            <dd>{formatIntegrationStatusLabel(github.status)}</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div style={panelStyle}>
+        <p
+          style={{
+            fontSize: 11,
+            letterSpacing: 1,
+            textTransform: "uppercase",
+            color: "#71767f",
+            marginBottom: 12,
+          }}
+        >
+          Actions GitHub dry-run
         </p>
         <ul style={{ fontSize: 13, color: "#a1a1aa", lineHeight: 1.7, paddingLeft: 18 }}>
-          {Object.values(DRY_RUN_AUTOMATION_LABELS).map((label) => (
+          {Object.values(GITHUB_DRY_RUN_LABELS).map((label) => (
             <li key={label}>{label}</li>
           ))}
         </ul>
@@ -91,15 +114,15 @@ export function AutomationDevPanel() {
             marginBottom: 12,
           }}
         >
-          Automatisations interdites en exécution réelle
+          Actions GitHub bloquées en réel
         </p>
         <ul style={{ fontSize: 13, color: "#a1a1aa", lineHeight: 1.7, paddingLeft: 18 }}>
-          {Object.values(FORBIDDEN_AUTOMATION_LABELS).map((label) => (
+          {Object.values(GITHUB_FORBIDDEN_LABELS).map((label) => (
             <li key={label}>{label}</li>
           ))}
         </ul>
         <p style={{ marginTop: 12, fontSize: 12, color: "#71767f", fontStyle: "italic" }}>
-          {V07_BLOCKED_REAL_MESSAGE}
+          {V08_BLOCKED_REAL_MESSAGE}
         </p>
       </div>
 
@@ -113,7 +136,7 @@ export function AutomationDevPanel() {
             marginBottom: 12,
           }}
         >
-          Exemple Automation Proposal
+          Exemple de plan GitHub
         </p>
         <dl style={{ fontSize: 13, lineHeight: 1.8, color: "#a1a1aa" }}>
           <div style={{ display: "flex", gap: 8 }}>
@@ -121,20 +144,12 @@ export function AutomationDevPanel() {
             <dd>{example.title}</dd>
           </div>
           <div style={{ display: "flex", gap: 8 }}>
-            <dt style={{ color: "#71767f", minWidth: 140 }}>Type</dt>
-            <dd>{example.automationType}</dd>
-          </div>
-          <div style={{ display: "flex", gap: 8 }}>
-            <dt style={{ color: "#71767f", minWidth: 140 }}>Déclencheur</dt>
-            <dd>{example.triggerDescription}</dd>
+            <dt style={{ color: "#71767f", minWidth: 140 }}>Action</dt>
+            <dd>{example.githubAction}</dd>
           </div>
           <div style={{ display: "flex", gap: 8 }}>
             <dt style={{ color: "#71767f", minWidth: 140 }}>Permissions</dt>
             <dd>{formatPermissionsList(example.requiredPermissions)}</dd>
-          </div>
-          <div style={{ display: "flex", gap: 8 }}>
-            <dt style={{ color: "#71767f", minWidth: 140 }}>Risque</dt>
-            <dd>{example.riskLevel}</dd>
           </div>
           <div style={{ display: "flex", gap: 8 }}>
             <dt style={{ color: "#71767f", minWidth: 140 }}>Statut</dt>
@@ -150,17 +165,11 @@ export function AutomationDevPanel() {
         <Link href="/dev/agents" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           Dev · Agents →
         </Link>
+        <Link href="/dev/automation" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
+          Dev · Automation →
+        </Link>
         <Link href="/dev/ai" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           Dev · AI →
-        </Link>
-        <Link href="/dev/daily-review" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
-          Dev · Daily Review →
-        </Link>
-        <Link href="/dev/execution" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
-          Dev · Execution →
-        </Link>
-        <Link href="/dev/integrations" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
-          Dev · Integrations →
         </Link>
         <Link href="/conversation" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           /conversation →

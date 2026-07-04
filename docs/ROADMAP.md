@@ -639,50 +639,52 @@ See [AUTOMATION_PREPARATION.md](./AUTOMATION_PREPARATION.md) for full details.
 
 ## Goal
 
-Add first external integrations carefully.
+Prepare controlled external integrations with GitHub as first candidate — dry-run only by default.
 
 ## Core Question
 
 ```text
-Can Gigi OS read external signals and improve decisions?
+Can Gigi produce safe GitHub integration plans without calling external APIs?
 ```
 
-## Candidate Integrations
-
-Start with one only.
-
-Possible first integration:
+## Features
 
 ```text
-GitHub
+Integration module (modules/integrations/)
+GitHub alpha submodule (dry-run plans)
+IntegrationProposal in AI pipeline
+IntegrationProposalCard in /conversation
+Dev page /dev/integrations
+Documentation (INTEGRATIONS_ALPHA.md)
 ```
 
-Why GitHub first:
+## Not Yet Connected
 
-- project progress can be measured;
-- commits and issues can become history;
-- Cursor workflows can be prepared later.
-
-## GitHub Alpha Features
+Do not connect or execute:
 
 ```text
-connect repository
-read commits
-read issues
-read README
-summarize project activity
-suggest project status update
+GitHub API (real calls)
+git commit / push / merge (real)
+Gmail
+Calendar
+n8n
+Supabase sync/restore (automatic)
 ```
+
+GitHub status in V0.8: dry_run_only (default).
 
 ## Acceptance Criteria
 
 V0.8 is complete when:
 
-- one integration works cleanly;
-- external data improves project memory;
-- Gigi does not become noisy;
-- the integration is optional;
-- the core product still works without it.
+- GitHub requests produce Integration Proposals (dry-run);
+- forbidden real GitHub actions are blocked with clear messaging;
+- Action + Automation + Integration proposals work together;
+- /dev/integrations documents dry-run and blocked actions;
+- npm run build passes;
+- no external API calls, no real git operations.
+
+See [INTEGRATIONS_ALPHA.md](./INTEGRATIONS_ALPHA.md) for full details.
 
 ---
 
