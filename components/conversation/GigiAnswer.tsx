@@ -89,7 +89,7 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
               </div>
             )}
 
-            {(response.alternative || response.warning) && (
+            {(response.alternative || response.warning || response.nextStep) && (
               <div className="p-4">
                 {response.alternative && (
                   <>
@@ -102,7 +102,14 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
                 )}
                 {response.warning && (
                   <p className="mt-2.5 text-[13px] leading-relaxed text-text-muted">
+                    <span className="font-medium text-text-secondary">Risque : </span>
                     {response.warning}
+                  </p>
+                )}
+                {response.nextStep && (
+                  <p className="mt-2.5 text-[13px] leading-relaxed text-text-secondary">
+                    <span className="font-medium text-text-muted">Prochaine étape : </span>
+                    {response.nextStep}
                   </p>
                 )}
               </div>

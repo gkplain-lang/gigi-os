@@ -11,6 +11,7 @@ import type {
   AiBrainRequest,
 } from "./types";
 import { mergeSafety } from "./safety";
+import { enrichAiBrainDecision } from "./decisionQuality/decisionFormatter";
 
 function mapIntent(raw: string): ConversationIntent {
   const norm = raw.toLowerCase();
@@ -71,6 +72,7 @@ export function aiBrainToGigiResponse(ai: AiBrainResponse): GigiConversationResp
 
   const mission = ai.recommendedMission;
   const projectName = PROJECT_NAMES[mission.projectId] ?? mission.projectName;
+  const displayWarning = ai.primaryRisk ?? undefined;
 
   return {
     intent,
@@ -82,9 +84,12 @@ export function aiBrainToGigiResponse(ai: AiBrainResponse): GigiConversationResp
     missionTitle: mission.title,
     why: ai.reason,
     tasks: ai.tasks,
+    warning: displayWarning,
+    primaryRisk: ai.primaryRisk,
+    nextStep: ai.nextStep,
     alternative: ai.alternative,
     notNow: ai.notNow,
-    finalMessage: "Le reste peut attendre.",
+    finalMessage: ai.nextStep ?? "Le reste peut attendre.",
   };
 }
 
@@ -125,7 +130,7 @@ export function parseProviderJsonToAiBrain(
     };
   });
 
-  return {
+  const draft: AiBrainResponse = {
     mode: "ai_assisted",
     intent: parsed.intent,
     message: parsed.message,
@@ -134,9 +139,13 @@ export function parseProviderJsonToAiBrain(
     tasks: parsed.recommendedMission?.tasks?.slice(0, 3),
     alternative,
     notNow,
+    primaryRisk: parsed.primaryRisk,
+    nextStep: parsed.nextStep,
     confidence: Math.min(1, Math.max(0, parsed.confidence ?? 0.5)),
     safety,
     provider: "openai",
     rawProvider: parsed,
   };
+
+  return enrichAiBrainDecision(draft, request);
 }

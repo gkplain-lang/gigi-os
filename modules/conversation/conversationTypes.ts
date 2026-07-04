@@ -42,6 +42,10 @@ export interface GigiConversationResponse {
   warning?: string;
   alternative?: AlternativeSuggestion;
   notNow?: NotNowItem[];
+  /** Risque principal — affiché via warning si présent */
+  primaryRisk?: string;
+  /** Prochaine étape après exécution */
+  nextStep?: string;
   finalMessage?: string;
 }
 
