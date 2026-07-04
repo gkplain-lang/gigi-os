@@ -16,6 +16,7 @@ import type {
 import { GigiAnswer } from "./GigiAnswer";
 
 const PROMPT_CHIPS = [
+  "Gigi, fais ma revue du jour",
   "Que faire dans Buildy Crafts aujourd'hui ?",
   "Je veux gagner 500 €/mois rapidement",
   "Quel projet dois-je ignorer aujourd'hui ?",
@@ -71,6 +72,8 @@ export function ConversationPageContent() {
         rejectedMissionIds: state.rejectedMissionIds,
         conversationContext: context,
         memoryContext,
+        historyEvents: state.history,
+        executionHints: state.executionHints ?? null,
       },
       { preferLocal: !isAiConfigured }
     );

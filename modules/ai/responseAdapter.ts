@@ -16,6 +16,7 @@ import { V06_BLOCKED_MESSAGE } from "@/modules/agents";
 
 function mapIntent(raw: string): ConversationIntent {
   const norm = raw.toLowerCase();
+  if (norm.includes("daily_review") || norm.includes("daily review")) return "daily_review";
   if (norm.includes("revenue") || norm.includes("revenu")) return "revenue";
   if (norm.includes("alternative")) return "alternative";
   if (norm.includes("project")) return "project_specific";
@@ -72,6 +73,7 @@ export function aiBrainToGigiResponse(ai: AiBrainResponse): GigiConversationResp
       agentBlockedMessage: ai.actionProposals?.some((p) => p.blockedReason)
         ? V06_BLOCKED_MESSAGE
         : undefined,
+      dailyReview: ai.dailyReview,
     };
   }
 
@@ -99,6 +101,7 @@ export function aiBrainToGigiResponse(ai: AiBrainResponse): GigiConversationResp
     agentBlockedMessage: ai.actionProposals?.some((p) => p.blockedReason)
       ? V06_BLOCKED_MESSAGE
       : undefined,
+    dailyReview: ai.dailyReview,
   };
 }
 

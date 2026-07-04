@@ -81,3 +81,12 @@ export {
 } from "@/modules/agents";
 
 export type { ActionProposal } from "@/modules/agents";
+
+export {
+  applyDailyReviewEnrichment,
+  buildDailyReviewSnapshot,
+  isDailyReviewRequest,
+  summarizeDailyReview,
+} from "@/modules/dailyReview";
+
+export type { DailyReviewSnapshot } from "@/modules/dailyReview";

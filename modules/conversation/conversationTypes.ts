@@ -5,6 +5,7 @@ export type ConversationIntent =
   | "project_specific"
   | "revenue"
   | "focus"
+  | "daily_review"
   | "alternative"
   | "creative"
   | "maintenance"
@@ -52,6 +53,8 @@ export interface GigiConversationResponse {
   actionProposals?: ActionProposal[];
   /** V0.6 — message when real execution is blocked */
   agentBlockedMessage?: string;
+  /** V0.6.1 — read-only daily review snapshot */
+  dailyReview?: import("../dailyReview/types").DailyReviewSnapshot;
 }
 
 export interface ConversationContext {
@@ -60,6 +63,12 @@ export interface ConversationContext {
   excludeMissionId?: string;
   excludeProjectId?: string;
   completedMissionIds?: string[];
+  postponedMissionIds?: string[];
+  rejectedMissionIds?: string[];
+  executionHints?: import("../missionExecution/types").MissionExecutionHints | null;
+  historyEvents?: import("../history/historyTypes").HistoryEvent[];
+  projects?: import("../projects/projectTypes").Project[];
+  currentMission?: import("../missions/missionTypes").Mission;
 }
 
 export interface ConversationExchange {

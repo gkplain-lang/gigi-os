@@ -49,6 +49,31 @@ function ActionProposalsSection({ response }: { response: GigiConversationRespon
   );
 }
 
+function DailyReviewSection({ response }: { response: GigiConversationResponse }) {
+  const review = response.dailyReview;
+  if (!review) return null;
+
+  return (
+    <div className="gigi-panel mt-3 rounded-xl p-4">
+      <Label>Bilan du jour</Label>
+      <p className="mt-2 text-[13.5px] leading-relaxed text-text-secondary">{review.shortSummary}</p>
+      {review.suggestedFocus && (
+        <p className="mt-2 text-[12.5px] text-text-muted">
+          Focus : <span className="text-text-secondary">{review.suggestedFocus}</span>
+        </p>
+      )}
+      {review.possibleBlockers[0] && (
+        <p className="mt-2 text-[12.5px] text-text-muted">
+          Blocage : {review.possibleBlockers[0].message}
+        </p>
+      )}
+      <p className="mt-2 text-[11px] text-text-muted/70">
+        V0.6.1 — read-only, aucune sync, aucun agent.
+      </p>
+    </div>
+  );
+}
+
 export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
   const [showNotNow, setShowNotNow] = useState(false);
 
@@ -64,6 +89,8 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
           </span>
         </div>
         <p className="mt-2.5 text-[15px] leading-relaxed text-text-primary">{response.listen}</p>
+
+        <DailyReviewSection response={response} />
 
         {response.needsClarification ? (
           <div className="gigi-panel mt-3 rounded-xl p-4">

@@ -444,6 +444,8 @@ No team accounts
 
 > **V0.6.0 (agents foundation)** — voir `docs/AGENTS_FOUNDATION.md` : agents contrôlés en dry-run, niveau max `level_1_prepare_only`, aucune exécution externe.
 
+> **V0.6.1 (daily review)** — voir `docs/DAILY_REVIEW_SYSTEM.md` : revue quotidienne read-only depuis localStorage, signaux, projets stale, blocages.
+
 ## Goal
 
 Add AI carefully to improve clarity and usefulness.
@@ -519,6 +521,8 @@ No GitHub automation
 # 10. V0.6 — Agents Foundation + Daily Review System
 
 > **V0.6.0 (agents foundation)** — voir `docs/AGENTS_FOUNDATION.md` : propositions d'action dry-run, garde-fous, pas de n8n ni d'exécution externe.
+
+> **V0.6.1 (daily review)** — voir `docs/DAILY_REVIEW_SYSTEM.md` : bilan matinal read-only, projets stale, blocages, mission du jour.
 
 ## Goal (V0.6.1 — Daily Review)
 
