@@ -1,18 +1,25 @@
 import { PROJECT_NAMES } from "@/modules/conversation/missionCatalog";
+import {
+  DECISION_CONTRACT_RULES,
+  DECISION_JSON_SCHEMA_HINT,
+} from "./decisionQuality/decisionContract";
 import type { AiBrainRequest } from "./types";
 
-const SYSTEM_PROMPT = `Tu es Gigi, assistant de décision pour Gigi OS.
+const SYSTEM_PROMPT = `Tu es Gigi, assistant de décision pour Gigi OS — pas une todo-list.
+Tu choisis, tranches et réduis la dispersion. Une seule mission prioritaire.
 Règles strictes :
-- Propose UNE SEULE mission prioritaire
+- Propose UNE SEULE mission prioritaire du jour
+- Format décision : mission + pourquoi + 3 tâches + quoi ignorer + risque principal + prochaine étape
 - Ne repropose jamais une mission déjà terminée (voir completedMissionIds)
 - Ne déclenche aucune action (email, publish, delete, payment, n8n, GitHub API, sync, restore)
 - Ne dis jamais que tu as synchronisé, restauré ou modifié quoi que ce soit
 - Suggère seulement — l'utilisateur décide
-- Tu peux dire "pas maintenant" pour les autres projets
+- Ne propose pas 5 projets en même temps
 - Réponds en JSON strict uniquement, en français
 - confidence entre 0 et 1
-- Si requestedProjectId est présent dans le contexte : la mission principale DOIT être dans CE projet exactement. Tu n'as pas le droit de substituer Buildy Clear ou un autre projet. L'alternative peut être ailleurs.
-- Si memoryContext indique un conflit local/Supabase : recommande une revue manuelle, jamais un restore automatique`;
+- Si requestedProjectId est présent : la mission principale DOIT être dans CE projet exactement
+- Utilise memoryContext pour comprendre l'état — ne pas ignorer le contexte mémoire
+- Si conflit local/Supabase : revue manuelle, jamais restore automatique`;
 
 function buildLegacyPayload(request: AiBrainRequest) {
   const recentHistory = request.history.slice(0, 5).map((h) => ({
@@ -89,12 +96,15 @@ export function buildAiPromptPayload(request: AiBrainRequest) {
     projectNames: PROJECT_NAMES,
     rules: [
       "Une mission prioritaire seulement",
+      "Pas une todo-list — choisir et trancher",
       "Pas d'action automatique",
       "Pas de sync ni restore",
       "Respecter missions terminées",
-      "Peut proposer alternative",
-      "Peut lister notNow",
+      "Exactement 3 tâches concrètes",
+      "Inclure notNow, primaryRisk, nextStep",
+      ...DECISION_CONTRACT_RULES.slice(0, 4),
     ],
+    decisionContract: DECISION_CONTRACT_RULES,
   };
 }
 
@@ -105,24 +115,7 @@ export function buildOpenAiMessages(request: AiBrainRequest) {
 ${JSON.stringify(payload)}
 
 Réponds avec ce JSON strict :
-{
-  "intent": "focus|revenue|project_specific|alternative|general|unclear",
-  "message": "message court à l'utilisateur",
-  "recommendedMission": {
-    "title": "...",
-    "projectId": "...",
-    "reason": "...",
-    "tasks": ["...", "...", "..."]
-  },
-  "alternative": { "title": "...", "reason": "...", "projectId": "..." },
-  "notNow": ["projet — raison courte"],
-  "confidence": 0.0,
-  "safety": {
-    "level": "safe",
-    "requiresConfirmation": false,
-    "blockedActions": []
-  }
-}`;
+${DECISION_JSON_SCHEMA_HINT}`;
 
   return [
     { role: "system" as const, content: SYSTEM_PROMPT },

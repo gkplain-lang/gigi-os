@@ -2,6 +2,7 @@ import { assertResponseSafe } from "./safety";
 import { callOpenAiBrainProvider, runLocalFallbackProvider } from "./aiProvider";
 import { enrichAiBrainRequest } from "./projectIntent";
 import { applyProjectIntentGuard } from "./projectIntentGuard";
+import { applyDecisionQuality } from "./decisionQuality/decisionFallback";
 import { parseProviderJsonToAiBrain } from "./responseAdapter";
 import type { AiBrainRequest, AiBrainResponse } from "./types";
 
@@ -30,7 +31,7 @@ export async function askAiBrain(
   const enriched = enrichAiBrainRequest(request);
 
   const fallback = (): AiBrainResponse =>
-    attachIntentMeta(assertResponseSafe(runLocalFallbackProvider(enriched)), enriched);
+    attachIntentMeta(applyDecisionQuality(enriched, assertResponseSafe(runLocalFallbackProvider(enriched))), enriched);
 
   if (options.forceLocal || options.preferLocal) {
     return fallback();
@@ -64,6 +65,7 @@ export async function askAiBrain(
   }
 
   response = applyProjectIntentGuard(enriched, response);
+  response = applyDecisionQuality(enriched, response);
   response = assertResponseSafe(response);
   return attachIntentMeta(response, enriched);
 }
@@ -81,5 +83,6 @@ export function finalizeServerAiResponse(
 
   let response = assertResponseSafe(mapped);
   response = applyProjectIntentGuard(enriched, response);
+  response = applyDecisionQuality(enriched, response);
   return attachIntentMeta(assertResponseSafe(response), enriched);
 }

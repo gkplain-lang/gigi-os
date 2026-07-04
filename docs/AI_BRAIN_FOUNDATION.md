@@ -130,7 +130,7 @@ Les agents et automations arrivent après validation terrain (V0.5.2+).
 |---------|----------|
 | V0.5.1 | Garde-fous projet explicite + tests OpenAI réels |
 | **V0.5.2** | **Contexte mémoire IA** — voir `docs/AI_MEMORY_CONTEXT.md` |
-| V0.5.3 | Affinage contexte + priorités dynamiques |
+| **V0.5.3** | **Qualité décisionnelle** — voir `docs/AI_DECISION_QUALITY.md` |
 | V0.6+ | Agents contrôlés avec confirmation explicite |
 
 ---

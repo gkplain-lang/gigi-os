@@ -438,6 +438,8 @@ No team accounts
 
 > **V0.5.2 (memory context)** — voir `docs/AI_MEMORY_CONTEXT.md` : contexte mémoire borné injecté dans le prompt IA, sans sync/restore automatique.
 
+> **V0.5.3 (decision quality)** — voir `docs/AI_DECISION_QUALITY.md` : contrat de décision structuré (mission + 3 tâches + ignorer + risque + prochaine étape).
+
 ## Goal
 
 Add AI carefully to improve clarity and usefulness.

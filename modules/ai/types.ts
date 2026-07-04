@@ -7,6 +7,7 @@ import type {
   AlternativeSuggestion,
 } from "@/modules/conversation/conversationTypes";
 import type { AiMemoryContext } from "./memoryContext/types";
+import type { DecisionQualityReport } from "./decisionQuality/types";
 
 export type AiAvailability = "not_configured" | "available" | "error";
 
@@ -80,6 +81,9 @@ export interface AiBrainResponse {
   requestedProjectId?: string | null;
   projectMismatchDetected?: boolean;
   fallbackReason?: string | null;
+  primaryRisk?: string;
+  nextStep?: string;
+  decisionQuality?: DecisionQualityReport;
 }
 
 export interface AiProviderJsonResponse {
@@ -88,6 +92,8 @@ export interface AiProviderJsonResponse {
   recommendedMission?: AiRecommendedMissionPayload;
   alternative?: AiAlternativePayload;
   notNow?: string[];
+  primaryRisk?: string;
+  nextStep?: string;
   confidence: number;
   safety?: {
     level?: AiSafetyLevel;

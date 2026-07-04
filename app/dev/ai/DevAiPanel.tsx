@@ -9,6 +9,7 @@ import {
   detectRequestedProject,
   fetchAiAvailability,
   summarizeAiMemoryContext,
+  summarizeDecisionQuality,
   type AiBrainResponse,
 } from "@/modules/ai";
 import { AI_SAFETY_RULES_SUMMARY } from "@/modules/ai/safety";
@@ -17,6 +18,7 @@ import { fetchRemoteSummaryForMemory, useMemoryStatus } from "@/modules/memory";
 const IS_PROD = process.env.NODE_ENV === "production";
 
 const TEST_PHRASES = [
+  "Gigi, choisis ma mission prioritaire du jour",
   "Que faire dans Buildy Crafts aujourd'hui ?",
   "Je veux avancer la bibliothèque Buildy Crafts",
   "Je veux gagner 500 €/mois rapidement",
@@ -351,6 +353,67 @@ export function DevAiPanel() {
               Mission : {result.recommendedMission.title} ({result.recommendedMission.projectId})
             </p>
           )}
+          {(() => {
+            const dq = summarizeDecisionQuality(result);
+            return (
+              <div
+                style={{
+                  marginTop: 14,
+                  paddingTop: 14,
+                  borderTop: "1px solid #2a2f38",
+                }}
+              >
+                <p style={{ fontSize: 11, letterSpacing: 1, textTransform: "uppercase", color: "#71767f" }}>
+                  Decision Quality
+                </p>
+                <dl style={{ marginTop: 8, fontSize: 12, lineHeight: 1.8 }}>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <dt style={{ color: "#71767f", minWidth: 180 }}>Mission détectée</dt>
+                    <dd>{dq.missionDetected ? "Oui" : "Non"}</dd>
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <dt style={{ color: "#71767f", minWidth: 180 }}>Projet</dt>
+                    <dd>{dq.projectId ?? "—"}</dd>
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <dt style={{ color: "#71767f", minWidth: 180 }}>Tâches</dt>
+                    <dd>{dq.taskCount}/3</dd>
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <dt style={{ color: "#71767f", minWidth: 180 }}>Quoi ignorer</dt>
+                    <dd>{dq.hasIgnoreToday ? "Oui" : "Non"}</dd>
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <dt style={{ color: "#71767f", minWidth: 180 }}>Risque principal</dt>
+                    <dd>{dq.hasPrimaryRisk ? "Oui" : "Non"}</dd>
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <dt style={{ color: "#71767f", minWidth: 180 }}>Prochaine étape</dt>
+                    <dd>{dq.hasNextStep ? "Oui" : "Non"}</dd>
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <dt style={{ color: "#71767f", minWidth: 180 }}>Project guard</dt>
+                    <dd>{dq.projectGuardStatus}</dd>
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <dt style={{ color: "#71767f", minWidth: 180 }}>Fallback utilisé</dt>
+                    <dd>{dq.fallbackUsed ? "Oui" : "Non"}</dd>
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <dt style={{ color: "#71767f", minWidth: 180 }}>Contrat complet</dt>
+                    <dd>{dq.isComplete ? "Oui" : "Non"}</dd>
+                  </div>
+                </dl>
+                {dq.warnings.length > 0 && (
+                  <ul style={{ marginTop: 8, paddingLeft: 18, fontSize: 11, color: "#71767f" }}>
+                    {dq.warnings.map((w) => (
+                      <li key={w}>{w}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          })()}
           <ul style={{ marginTop: 10, paddingLeft: 18 }}>
             {AI_SAFETY_RULES_SUMMARY.map((r) => (
               <li key={r}>{r}</li>

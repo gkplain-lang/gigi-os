@@ -57,4 +57,17 @@ export {
   DEFAULT_CONTEXT_LIMITS,
 } from "./memoryContext";
 
+export {
+  applyDecisionQuality,
+  summarizeDecisionQuality,
+  validateDecisionQuality,
+  DECISION_CONTRACT_RULES,
+} from "./decisionQuality";
+
+export type {
+  DecisionQualityReport,
+  DecisionQualitySummary,
+  GigiDecisionContract,
+} from "./decisionQuality";
+
 export { useAiAvailability } from "./useAiAvailability";
