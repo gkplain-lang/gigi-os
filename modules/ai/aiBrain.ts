@@ -5,6 +5,7 @@ import { applyProjectIntentGuard } from "./projectIntentGuard";
 import { applyDecisionQuality } from "./decisionQuality/decisionFallback";
 import { applyAgentProposals } from "@/modules/agents";
 import { applyAutomationProposals } from "@/modules/automation";
+import { applyIntegrationProposals } from "@/modules/integrations";
 import { applyDailyReviewEnrichment } from "@/modules/dailyReview";
 import { parseProviderJsonToAiBrain } from "./responseAdapter";
 import type { AiBrainRequest, AiBrainResponse } from "./types";
@@ -26,9 +27,12 @@ function attachIntentMeta(response: AiBrainResponse, request: AiBrainRequest): A
 function enrichPipeline(request: AiBrainRequest, response: AiBrainResponse): AiBrainResponse {
   return applyDailyReviewEnrichment(
     request,
-    applyAutomationProposals(
+    applyIntegrationProposals(
       request,
-      applyAgentProposals(request, applyDecisionQuality(request, response))
+      applyAutomationProposals(
+        request,
+        applyAgentProposals(request, applyDecisionQuality(request, response))
+      )
     )
   );
 }

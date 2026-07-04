@@ -220,6 +220,9 @@ export function AgentsDevPanel() {
         <Link href="/dev/automation" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           Dev · Automation →
         </Link>
+        <Link href="/dev/integrations" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
+          Dev · Integrations →
+        </Link>
         <Link href="/conversation" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           /conversation →
         </Link>

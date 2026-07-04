@@ -14,6 +14,7 @@ import { mergeSafety } from "./safety";
 import { enrichAiBrainDecision } from "./decisionQuality/decisionFormatter";
 import { V06_BLOCKED_MESSAGE } from "@/modules/agents";
 import { V07_BLOCKED_REAL_MESSAGE } from "@/modules/automation";
+import { V08_BLOCKED_REAL_MESSAGE } from "@/modules/integrations";
 
 function mapIntent(raw: string): ConversationIntent {
   const norm = raw.toLowerCase();
@@ -78,6 +79,10 @@ export function aiBrainToGigiResponse(ai: AiBrainResponse): GigiConversationResp
       automationBlockedMessage: ai.automationProposals?.some((p) => p.blockedReason)
         ? V07_BLOCKED_REAL_MESSAGE
         : undefined,
+      integrationProposals: ai.integrationProposals,
+      integrationBlockedMessage: ai.integrationProposals?.some((p) => p.blockedReason)
+        ? V08_BLOCKED_REAL_MESSAGE
+        : undefined,
       dailyReview: ai.dailyReview,
     };
   }
@@ -109,6 +114,10 @@ export function aiBrainToGigiResponse(ai: AiBrainResponse): GigiConversationResp
     automationProposals: ai.automationProposals,
     automationBlockedMessage: ai.automationProposals?.some((p) => p.blockedReason)
       ? V07_BLOCKED_REAL_MESSAGE
+      : undefined,
+    integrationProposals: ai.integrationProposals,
+    integrationBlockedMessage: ai.integrationProposals?.some((p) => p.blockedReason)
+      ? V08_BLOCKED_REAL_MESSAGE
       : undefined,
     dailyReview: ai.dailyReview,
   };

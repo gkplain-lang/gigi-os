@@ -1,6 +1,7 @@
 import type { Mission } from "../missions/missionTypes";
 import type { ActionProposal } from "../agents/types";
 import type { AutomationProposal } from "../automation/types";
+import type { IntegrationProposal } from "../integrations/types";
 
 export type ConversationIntent =
   | "project_specific"
@@ -58,6 +59,10 @@ export interface GigiConversationResponse {
   automationProposals?: AutomationProposal[];
   /** V0.7 — message when real automation is blocked */
   automationBlockedMessage?: string;
+  /** V0.8 — integration proposals (dry-run only) */
+  integrationProposals?: IntegrationProposal[];
+  /** V0.8 — message when real integration is blocked */
+  integrationBlockedMessage?: string;
   /** V0.6.1 — read-only daily review snapshot */
   dailyReview?: import("../dailyReview/types").DailyReviewSnapshot;
 }

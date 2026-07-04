@@ -54,7 +54,7 @@ const INTENT_PATTERNS: IntentMatch[] = [
   },
   {
     automationType: "weekly_project_review",
-    keywords: ["revue hebdo", "chaque semaine", "toutes les semaines", "check mes projets"],
+    keywords: ["revue hebdo", "chaque semaine", "toutes les semaines", "check mes projets", "review github", "revue github"],
     priority: 8,
   },
   {

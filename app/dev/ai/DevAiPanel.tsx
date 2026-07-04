@@ -447,6 +447,9 @@ export function DevAiPanel() {
         <Link href="/dev/automation" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           Dev · Automation →
         </Link>
+        <Link href="/dev/integrations" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
+          Dev · Integrations →
+        </Link>
         {!IS_PROD && (
           <Link href="/memory" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
             /memory →
