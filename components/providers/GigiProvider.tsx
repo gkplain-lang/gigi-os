@@ -28,10 +28,23 @@ import {
 } from "@/modules/missionExecution";
 import type { MissionExecutionSnapshot } from "@/modules/missionExecution";
 import { askGigi } from "@/modules/conversation/conversationBrain";
+import type { OnboardingGoalId, WorkStyleId } from "@/modules/onboarding/types";
+import {
+  advanceOnboardingStep,
+  completeOnboarding,
+  generateFirstMissionForState,
+  goBackOnboardingStep,
+  isOnboardingComplete,
+  resetOnboardingState,
+  updateOnboardingGoal,
+  updateOnboardingProjects,
+  updateOnboardingWorkStyle,
+} from "@/modules/onboarding/onboardingState";
 
 interface GigiContextValue {
   state: GigiLocalState;
   isHydrated: boolean;
+  isOnboardingComplete: boolean;
   execution: MissionExecutionSnapshot;
   startMission: () => void;
   completeMission: () => void;
@@ -43,6 +56,14 @@ interface GigiContextValue {
   hasNextMission: () => boolean;
   getDecision: () => ReturnType<typeof explainDecisionFromProjects>;
   getMissionProjectLabel: (projectId: string) => string | undefined;
+  advanceOnboarding: () => void;
+  goBackOnboarding: () => void;
+  setOnboardingProjects: (selectedIds: string[], customNames: string[]) => void;
+  setOnboardingGoal: (goal: OnboardingGoalId | null, customGoal?: string) => void;
+  setOnboardingWorkStyle: (style: WorkStyleId | null) => void;
+  generateAndApplyFirstMission: () => boolean;
+  finishOnboarding: (options?: { firstMissionGenerated?: boolean }) => void;
+  resetOnboarding: () => void;
 }
 
 const GigiContext = createContext<GigiContextValue | null>(null);
@@ -144,10 +165,65 @@ export function GigiProvider({ children }: { children: ReactNode }) {
     [state.mission]
   );
 
+  const advanceOnboarding = useCallback(() => {
+    updateState((prev) => advanceOnboardingStep(prev));
+  }, [updateState]);
+
+  const goBackOnboarding = useCallback(() => {
+    updateState((prev) => goBackOnboardingStep(prev));
+  }, [updateState]);
+
+  const setOnboardingProjects = useCallback(
+    (selectedIds: string[], customNames: string[]) => {
+      updateState((prev) => updateOnboardingProjects(prev, selectedIds, customNames));
+    },
+    [updateState]
+  );
+
+  const setOnboardingGoal = useCallback(
+    (goal: OnboardingGoalId | null, customGoal?: string) => {
+      updateState((prev) => updateOnboardingGoal(prev, goal, customGoal));
+    },
+    [updateState]
+  );
+
+  const setOnboardingWorkStyle = useCallback(
+    (style: WorkStyleId | null) => {
+      updateState((prev) => updateOnboardingWorkStyle(prev, style));
+    },
+    [updateState]
+  );
+
+  const generateAndApplyFirstMission = useCallback(() => {
+    let applied = false;
+    updateState((prev) => {
+      const mission = generateFirstMissionForState(prev);
+      if (!mission) return prev;
+      applied = true;
+      const withMission = applyRecommendedMissionState(prev, mission);
+      return completeOnboarding(withMission, { firstMissionGenerated: true });
+    });
+    return applied;
+  }, [updateState]);
+
+  const finishOnboarding = useCallback(
+    (options?: { firstMissionGenerated?: boolean }) => {
+      updateState((prev) => completeOnboarding(prev, options));
+    },
+    [updateState]
+  );
+
+  const resetOnboarding = useCallback(() => {
+    updateState((prev) => resetOnboardingState(prev));
+  }, [updateState]);
+
+  const onboardingComplete = isHydrated && isOnboardingComplete(state);
+
   const value = useMemo(
     () => ({
       state,
       isHydrated,
+      isOnboardingComplete: onboardingComplete,
       execution,
       startMission,
       completeMission,
@@ -159,10 +235,19 @@ export function GigiProvider({ children }: { children: ReactNode }) {
       hasNextMission,
       getDecision,
       getMissionProjectLabel,
+      advanceOnboarding,
+      goBackOnboarding,
+      setOnboardingProjects,
+      setOnboardingGoal,
+      setOnboardingWorkStyle,
+      generateAndApplyFirstMission,
+      finishOnboarding,
+      resetOnboarding,
     }),
     [
       state,
       isHydrated,
+      onboardingComplete,
       execution,
       startMission,
       completeMission,
@@ -174,6 +259,14 @@ export function GigiProvider({ children }: { children: ReactNode }) {
       hasNextMission,
       getDecision,
       getMissionProjectLabel,
+      advanceOnboarding,
+      goBackOnboarding,
+      setOnboardingProjects,
+      setOnboardingGoal,
+      setOnboardingWorkStyle,
+      generateAndApplyFirstMission,
+      finishOnboarding,
+      resetOnboarding,
     ]
   );
 

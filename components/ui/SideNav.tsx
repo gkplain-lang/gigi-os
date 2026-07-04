@@ -12,6 +12,7 @@ import { useGigi } from "@/components/providers/GigiProvider";
 import { cn } from "@/lib/utils";
 import { SIDEBAR_READY_LABEL } from "@/modules/dailyUse";
 import { SIDEBAR_LINK_LABELS, SIMULATION_NOTE } from "@/modules/dailyUseRefinement";
+import { ONBOARDING_BANNER, SIDEBAR_ONBOARDING_LABEL } from "@/modules/onboarding";
 
 const iconMap = {
   target: Target,
@@ -25,7 +26,7 @@ const PRIMARY = new Set(["/", "/conversation"]);
 
 export function SideNav() {
   const pathname = usePathname();
-  const { resetLocalData } = useGigi();
+  const { resetLocalData, isOnboardingComplete } = useGigi();
 
   const primary = NAV_ITEMS.filter((i) => PRIMARY.has(i.href));
   const secondary = NAV_ITEMS.filter((i) => !PRIMARY.has(i.href));
@@ -99,6 +100,15 @@ export function SideNav() {
       <nav className="flex flex-col gap-0.5">{secondary.map(renderLink)}</nav>
 
       <div className="mt-auto space-y-3 border-t border-border px-3 pt-4">
+        {!isOnboardingComplete && (
+          <Link
+            href="/onboarding"
+            className="gigi-focus block rounded-lg border border-[rgba(124,140,255,0.22)] bg-accent-dim/30 px-2.5 py-2 text-[12px] text-text-secondary hover:text-text-primary"
+            title={ONBOARDING_BANNER.body}
+          >
+            {SIDEBAR_ONBOARDING_LABEL}
+          </Link>
+        )}
         <Link
           href="/feedback"
           className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"

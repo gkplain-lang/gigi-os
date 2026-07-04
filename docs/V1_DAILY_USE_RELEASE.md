@@ -119,6 +119,7 @@ Identiques à V0.9 :
 - Intégrations réelles **opt-in** uniquement, avec confirmation
 - **V1.1** : améliorations UX daily use — voir [V1_1_DAILY_USE_IMPROVEMENTS.md](./V1_1_DAILY_USE_IMPROVEMENTS.md)
 - **V1.3** : affinage usage quotidien — voir [V1_3_DAILY_USE_REFINEMENT.md](./V1_3_DAILY_USE_REFINEMENT.md)
+- **V1.4** : onboarding & first run — voir [ONBOARDING_FIRST_RUN.md](./ONBOARDING_FIRST_RUN.md)
 - V2.0+ : fondation SaaS
 
 ---

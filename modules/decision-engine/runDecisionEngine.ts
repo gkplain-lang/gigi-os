@@ -73,15 +73,31 @@ export function scoreAllProjects(projects: Project[]): DecisionScore[] {
     .sort((a, b) => b.score - a.score);
 }
 
-export function selectBestProject(projects: Project[]): DecisionScore {
+function emptyDecisionExplanation(): DecisionExplanation {
+  return {
+    missionTitle: "Aucune mission disponible",
+    projectName: "—",
+    finalScore: 0,
+    reasoning:
+      "Ajoute au moins un projet pour que Gigi puisse choisir une mission prioritaire.",
+    criteria: [],
+    alternatives: [],
+  };
+}
+
+export function selectBestProject(projects: Project[]): DecisionScore | null {
   const scored = scoreAllProjects(projects);
-  return scored[0];
+  return scored[0] ?? null;
 }
 
 export function explainDecisionFromProjects(projects: Project[]): DecisionExplanation {
   const scored = scoreAllProjects(projects);
   const winner = scored[0];
-  const winnerProject = projects.find((p) => p.id === winner.projectId)!;
+  if (!winner) return emptyDecisionExplanation();
+
+  const winnerProject = projects.find((p) => p.id === winner.projectId);
+  if (!winnerProject) return emptyDecisionExplanation();
+
   const mission = buildMissionFromProject(winnerProject, winner.score);
 
   const alternatives: AlternativeConsidered[] = scored.slice(1).map((entry) => ({

@@ -6,6 +6,7 @@ import { MissionSidebar } from "@/components/mission/MissionSidebar";
 import { MissionDone } from "@/components/mission/MissionDone";
 import { TaskChecklist } from "@/components/mission/TaskChecklist";
 import { DailyUseStrip } from "@/components/daily/DailyUseStrip";
+import { OnboardingBanner } from "@/components/onboarding/OnboardingBanner";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { askGigi } from "@/modules/conversation/conversationBrain";
 import { getRefinedMissionPageMeta } from "@/modules/dailyUseRefinement";
@@ -22,6 +23,7 @@ export function MissionPageContent() {
   const {
     state,
     isHydrated,
+    isOnboardingComplete,
     execution,
     startMission,
     completeMission,
@@ -55,6 +57,7 @@ export function MissionPageContent() {
           meta={getRefinedMissionPageMeta("completed")}
           right={badge}
         />
+        {!isOnboardingComplete && <OnboardingBanner />}
         <DailyUseStrip />
         <MissionDone
           completedTitle={mission.title}
@@ -70,6 +73,7 @@ export function MissionPageContent() {
     return (
       <div className="animate-fade-in">
         <PageHeader title="Mission du jour" meta={getRefinedMissionPageMeta(mission.status)} right={badge} />
+        {!isOnboardingComplete && <OnboardingBanner />}
         <DailyUseStrip />
         <div className="max-w-2xl">
           <MissionCard
@@ -90,6 +94,7 @@ export function MissionPageContent() {
   return (
     <div className="animate-fade-in">
       <PageHeader title="Mission du jour" meta={meta} right={badge} />
+      {!isOnboardingComplete && <OnboardingBanner />}
       <DailyUseStrip />
 
       <div className="grid gap-4 lg:grid-cols-3 lg:items-start">

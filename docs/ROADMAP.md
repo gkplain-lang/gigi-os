@@ -99,6 +99,7 @@ V1.1 — Daily Use Improvements
 V1.2 — Visual Polish
 V1.2.1 — Accent Dim Fix
 V1.3 — Daily Use Refinement
+V1.4 — Onboarding & First Run
 V2.0 — Multi-user SaaS
 ```
 
@@ -887,7 +888,58 @@ See [V1_3_DAILY_USE_REFINEMENT.md](./V1_3_DAILY_USE_REFINEMENT.md) for full deta
 
 ---
 
-# 17. V2.0 — SaaS Version
+# 17. V1.4 — Onboarding & First Run
+
+## Goal
+
+Guide first-time users from “I don't know what to do” to “Gigi knows my projects and proposes a first mission.”
+
+## Core Question
+
+```text
+Does a new user understand Gigi and get a first mission in under 2 minutes?
+```
+
+## Features
+
+```text
+Onboarding module (modules/onboarding/)
+Five-step wizard at /onboarding (welcome, projects, goals, work style, first mission)
+Local-only storage in gigi-os-v03-state (onboarding field)
+Discrete banner on / when onboarding incomplete
+Sidebar link "Premiers pas" when incomplete
+First mission via local decision engine or /conversation?ask=
+Legacy users auto-complete onboarding (soft migration)
+Dev diagnostics at /dev/onboarding
+Documentation (ONBOARDING_FIRST_RUN.md)
+```
+
+## Not in V1.4
+
+```text
+SaaS, payment, public landing
+Real integrations (n8n, GitHub, Gmail, Calendar)
+Automatic Supabase sync or restore
+Palette or design overhaul
+Account required
+```
+
+## Acceptance Criteria
+
+V1.4 is complete when:
+
+- new users can complete onboarding locally;
+- completed onboarding hides banner and sidebar link;
+- first mission works without OpenAI (local fallback);
+- existing users are not forced through onboarding;
+- dry-run guardrails remain enforced;
+- npm run build passes.
+
+See [ONBOARDING_FIRST_RUN.md](./ONBOARDING_FIRST_RUN.md) for full details.
+
+---
+
+# 18. V2.0 — SaaS Version
 
 ## Goal
 
