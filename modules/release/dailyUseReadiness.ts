@@ -1,6 +1,8 @@
 import type { DailyUseReadiness } from "./types";
 
-export const V10_PROMISE = "Ouvre Gigi. Sache quoi faire. Exécute.";
+import { PRODUCT_PROMISE } from "@/lib/branding";
+
+export const V10_PROMISE = PRODUCT_PROMISE;
 
 export const V10_NO_AUTO_EXTERNAL_MESSAGE =
   "V1.0 — usage quotidien : aucune action externe automatique. Garde-fous dry-run conservés.";

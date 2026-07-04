@@ -11,7 +11,7 @@ export const SUGGESTED_PROJECT_IDS = [
 export type SuggestedProjectId = (typeof SUGGESTED_PROJECT_IDS)[number];
 
 export const SUGGESTED_PROJECT_LABELS: Record<SuggestedProjectId, string> = {
-  "gigi-os": "Gigi OS",
+  "gigi-os": "Aegis",
   "buildy-crafts": "Buildy Crafts",
   "buildy-clear": "Buildy Clear",
   linko: "Linko",

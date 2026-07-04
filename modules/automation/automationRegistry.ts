@@ -32,7 +32,7 @@ export const DRY_RUN_AUTOMATION_LABELS: Record<DryRunAutomationType, string> = {
   weekly_project_review: "Revue hebdomadaire des projets",
   buildy_crafts_library_update_plan: "Plan MAJ bibliothèque Buildy Crafts",
   buildy_clear_launch_checklist: "Checklist lancement Buildy Clear",
-  gigi_os_git_branch_plan: "Plan branche Git Gigi OS",
+  gigi_os_git_branch_plan: "Plan branche Git Aegis",
   n8n_agent_plan: "Plan agent n8n (sans connexion)",
   content_publication_plan: "Plan publication contenu",
   supabase_backup_plan: "Plan backup Supabase",

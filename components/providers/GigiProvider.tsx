@@ -128,7 +128,7 @@ export function GigiProvider({ children }: { children: ReactNode }) {
         createHistoryEntry(
           "data_reset",
           "Données locales réinitialisées.",
-          "Gigi est revenu à l'état initial."
+          "Aegis est revenu à l'état initial."
         ),
         ...initial.history,
       ],
