@@ -29,6 +29,7 @@ export async function callOpenAiBrainProvider(
         requestedProjectId: request.requestedProjectId,
         requestedProjectName: request.requestedProjectName,
         intentLock: request.intentLock,
+        memoryContext: request.memoryContext,
       }),
     });
 

@@ -104,6 +104,7 @@ Pas de nouvelle entrée dans la navigation principale.
 | V0.5+ | Auto-sync opt-in après validation |
 | V0.5+ | Notifications backup recommandé |
 | V0.5+ | Résolution conflits guidée dans l'app |
+| **V0.5.2** | Statut mémoire résumé dans le contexte IA — voir `docs/AI_MEMORY_CONTEXT.md` |
 
 ---
 
