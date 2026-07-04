@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Target, MessageCircle, Layers, Compass, Clock } from "lucide-react";
 import { APP_NAME, NAV_ITEMS } from "@/lib/constants";
-import { GigiOrb } from "./GigiOrb";
+import { AegisMark } from "@/components/brand/AegisMark";
 import { LocalResetButton } from "./LocalResetButton";
 import { AuthAccountStrip } from "./AuthAccountStrip";
 import { MemoryStatusStrip } from "@/components/memory/MemoryStatusStrip";
@@ -67,7 +67,7 @@ export function SideNav() {
   return (
     <aside className="sticky top-0 hidden h-screen w-[260px] shrink-0 flex-col border-r border-border bg-bg-sidebar px-4 py-5 lg:flex">
       <div className="flex items-center gap-2.5 px-2 pb-5">
-        <GigiOrb size="sm" />
+        <AegisMark size="sm" />
         <span className="font-display text-[16px] tracking-tight text-text-primary">
           {APP_NAME}
         </span>

@@ -1,7 +1,7 @@
 "use client";
 
 import { APP_NAME } from "@/lib/constants";
-import { GigiOrb } from "./GigiOrb";
+import { AegisMark } from "@/components/brand/AegisMark";
 import { SideNav } from "./SideNav";
 import { BottomNav } from "./BottomNav";
 import { AuthMobileLink } from "./AuthAccountStrip";
@@ -20,7 +20,7 @@ export function AppShell({ children }: AppShellProps) {
         <div className="flex min-w-0 flex-1 flex-col">
           {/* Mobile identity bar */}
           <header className="flex items-center gap-2.5 border-b border-border px-5 py-4 lg:hidden">
-            <GigiOrb size="sm" />
+            <AegisMark size="sm" />
             <span className="font-display text-[16px] tracking-tight text-text-primary">
               {APP_NAME}
             </span>
