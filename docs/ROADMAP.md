@@ -103,6 +103,7 @@ V1.4 — Onboarding & First Run
 V1.6 — Project Detail & Mission Suggestions
 V1.7 — Action Plan Builder
 V1.8 — Controlled Action Preparation
+V1.9 — Action Queue & Validation Center
 V2.0 — Multi-user SaaS
 ```
 
@@ -1089,7 +1090,56 @@ See [CONTROLLED_ACTION_PREPARATION.md](./CONTROLLED_ACTION_PREPARATION.md) for f
 
 ---
 
-# 21. V2.0 — SaaS Version
+# 21. V1.9 — Action Queue & Validation Center
+
+## Goal
+
+Local queue of prepared actions the user can review, copy, and mark as validated — no real execution.
+
+## Core Question
+
+```text
+Can the user see and validate all prepared actions in one place?
+```
+
+## Features
+
+```text
+Local action queue module (modules/actionQueue/)
+Storage key gigi-os-v19-action-queue (new, documented)
+Page /actions with filters by status and project
+QueuedActionCard with validate / reject / revise / copy
+AddToQueueButton on PreparedActionPanel and conversation
+Bulk add from action plan future actions
+Navigation link Actions
+Documentation (ACTION_QUEUE_VALIDATION_CENTER.md)
+```
+
+## Not in V1.9
+
+```text
+Real execution after approval
+Git branch creation
+External API calls
+Supabase sync or restore
+Modification of existing localStorage keys
+Payments, landing
+```
+
+## Acceptance Criteria
+
+V1.9 is complete when:
+
+- user can add prepared actions to local queue;
+- /actions shows filtered list with status changes;
+- validate/reject only updates local status;
+- npm run build passes (29+ routes).
+
+See [ACTION_QUEUE_VALIDATION_CENTER.md](./ACTION_QUEUE_VALIDATION_CENTER.md) for full details.
+
+---
+
+# 22. V2.0 — SaaS Version
 
 ## Goal
 

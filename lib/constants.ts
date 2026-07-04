@@ -4,6 +4,7 @@ export const NAV_ITEMS = [
   { href: "/", label: "Mission", icon: "target" as const },
   { href: "/conversation", label: "Gigi", icon: "message" as const },
   { href: "/projects", label: "Projets", icon: "layers" as const },
+  { href: "/actions", label: "Actions", icon: "actions" as const },
   { href: "/brain", label: "Décision", icon: "brain" as const },
   { href: "/history", label: "Historique", icon: "clock" as const },
 ] as const;
@@ -23,6 +24,10 @@ export const PAGE_META = {
   "/projects": {
     title: "Projets",
     subtitle: "Pour te situer — Gigi a déjà tranché.",
+  },
+  "/actions": {
+    title: "Actions à valider",
+    subtitle: "Actions préparées par Gigi — aucune exécution automatique.",
   },
   "/brain": {
     title: "Décision",
