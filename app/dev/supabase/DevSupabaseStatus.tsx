@@ -303,6 +303,18 @@ export function DevSupabaseStatus() {
         >
           Dev · Persistence →
         </Link>
+        <Link
+          href="/dev/controls"
+          style={{
+            display: "inline-block",
+            marginTop: 10,
+            fontSize: 13,
+            color: "#71767f",
+            textDecoration: "none",
+          }}
+        >
+          Dev · Controls →
+        </Link>
       </div>
     </>
   );

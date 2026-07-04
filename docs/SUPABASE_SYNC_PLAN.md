@@ -91,12 +91,12 @@ Restore guidé avec consentement : **V0.4.6** (voir `docs/PERSISTENCE_STRATEGY.m
 
 ---
 
-## 7. Plan V0.4.6 — Migration / restore guidé
+## 7. Plan V0.4.6 — Backup & restore manuels ✅
 
-- UI de comparaison local vs remote détaillée
-- Import sélectif (projets, missions, historique)
-- Première écriture localStorage depuis Supabase **avec consentement**
-- Journal de migration dans `history_events`
+- Module `modules/persistence/manualControls/`
+- Page `/dev/controls`
+- Backup local + restore manuel avec confirmation
+- Voir `docs/MANUAL_BACKUP_RESTORE.md`
 
 ---
 

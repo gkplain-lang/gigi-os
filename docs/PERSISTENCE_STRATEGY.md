@@ -135,13 +135,13 @@ Module : `modules/persistence/`
 
 ---
 
-## 8. Plan V0.4.6 — Restore guidé
+## 8. Plan V0.4.6 — Restore guidé ✅
 
-- UI de comparaison détaillée local vs remote
-- Bouton « Restaurer depuis Supabase » avec confirmation
-- Import sélectif (projets, missions, historique)
-- Écriture localStorage **uniquement** après consentement
-- Journal de migration dans `history_events`
+- Page `/dev/controls` — backup local + restore manuel
+- Backup obligatoire avant restore
+- Phrase de confirmation : `RESTAURER DEPUIS SUPABASE`
+- Mapping Supabase → local validé avant écriture
+- Voir `docs/MANUAL_BACKUP_RESTORE.md`
 
 ---
 

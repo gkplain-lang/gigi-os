@@ -19,3 +19,5 @@ export {
 } from "./persistenceStrategy";
 
 export { usePersistenceDiagnostic } from "./usePersistenceDiagnostic";
+
+export * from "./manualControls";

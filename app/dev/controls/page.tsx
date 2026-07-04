@@ -1,10 +1,10 @@
 "use client";
 
-import { DevSyncPanel } from "./DevSyncPanel";
+import { DevControlsPanel } from "./DevControlsPanel";
 
 const IS_PROD = process.env.NODE_ENV === "production";
 
-export default function DevSyncPage() {
+export default function DevControlsPage() {
   if (IS_PROD) {
     return (
       <div style={{ padding: "2rem", color: "#a1a1aa", fontFamily: "system-ui" }}>
@@ -25,42 +25,19 @@ export default function DevSyncPage() {
     >
       <div style={{ maxWidth: 560, margin: "0 auto" }}>
         <p style={{ fontSize: 12, letterSpacing: 1, textTransform: "uppercase", color: "#71767f" }}>
-          Dev · Sync
+          Dev · Controls
         </p>
         <h1 style={{ fontSize: 22, fontWeight: 600, marginTop: 6 }}>
-          Synchronisation Supabase
+          Backup &amp; restore manuels
         </h1>
 
-        <DevSyncPanel />
+        <DevControlsPanel />
 
         <p style={{ marginTop: 18, fontSize: 13, lineHeight: 1.6, color: "#71767f" }}>
-          V0.4.4 prépare la synchronisation. localStorage reste la source principale (
+          V0.4.6 ajoute des contrôles manuels sécurisés. Aucune sync ni restauration
+          automatique. localStorage reste la source principale (
           <code style={{ color: "#a1a1aa" }}>gigi-os-v03-state</code>).
         </p>
-        <a
-          href="/dev/persistence"
-          style={{
-            display: "inline-block",
-            marginTop: 10,
-            fontSize: 13,
-            color: "#71767f",
-            textDecoration: "none",
-          }}
-        >
-          Dev · Persistence →
-        </a>
-        <a
-          href="/dev/controls"
-          style={{
-            display: "inline-block",
-            marginTop: 10,
-            fontSize: 13,
-            color: "#71767f",
-            textDecoration: "none",
-          }}
-        >
-          Dev · Controls →
-        </a>
       </div>
     </main>
   );

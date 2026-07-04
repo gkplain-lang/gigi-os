@@ -263,6 +263,12 @@ export function DevPersistencePanel() {
         >
           Dev · Supabase →
         </Link>
+        <Link
+          href="/dev/controls"
+          style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}
+        >
+          Dev · Controls →
+        </Link>
       </div>
     </>
   );
