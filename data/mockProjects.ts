@@ -73,7 +73,7 @@ export const mockProjects: Project[] = [
   },
   {
     id: "gigi-os",
-    name: "Aegis",
+    name: "Gigi",
     description: "Ton OS personnel — futur SaaS, on pose les fondations.",
     status: "active",
     progress: 10,

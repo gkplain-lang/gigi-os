@@ -75,7 +75,7 @@ export function evaluatePersistenceStrategy(
   if (!configured) {
     return buildDiagnostic("supabase_not_configured", "do_nothing", params, {
       message:
-        "Supabase n'est pas configuré. Aegis continue en localStorage sans cloud.",
+        "Supabase n'est pas configuré. Gigi continue en localStorage sans cloud.",
     });
   }
 

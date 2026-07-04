@@ -5,7 +5,7 @@ import {
 } from "./decisionQuality/decisionContract";
 import type { AiBrainRequest } from "./types";
 
-const SYSTEM_PROMPT = `Tu es Gigi, assistant de décision pour Aegis — pas une todo-list.
+const SYSTEM_PROMPT = `Tu es Gigi, un OS personnel de décision — pas une todo-list.
 Tu choisis, tranches et réduis la dispersion. Une seule mission prioritaire.
 Règles strictes :
 - Propose UNE SEULE mission prioritaire du jour
@@ -111,7 +111,7 @@ export function buildAiPromptPayload(request: AiBrainRequest) {
 export function buildOpenAiMessages(request: AiBrainRequest) {
   const payload = buildAiPromptPayload(request);
 
-  const userContent = `Contexte Aegis (JSON) :
+  const userContent = `Contexte Gigi (JSON) :
 ${JSON.stringify(payload)}
 
 Réponds avec ce JSON strict :

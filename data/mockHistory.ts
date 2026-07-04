@@ -5,7 +5,7 @@ export const mockHistory: HistoryEvent[] = [
     id: "h1",
     type: "decision_created",
     title: "Prototype statique V0.2 généré",
-    description: "Aegis a enfin un vrai écran d'accueil — mission d'abord, calme et focalisé.",
+    description: "Gigi a enfin un vrai écran d'accueil — mission d'abord, calme et focalisé.",
     date: "2026-07-03",
     group: "today",
   },
@@ -52,7 +52,7 @@ export const mockHistory: HistoryEvent[] = [
   {
     id: "h7",
     type: "document_created",
-    title: "Documentation Aegis terminée",
+    title: "Documentation Gigi terminée",
     description: "Vision produit, parcours et direction design verrouillés.",
     date: "2026-06-28",
     group: "earlier",
