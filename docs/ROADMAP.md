@@ -104,7 +104,10 @@ V1.6 — Project Detail & Mission Suggestions
 V1.7 — Action Plan Builder
 V1.8 — Controlled Action Preparation
 V1.9 — Action Queue & Validation Center
-V2.0 — Multi-user SaaS
+V2.0 — Controlled Execution Bridge
+V2.1 — Execution Logs (planned)
+V2.2 — Cursor/Git Workflow Assistant (planned)
+V2.3 — Multi-user SaaS (planned)
 ```
 
 ---
@@ -1139,11 +1142,58 @@ See [ACTION_QUEUE_VALIDATION_CENTER.md](./ACTION_QUEUE_VALIDATION_CENTER.md) for
 
 ---
 
-# 22. V2.0 — SaaS Version
+# 22. V2.0 — Controlled Execution Bridge
 
 ## Goal
 
-Turn Gigi OS into a product for other entrepreneurs.
+When an action is validated in `/actions`, generate a secure local execution plan — no real execution.
+
+## Core Question
+
+```text
+Can the user go from "this action is approved" to "here is exactly how to execute it safely"?
+```
+
+## Features
+
+```text
+Execution plans module (modules/executionPlans/)
+Rules per PreparedAction type (cursor, checklist, branch, PR, content, file draft)
+/actions: "Prepare execution" button for approved actions only
+ExecutionPlanPanel with steps, copyable commands, tests, risks, rollback
+Conversation intent execution_plan
+Optional storage key gigi-os-v20-execution-plans
+Documentation (CONTROLLED_EXECUTION_BRIDGE.md)
+```
+
+## Not in V2.0
+
+```text
+Real execution (files, Git, commands, agents)
+GitHub / Supabase / n8n calls
+Automatic status change to "executed"
+Modification of existing localStorage keys (v03, v04, v09, v19)
+Payments, landing, branding changes
+```
+
+## Acceptance Criteria
+
+V2.0 is complete when:
+
+- approved actions in /actions can generate an ExecutionPlan;
+- commands are display-only (copy, never run);
+- conversation answers execution-plan requests without pretending to execute;
+- npm run build passes.
+
+See [CONTROLLED_EXECUTION_BRIDGE.md](./CONTROLLED_EXECUTION_BRIDGE.md). Links forward to V2.1 Execution Logs and V2.2 Cursor/Git Workflow Assistant.
+
+---
+
+# 23. V2.3 — SaaS Version (planned)
+
+## Goal
+
+Turn Gigi into a product for other entrepreneurs.
 
 ## Core Question
 
@@ -1181,7 +1231,7 @@ Team plan
 
 ## Acceptance Criteria
 
-V2.0 is complete when:
+V2.3 is complete when:
 
 - users can sign up;
 - users can pay;
