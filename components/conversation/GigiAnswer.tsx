@@ -5,7 +5,9 @@ import { ChevronDown } from "lucide-react";
 import type { GigiConversationResponse } from "@/modules/conversation/conversationTypes";
 import { GigiOrb } from "@/components/ui/GigiOrb";
 import { ActionProposalCard } from "./ActionProposalCard";
+import { AutomationProposalCard } from "./AutomationProposalCard";
 import { V062_NO_EXTERNAL_MESSAGE } from "@/modules/agents/confirmation";
+import { V07_NO_EXECUTION_MESSAGE } from "@/modules/automation";
 
 interface GigiAnswerProps {
   response: GigiConversationResponse;
@@ -15,6 +17,25 @@ interface GigiAnswerProps {
 function Label({ children }: { children: React.ReactNode }) {
   return (
     <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">{children}</p>
+  );
+}
+
+function AutomationProposalsSection({ response }: { response: GigiConversationResponse }) {
+  if (!response.automationProposals?.length) return null;
+
+  return (
+    <div className="gigi-panel mt-3 rounded-xl p-4">
+      <Label>Automatisation proposée (dry-run)</Label>
+      {response.automationBlockedMessage && (
+        <p className="mt-2 text-[12.5px] leading-relaxed text-amber-200/90">
+          {response.automationBlockedMessage}
+        </p>
+      )}
+      {response.automationProposals.map((proposal) => (
+        <AutomationProposalCard key={proposal.id} proposal={proposal} />
+      ))}
+      <p className="mt-2.5 text-[11px] text-text-muted/70">V0.7 — {V07_NO_EXECUTION_MESSAGE}</p>
+    </div>
   );
 }
 
@@ -113,6 +134,7 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
                 </p>
               )}
             </div>
+            <AutomationProposalsSection response={response} />
             <ActionProposalsSection response={response} />
           </>
         ) : (
@@ -184,6 +206,23 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
                     ))}
                   </ul>
                 )}
+              </div>
+            )}
+
+            {response.automationProposals && response.automationProposals.length > 0 && (
+              <div className="p-4">
+                <Label>Automatisation proposée (dry-run)</Label>
+                {response.automationBlockedMessage && (
+                  <p className="mt-2 text-[12.5px] leading-relaxed text-amber-200/90">
+                    {response.automationBlockedMessage}
+                  </p>
+                )}
+                {response.automationProposals.map((proposal) => (
+                  <AutomationProposalCard key={proposal.id} proposal={proposal} />
+                ))}
+                <p className="mt-2.5 text-[11px] text-text-muted/70">
+                  V0.7 — {V07_NO_EXECUTION_MESSAGE}
+                </p>
               </div>
             )}
 

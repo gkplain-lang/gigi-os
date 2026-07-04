@@ -583,23 +583,24 @@ V0.6 is complete when:
 
 ## Goal
 
-Prepare the system for future automation without connecting everything yet.
+Prepare controlled automation architecture without connecting external systems.
 
 ## Core Question
 
 ```text
-Is the architecture ready for agents and integrations?
+Can Gigi recognize automation requests and produce safe dry-run plans?
 ```
 
 ## Features
 
 ```text
-Automation module specification
-Integration abstraction layer
-Event system
-Action queue
-Webhook preparation
-Agent task format
+Automation module (modules/automation/)
+Automation Proposal (dry-run only)
+Intent detection (schedule, triggers, surveillance)
+Integration with Action Proposals V0.6
+AutomationProposalCard in /conversation
+Dev page /dev/automation
+Documentation (AUTOMATION_PREPARATION.md)
 ```
 
 ## Not Yet Connected
@@ -613,18 +614,24 @@ GitHub
 Drive
 n8n
 Stripe
+Supabase sync/restore (automatic)
 ```
 
-The goal is architecture preparation only.
+The goal is architecture preparation only — plans, permissions, risks, confirmation UX.
 
 ## Acceptance Criteria
 
 V0.7 is complete when:
 
-- future integrations have a clean structure;
-- events can trigger internal actions;
-- agent task format exists;
-- automation logic does not pollute core modules.
+- automation requests produce Automation Proposals (dry-run);
+- forbidden real automations are blocked with clear messaging;
+- action vs automation routing works in the AI pipeline;
+- /conversation displays triggers, permissions, steps, and risks;
+- /dev/automation documents available and forbidden automations;
+- npm run build passes;
+- no external API calls, no n8n, no real scheduling.
+
+See [AUTOMATION_PREPARATION.md](./AUTOMATION_PREPARATION.md) for full details.
 
 ---
 

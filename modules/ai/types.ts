@@ -9,6 +9,7 @@ import type {
 import type { AiMemoryContext } from "./memoryContext/types";
 import type { DecisionQualityReport } from "./decisionQuality/types";
 import type { ActionProposal } from "@/modules/agents/types";
+import type { AutomationProposal } from "@/modules/automation/types";
 import type { DailyReviewSnapshot } from "@/modules/dailyReview/types";
 import type { HistoryEvent } from "@/modules/history/historyTypes";
 import type { MissionExecutionHints } from "@/modules/missionExecution/types";
@@ -93,6 +94,8 @@ export interface AiBrainResponse {
   decisionQuality?: DecisionQualityReport;
   /** V0.6 — dry-run action proposals, never auto-executed */
   actionProposals?: ActionProposal[];
+  /** V0.7 — dry-run automation proposals, never scheduled or executed */
+  automationProposals?: AutomationProposal[];
   /** V0.6.1 — read-only daily review */
   dailyReview?: DailyReviewSnapshot;
 }
