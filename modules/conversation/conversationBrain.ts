@@ -11,6 +11,12 @@ import {
   detectActionPlanIntent,
   getActionPlanStepsAsTasks,
 } from "@/modules/actionPlans";
+import {
+  PREPARED_ACTION_DRY_RUN_MESSAGE,
+  buildPreparedActionForProject,
+  detectPreparedActionIntent,
+} from "@/modules/preparedActions";
+import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions/types";
 import type {
   ConversationContext,
   ConversationIntent,
@@ -311,6 +317,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   unclear: "Je veux être sûr de bien comprendre",
   general: "J'ai regardé tes projets",
   action_plan: "Plan d'action",
+  prepared_action: "Action préparée",
 };
 
 function clarificationResponse(): GigiConversationResponse {
@@ -347,6 +354,35 @@ function allDoneResponse(
 }
 
 // ---------------------------------------------------------------- main
+
+function buildPreparedActionResponse(
+  projectId: string,
+  type: import("@/modules/preparedActions/types").PreparedActionType | null
+): GigiConversationResponse {
+  const projectName = PROJECT_NAMES[projectId] ?? projectId;
+  const resolvedType = type ?? undefined;
+  const plan = buildActionPlanForProject(projectId, projectName);
+  const prepared = buildPreparedActionForProject(projectId, projectName, resolvedType ?? null, {
+    plan: plan ?? undefined,
+    sourceActionId: plan?.possibleFutureActions[0]?.id,
+  });
+
+  const typeLabel = PREPARED_ACTION_TYPE_LABELS[prepared.type];
+
+  return {
+    intent: "prepared_action",
+    intentLabel: `${INTENT_LABELS.prepared_action} · ${typeLabel} · ${projectName}`,
+    listen: `Voici l'action préparée — ${typeLabel.toLowerCase()} prêt à copier-coller, sans exécution.`,
+    needsClarification: false,
+    priorityProjectName: projectName,
+    missionTitle: prepared.target ?? prepared.title,
+    why: prepared.summary,
+    preparedAction: prepared,
+    preparedActionBlockedMessage: PREPARED_ACTION_DRY_RUN_MESSAGE,
+    actionPlan: plan ?? undefined,
+    finalMessage: "Valide, copie, puis exécute toi-même — Gigi ne lance rien.",
+  };
+}
 
 function buildActionPlanResponse(
   objective: string,
@@ -391,6 +427,29 @@ export function askGigi(
   _projects: unknown,
   context: ConversationContext = {}
 ): GigiConversationResponse {
+  const preparedIntent = detectPreparedActionIntent(objective);
+  if (preparedIntent.isPreparedAction) {
+    const projectId =
+      preparedIntent.projectId ??
+      context.currentProjectId ??
+      detectProject(normalize(objective));
+    if (projectId) {
+      return buildPreparedActionResponse(projectId, preparedIntent.type);
+    }
+    return {
+      intent: "prepared_action",
+      intentLabel: INTENT_LABELS.prepared_action,
+      listen: "Tu veux une action préparée — dis-moi sur quel projet et quel type.",
+      needsClarification: true,
+      clarificationQuestion: "Quelle action préparer ?",
+      choices: [
+        { label: "Prompt Cursor · Buildy Clear", prompt: "Gigi, prépare le prompt Cursor pour Buildy Clear" },
+        { label: "Checklist · Buildy Crafts", prompt: "Gigi, fais-moi une checklist pour Buildy Crafts" },
+        { label: "Branche · Gigi OS", prompt: "Gigi, prépare la branche pour Gigi OS" },
+      ],
+    };
+  }
+
   const planIntent = detectActionPlanIntent(objective);
   if (planIntent.isActionPlan) {
     const projectId =
@@ -534,6 +593,7 @@ export function askGigi(
     general: "Le reste peut attendre.",
     unclear: "",
     action_plan: "Valide chaque étape avant d'exécuter.",
+    prepared_action: "Valide, copie, puis exécute toi-même.",
   };
 
   return {

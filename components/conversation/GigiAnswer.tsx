@@ -8,6 +8,7 @@ import { ActionProposalCard } from "./ActionProposalCard";
 import { AutomationProposalCard } from "./AutomationProposalCard";
 import { IntegrationProposalCard } from "./IntegrationProposalCard";
 import { ActionPlanPanel } from "@/components/actionPlans/ActionPlanPanel";
+import { PreparedActionPanel } from "@/components/preparedActions/PreparedActionPanel";
 import { V062_NO_EXTERNAL_MESSAGE } from "@/modules/agents/confirmation";
 import { V07_NO_EXECUTION_MESSAGE } from "@/modules/automation";
 import { V08_NO_API_MESSAGE } from "@/modules/integrations";
@@ -139,6 +140,28 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
                 </button>
               ))}
             </div>
+          </div>
+        ) : response.preparedAction ? (
+          <div className="mt-3 space-y-3">
+            {response.preparedActionBlockedMessage && (
+              <p className="text-[12.5px] leading-relaxed text-amber-200/90">
+                {response.preparedActionBlockedMessage}
+              </p>
+            )}
+            <PreparedActionPanel action={response.preparedAction} />
+            {response.actionPlan && (
+              <details className="gigi-panel rounded-xl p-3">
+                <summary className="cursor-pointer text-[12px] font-medium text-text-muted">
+                  Voir le plan d&apos;action associé
+                </summary>
+                <div className="mt-3">
+                  <ActionPlanPanel plan={response.actionPlan} compact />
+                </div>
+              </details>
+            )}
+            {response.finalMessage && (
+              <p className="text-[14px] font-medium text-text-primary">{response.finalMessage}</p>
+            )}
           </div>
         ) : response.actionPlan ? (
           <div className="mt-3 space-y-3">

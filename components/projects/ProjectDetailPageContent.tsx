@@ -53,6 +53,7 @@ export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContent
   const { state, isHydrated } = useGigi();
   const searchParams = useSearchParams();
   const planParam = searchParams.get("plan");
+  const prepareParam = searchParams.get("prepare");
 
   if (!isHydrated) return null;
 
@@ -183,7 +184,11 @@ export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContent
                   title="Plan d'action"
                   meta="Préparation locale — aucune exécution automatique."
                 />
-                <ActionPlanPanel plan={actionPlan} />
+                <ActionPlanPanel
+                  plan={actionPlan}
+                  projectName={project.name}
+                  initialPrepareId={prepareParam}
+                />
               </section>
             )}
 

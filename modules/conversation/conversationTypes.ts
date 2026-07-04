@@ -13,7 +13,8 @@ export type ConversationIntent =
   | "maintenance"
   | "unclear"
   | "general"
-  | "action_plan";
+  | "action_plan"
+  | "prepared_action";
 
 export interface NotNowItem {
   projectName: string;
@@ -70,6 +71,10 @@ export interface GigiConversationResponse {
   actionPlan?: import("../actionPlans/types").ActionPlan;
   /** V1.7 — reminder when plan is preparation-only */
   actionPlanBlockedMessage?: string;
+  /** V1.8 — prepared action artifact (dry-run only) */
+  preparedAction?: import("../preparedActions/types").PreparedAction;
+  /** V1.8 — reminder when prepared action is copy-only */
+  preparedActionBlockedMessage?: string;
 }
 
 export interface ConversationContext {

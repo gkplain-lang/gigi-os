@@ -1,16 +1,24 @@
 import type { ActionPlan } from "@/modules/actionPlans";
-import { PREPARED_ACTION_LABELS } from "@/modules/actionPlans";
+import { ActionPlanFutureActions } from "@/components/actionPlans/ActionPlanFutureActions";
 import { cn } from "@/lib/utils";
 
 const EFFORT_LABEL = { low: "Faible", medium: "Moyen", high: "Élevé" } as const;
 
 interface ActionPlanPanelProps {
   plan: ActionPlan;
+  projectName?: string;
+  initialPrepareId?: string | null;
   compact?: boolean;
   className?: string;
 }
 
-export function ActionPlanPanel({ plan, compact = false, className }: ActionPlanPanelProps) {
+export function ActionPlanPanel({
+  plan,
+  projectName = plan.projectId,
+  initialPrepareId,
+  compact = false,
+  className,
+}: ActionPlanPanelProps) {
   return (
     <section className={cn("gigi-command-card overflow-hidden", className)}>
       <div className="border-b border-border px-4 py-3 md:px-5">
@@ -101,30 +109,11 @@ export function ActionPlanPanel({ plan, compact = false, className }: ActionPlan
         )}
 
         {plan.possibleFutureActions.length > 0 && (
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
-              Ce que Gigi pourra préparer ensuite
-            </p>
-            <ul className="mt-2 space-y-2">
-              {plan.possibleFutureActions.map((action) => (
-                <li
-                  key={action.id}
-                  className="rounded-lg border border-dashed border-border px-3 py-2.5 text-[13px]"
-                >
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-medium text-text-primary">{action.label}</span>
-                    <span className="rounded bg-surface-2 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-text-muted">
-                      {PREPARED_ACTION_LABELS[action.type] ?? action.type}
-                    </span>
-                    <span className="rounded border border-amber-500/30 px-1.5 py-0.5 text-[10px] text-amber-200/80">
-                      validation requise
-                    </span>
-                  </div>
-                  <p className="mt-1 text-text-muted">{action.description}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ActionPlanFutureActions
+            plan={plan}
+            projectName={projectName}
+            initialPrepareId={initialPrepareId}
+          />
         )}
 
         {plan.validationRequired.length > 0 && (

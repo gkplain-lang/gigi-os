@@ -102,6 +102,7 @@ V1.3 — Daily Use Refinement
 V1.4 — Onboarding & First Run
 V1.6 — Project Detail & Mission Suggestions
 V1.7 — Action Plan Builder
+V1.8 — Controlled Action Preparation
 V2.0 — Multi-user SaaS
 ```
 
@@ -1040,7 +1041,55 @@ See [ACTION_PLAN_BUILDER.md](./ACTION_PLAN_BUILDER.md) for full details.
 
 ---
 
-# 20. V2.0 — SaaS Version
+# 20. V1.8 — Controlled Action Preparation
+
+## Goal
+
+Generate copy-ready prepared action artifacts from action plans — dry-run only, no real execution.
+
+## Core Question
+
+```text
+When the user asks to prepare a Cursor prompt or checklist, does Gigi deliver a ready-to-copy artifact?
+```
+
+## Features
+
+```text
+Local preparedActions module (modules/preparedActions/)
+Types: cursor_prompt, checklist, branch_plan, file_draft, content_plan, research_plan, collaborator_brief, pr_plan
+PreparedActionPanel with copy button
+ActionPlanFutureActions with "Préparer" buttons
+Query param ?prepare=sourceActionId on project detail
+Conversation intent prepared_action
+Documentation (CONTROLLED_ACTION_PREPARATION.md)
+```
+
+## Not in V1.8
+
+```text
+Real Git branch creation
+Real file writes
+Real agent or n8n execution
+Supabase sync or restore
+New localStorage keys
+Payments, landing
+```
+
+## Acceptance Criteria
+
+V1.8 is complete when:
+
+- action plan future actions show Prepare buttons;
+- prepared artifacts display with dry-run badges;
+- conversation recognizes prompt/checklist/branch requests;
+- npm run build passes.
+
+See [CONTROLLED_ACTION_PREPARATION.md](./CONTROLLED_ACTION_PREPARATION.md) for full details.
+
+---
+
+# 21. V2.0 — SaaS Version
 
 ## Goal
 
