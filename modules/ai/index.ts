@@ -12,6 +12,13 @@ export type {
   ProjectIntentLock,
 } from "./types";
 
+export type {
+  AiMemoryContext,
+  AiMemoryContextStats,
+  BuildAiMemoryContextParams,
+  ContextLimits,
+} from "./memoryContext";
+
 export { SAFE_AI_SAFETY } from "./types";
 
 export { getServerAiConfig, getPublicAiStatus } from "./aiConfig";
@@ -42,5 +49,12 @@ export type { AskAiBrainOptions } from "./aiBrain";
 
 export { detectRequestedProject, enrichAiBrainRequest } from "./projectIntent";
 export { applyProjectIntentGuard, pickCatalogMissionForProject } from "./projectIntentGuard";
+
+export {
+  buildAiMemoryContext,
+  tryBuildAiMemoryContext,
+  summarizeAiMemoryContext,
+  DEFAULT_CONTEXT_LIMITS,
+} from "./memoryContext";
 
 export { useAiAvailability } from "./useAiAvailability";

@@ -92,11 +92,13 @@ Règles :
 
 | Surface | Comportement |
 |---------|--------------|
-| `/conversation` | `askAiBrain()` + badge moteur discret |
+| `/conversation` | `askAiBrain()` + badge moteur discret + `memoryContext` V0.5.2 |
 | `/brain` | Badge IA disponible / local |
-| `/dev/ai` | Test provider + sécurité |
+| `/dev/ai` | Test provider + sécurité + résumé contexte mémoire |
 
 localStorage `gigi-os-v03-state` **inchangé** par l'IA.
+
+Voir **V0.5.2** : `docs/AI_MEMORY_CONTEXT.md` — contexte mémoire borné pour le prompt IA.
 
 ---
 
@@ -126,8 +128,9 @@ Les agents et automations arrivent après validation terrain (V0.5.2+).
 
 | Version | Objectif |
 |---------|----------|
-| V0.5.1 | Raffiner prompts + tests réels OpenAI |
-| V0.5.2 | Explications IA enrichies sur `/brain` |
+| V0.5.1 | Garde-fous projet explicite + tests OpenAI réels |
+| **V0.5.2** | **Contexte mémoire IA** — voir `docs/AI_MEMORY_CONTEXT.md` |
+| V0.5.3 | Affinage contexte + priorités dynamiques |
 | V0.6+ | Agents contrôlés avec confirmation explicite |
 
 ---
@@ -145,6 +148,9 @@ modules/ai/
   aiProvider.ts
   aiBrain.ts
   useAiAvailability.ts
+  memoryContext/          # V0.5.2
+  projectIntent.ts        # V0.5.1
+  projectIntentGuard.ts   # V0.5.1
   index.ts
 
 app/api/ai/status/route.ts
@@ -153,6 +159,7 @@ app/dev/ai/
 components/ai/AiEngineBadge.tsx
 .env.local.example
 docs/AI_BRAIN_FOUNDATION.md
+docs/AI_MEMORY_CONTEXT.md   # V0.5.2
 ```
 
 ---

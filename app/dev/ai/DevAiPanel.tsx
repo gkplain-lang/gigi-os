@@ -5,11 +5,14 @@ import Link from "next/link";
 import { useGigi } from "@/components/providers/GigiProvider";
 import {
   askAiBrain,
+  buildAiMemoryContext,
   detectRequestedProject,
   fetchAiAvailability,
+  summarizeAiMemoryContext,
   type AiBrainResponse,
 } from "@/modules/ai";
 import { AI_SAFETY_RULES_SUMMARY } from "@/modules/ai/safety";
+import { fetchRemoteSummaryForMemory, useMemoryStatus } from "@/modules/memory";
 
 const IS_PROD = process.env.NODE_ENV === "production";
 
@@ -34,6 +37,7 @@ function modeLabel(mode: AiBrainResponse["mode"]): string {
 
 export function DevAiPanel() {
   const { state, isHydrated } = useGigi();
+  const { memoryStatus } = useMemoryStatus();
   const [status, setStatus] = useState<Awaited<ReturnType<typeof fetchAiAvailability>> | null>(
     null
   );
@@ -41,8 +45,19 @@ export function DevAiPanel() {
   const [result, setResult] = useState<AiBrainResponse | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [includeRemoteSnapshot, setIncludeRemoteSnapshot] = useState(false);
+  const [lastContextStats, setLastContextStats] = useState(
+    summarizeAiMemoryContext(undefined)
+  );
 
   const detectedIntent = detectRequestedProject(input);
+
+  const previewContext = buildAiMemoryContext({
+    localState: state,
+    memoryStatus,
+    includeRemoteSnapshot: false,
+  });
+  const previewStats = summarizeAiMemoryContext(previewContext);
 
   useEffect(() => {
     void fetchAiAvailability().then(setStatus);
@@ -53,6 +68,24 @@ export function DevAiPanel() {
     setBusy(true);
     setError(null);
 
+    let remoteSnapshot = null;
+    if (includeRemoteSnapshot) {
+      const remote = await fetchRemoteSummaryForMemory();
+      if (remote.ok) {
+        remoteSnapshot = remote.remoteSummary;
+      } else {
+        setError(remote.error);
+      }
+    }
+
+    const memoryContext = buildAiMemoryContext({
+      localState: state,
+      memoryStatus,
+      remoteSnapshot,
+      includeRemoteSnapshot,
+    });
+    setLastContextStats(summarizeAiMemoryContext(memoryContext));
+
     const response = await askAiBrain({
       userMessage: input,
       currentMission: state.mission,
@@ -62,14 +95,20 @@ export function DevAiPanel() {
         type: h.type,
         date: h.date,
       })),
+      memoryStatus: {
+        mode: memoryStatus.mode,
+        label: memoryStatus.label,
+        lastBackupAt: memoryStatus.lastBackupAt,
+      },
       completedMissionIds: state.completedMissionIds,
       postponedMissionIds: state.postponedMissionIds,
       rejectedMissionIds: state.rejectedMissionIds,
+      memoryContext,
     });
 
     setResult(response);
     setBusy(false);
-  }, [input, isHydrated, state]);
+  }, [includeRemoteSnapshot, input, isHydrated, memoryStatus, state]);
 
   return (
     <>
@@ -111,6 +150,61 @@ export function DevAiPanel() {
             <dd>{status?.availability ?? "—"}</dd>
           </div>
         </dl>
+      </div>
+
+      <div
+        style={{
+          marginTop: 16,
+          border: "1px solid #2a2f38",
+          background: "#171a20",
+          borderRadius: 12,
+          padding: 20,
+        }}
+      >
+        <p
+          style={{
+            fontSize: 11,
+            letterSpacing: 1,
+            textTransform: "uppercase",
+            color: "#71767f",
+            marginBottom: 12,
+          }}
+        >
+          Contexte mémoire IA (aperçu)
+        </p>
+        <dl style={{ fontSize: 13, lineHeight: 1.8, color: "#a1a1aa" }}>
+          <div style={{ display: "flex", gap: 8 }}>
+            <dt style={{ color: "#71767f", minWidth: 200 }}>Contexte utilisé</dt>
+            <dd>{previewStats.hasContext ? "Oui" : "Non"}</dd>
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <dt style={{ color: "#71767f", minWidth: 200 }}>Projets dans contexte</dt>
+            <dd>{previewStats.projectsCount}</dd>
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <dt style={{ color: "#71767f", minWidth: 200 }}>Historique dans contexte</dt>
+            <dd>{previewStats.historyCount}</dd>
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <dt style={{ color: "#71767f", minWidth: 200 }}>Mission actuelle incluse</dt>
+            <dd>{previewStats.hasCurrentMission ? "Oui" : "Non"}</dd>
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <dt style={{ color: "#71767f", minWidth: 200 }}>Missions terminées (ids)</dt>
+            <dd>{previewStats.completedCount}</dd>
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <dt style={{ color: "#71767f", minWidth: 200 }}>Taille approximative</dt>
+            <dd>{previewStats.approximateSizeChars} car.</dd>
+          </div>
+        </dl>
+        {previewStats.warnings.length > 0 && (
+          <ul style={{ marginTop: 10, paddingLeft: 18, fontSize: 12, color: "#71767f" }}>
+            {previewStats.warnings.map((w) => (
+              <li key={w}>{w}</li>
+            ))}
+          </ul>
+        )}
       </div>
 
       <div
@@ -176,6 +270,14 @@ export function DevAiPanel() {
             {detectedIntent.requestedProjectId ?? "aucun projet verrouillé"}
           </span>
         </p>
+        <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "#71767f" }}>
+          <input
+            type="checkbox"
+            checked={includeRemoteSnapshot}
+            onChange={(e) => setIncludeRemoteSnapshot(e.target.checked)}
+          />
+          Inclure snapshot Supabase (dev uniquement, au moment du test)
+        </label>
         <button
           type="button"
           onClick={() => void runTest()}
@@ -192,7 +294,7 @@ export function DevAiPanel() {
             opacity: busy ? 0.6 : 1,
           }}
         >
-          {busy ? "Test…" : "Tester cerveau IA"}
+          {busy ? "Test…" : "Tester avec contexte mémoire"}
         </button>
         {error && <p style={{ marginTop: 10, fontSize: 13, color: "#c98f8f" }}>{error}</p>}
       </div>
@@ -231,6 +333,13 @@ export function DevAiPanel() {
           )}
           <p>
             Intent : <span style={{ color: "#f4f4f5" }}>{result.intent}</span>
+          </p>
+          <p>
+            Contexte mémoire au test :{" "}
+            <span style={{ color: "#f4f4f5" }}>
+              {lastContextStats.hasContext ? "oui" : "non"} · {lastContextStats.approximateSizeChars}{" "}
+              car. · remote {lastContextStats.includeRemoteSnapshot ? "oui" : "non"}
+            </span>
           </p>
           <p>
             Sécurité : {result.safety.level}

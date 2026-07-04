@@ -6,8 +6,9 @@ import { ArrowUp, Check, RefreshCw } from "lucide-react";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { AiEngineBadge } from "@/components/ai/AiEngineBadge";
-import { askAiBrain, aiBrainToGigiResponse, useAiAvailability } from "@/modules/ai";
+import { askAiBrain, aiBrainToGigiResponse, tryBuildAiMemoryContext, useAiAvailability } from "@/modules/ai";
 import type { AiBrainMode } from "@/modules/ai";
+import { useMemoryStatus } from "@/modules/memory";
 import type {
   ConversationContext,
   ConversationExchange,
@@ -24,6 +25,7 @@ const PROMPT_CHIPS = [
 export function ConversationPageContent() {
   const { state, isHydrated, applyRecommendedMission } = useGigi();
   const { isAiConfigured } = useAiAvailability();
+  const { memoryStatus } = useMemoryStatus();
   const [input, setInput] = useState("");
   const [exchanges, setExchanges] = useState<ConversationExchange[]>([]);
   const [brainMode, setBrainMode] = useState<AiBrainMode>("local_only");
@@ -44,6 +46,11 @@ export function ConversationPageContent() {
 
     setAsking(true);
 
+    const memoryContext = tryBuildAiMemoryContext({
+      localState: state,
+      memoryStatus,
+    });
+
     const aiResult = await askAiBrain(
       {
         userMessage: trimmed,
@@ -54,10 +61,16 @@ export function ConversationPageContent() {
           type: h.type,
           date: h.date,
         })),
+        memoryStatus: {
+          mode: memoryStatus.mode,
+          label: memoryStatus.label,
+          lastBackupAt: memoryStatus.lastBackupAt,
+        },
         completedMissionIds: state.completedMissionIds,
         postponedMissionIds: state.postponedMissionIds,
         rejectedMissionIds: state.rejectedMissionIds,
         conversationContext: context,
+        memoryContext,
       },
       { preferLocal: !isAiConfigured }
     );

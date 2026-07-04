@@ -436,6 +436,8 @@ No team accounts
 
 > **V0.5.0 (foundation)** — voir `docs/AI_BRAIN_FOUNDATION.md` pour l'implémentation actuelle : module `modules/ai/`, fallback local obligatoire, route `/api/ai/brain`, page `/dev/ai`.
 
+> **V0.5.2 (memory context)** — voir `docs/AI_MEMORY_CONTEXT.md` : contexte mémoire borné injecté dans le prompt IA, sans sync/restore automatique.
+
 ## Goal
 
 Add AI carefully to improve clarity and usefulness.

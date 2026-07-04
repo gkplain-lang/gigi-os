@@ -105,7 +105,7 @@ export function parseProviderJsonToAiBrain(
     return null;
   }
 
-  const safety = mergeSafety(parsed.safety, parsed.message);
+  const safety = mergeSafety(parsed.safety, parsed.message, request.memoryContext);
 
   const alternative = parsed.alternative
     ? {

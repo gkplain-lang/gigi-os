@@ -5,6 +5,7 @@ import type {
   AiSafetyLevel,
   AiSafetyResult,
 } from "./types";
+import type { AiMemoryContext } from "./memoryContext/types";
 
 const BLOCKED_PHRASES = [
   "envoyer un email",
@@ -17,8 +18,6 @@ const BLOCKED_PHRASES = [
   "n8n",
   "github api",
   "stripe",
-  "paiement",
-  "payment",
   "facturer",
   "webhook",
   "automatiser",
@@ -26,6 +25,14 @@ const BLOCKED_PHRASES = [
   "exécuter",
   "lancer l'agent",
   "launch agent",
+  "j'ai synchronisé",
+  "j ai synchronise",
+  "j'ai restauré",
+  "j ai restaure",
+  "synchronisation effectuée",
+  "restauration effectuée",
+  "restore automatique",
+  "sync automatique",
 ];
 
 const CONFIRMATION_PHRASES = [
@@ -87,7 +94,8 @@ export function evaluateTextSafety(text: string): AiSafetyResult {
 
 export function mergeSafety(
   parsed: AiProviderJsonResponse["safety"],
-  message: string
+  message: string,
+  memoryContext?: AiMemoryContext | null
 ): AiSafetyResult {
   const textSafety = evaluateTextSafety(message);
 
@@ -107,11 +115,17 @@ export function mergeSafety(
     blockedActions.add("external_action");
   }
 
+  const warnings = [...textSafety.warnings];
+
+  if (memoryContext?.memoryStatusSummary?.conflictDetected) {
+    warnings.push("Conflit mémoire local/Supabase — revue manuelle uniquement");
+  }
+
   return {
     level,
     requiresConfirmation: Boolean(parsed?.requiresConfirmation) || textSafety.requiresConfirmation,
     blockedActions: [...blockedActions],
-    warnings: [...textSafety.warnings],
+    warnings,
   };
 }
 
@@ -130,6 +144,7 @@ export const AI_SAFETY_RULES_SUMMARY = [
   "L'IA ne peut pas exécuter d'action",
   "Suggestions uniquement en V0.5",
   "Actions externes bloquées",
+  "Pas de sync ni restore automatique",
   "Une seule mission prioritaire",
   "Pas de suppression, paiement, publication ou email",
 ];

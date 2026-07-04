@@ -6,6 +6,7 @@ import type {
   NotNowItem,
   AlternativeSuggestion,
 } from "@/modules/conversation/conversationTypes";
+import type { AiMemoryContext } from "./memoryContext/types";
 
 export type AiAvailability = "not_configured" | "available" | "error";
 
@@ -59,6 +60,8 @@ export interface AiBrainRequest {
   requestedProjectId?: string | null;
   requestedProjectName?: string | null;
   intentLock?: ProjectIntentLock;
+  /** Bounded read-only memory context for AI prompts */
+  memoryContext?: AiMemoryContext;
 }
 
 export interface AiBrainResponse {
