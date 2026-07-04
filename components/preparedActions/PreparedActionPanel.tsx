@@ -5,14 +5,26 @@ import { Check, Copy } from "lucide-react";
 import type { PreparedAction } from "@/modules/preparedActions";
 import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions";
 import { formatPreparedActionForCopy } from "@/modules/preparedActions";
+import { AddToQueueButton } from "@/components/preparedActions/AddToQueueButton";
 import { cn } from "@/lib/utils";
 
 interface PreparedActionPanelProps {
   action: PreparedAction;
+  projectName?: string;
+  sourcePlanId?: string;
+  sourceActionId?: string;
+  showQueueButton?: boolean;
   className?: string;
 }
 
-export function PreparedActionPanel({ action, className }: PreparedActionPanelProps) {
+export function PreparedActionPanel({
+  action,
+  projectName,
+  sourcePlanId,
+  sourceActionId,
+  showQueueButton = true,
+  className,
+}: PreparedActionPanelProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(async () => {
@@ -135,6 +147,16 @@ export function PreparedActionPanel({ action, className }: PreparedActionPanelPr
             Gigi n&apos;exécute rien — copie, valide, puis agis toi-même.
           </p>
         </div>
+
+        {showQueueButton && projectName && (
+          <AddToQueueButton
+            preparedAction={action}
+            projectId={action.projectId}
+            projectName={projectName}
+            sourcePlanId={sourcePlanId}
+            sourceActionId={sourceActionId}
+          />
+        )}
       </div>
     </section>
   );

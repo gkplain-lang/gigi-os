@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Target, MessageCircle, Layers, Compass, Clock } from "lucide-react";
+import { Target, MessageCircle, Layers, Compass, Clock, ClipboardList } from "lucide-react";
 import { NAV_ITEMS } from "@/lib/constants";
 import { GigiBrand } from "@/components/brand/GigiBrand";
 import { LocalResetButton } from "./LocalResetButton";
@@ -18,6 +18,7 @@ const iconMap = {
   target: Target,
   message: MessageCircle,
   layers: Layers,
+  actions: ClipboardList,
   brain: Compass,
   clock: Clock,
 } as const;

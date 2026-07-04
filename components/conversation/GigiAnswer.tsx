@@ -148,7 +148,10 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
                 {response.preparedActionBlockedMessage}
               </p>
             )}
-            <PreparedActionPanel action={response.preparedAction} />
+            <PreparedActionPanel
+              action={response.preparedAction}
+              projectName={response.priorityProjectName ?? response.preparedAction.projectId}
+            />
             {response.actionPlan && (
               <details className="gigi-panel rounded-xl p-3">
                 <summary className="cursor-pointer text-[12px] font-medium text-text-muted">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Geist } from "next/font/google";
 import { AppShell } from "@/components/ui/AppShell";
 import { GigiProvider } from "@/components/providers/GigiProvider";
+import { ActionQueueProvider } from "@/components/providers/ActionQueueProvider";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { PRODUCT_NAME, PRODUCT_TAGLINE, PRODUCT_DESCRIPTION } from "@/lib/branding";
 import "./globals.css";
@@ -31,9 +32,11 @@ export default function RootLayout({
     <html lang="fr" className={`${geistSans.variable} ${fraunces.variable} h-full antialiased`}>
       <body className="min-h-full">
         <GigiProvider>
-          <AuthProvider>
-            <AppShell>{children}</AppShell>
-          </AuthProvider>
+          <ActionQueueProvider>
+            <AuthProvider>
+              <AppShell>{children}</AppShell>
+            </AuthProvider>
+          </ActionQueueProvider>
         </GigiProvider>
       </body>
     </html>

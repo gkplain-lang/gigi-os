@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { ListPlus } from "lucide-react";
 import type { ActionPlan } from "@/modules/actionPlans";
 import { PREPARED_ACTION_LABELS } from "@/modules/actionPlans";
 import {
@@ -11,6 +13,7 @@ import {
 } from "@/modules/preparedActions";
 import { defaultTypeForProject } from "@/modules/preparedActions/preparedActionRules";
 import { PreparedActionPanel } from "@/components/preparedActions/PreparedActionPanel";
+import { useActionQueue } from "@/components/providers/ActionQueueProvider";
 
 interface ActionPlanFutureActionsProps {
   plan: ActionPlan;
@@ -24,6 +27,8 @@ export function ActionPlanFutureActions({
   initialPrepareId,
 }: ActionPlanFutureActionsProps) {
   const [expandedId, setExpandedId] = useState<string | null>(initialPrepareId ?? null);
+  const [bulkAdded, setBulkAdded] = useState(false);
+  const { addManyToQueue } = useActionQueue();
 
   if (plan.possibleFutureActions.length === 0) return null;
 
@@ -39,11 +44,39 @@ export function ActionPlanFutureActions({
         )
     : null;
 
+  const handleAddAllToQueue = () => {
+    const inputs = plan.possibleFutureActions.map((preview) => ({
+      preparedAction: buildPreparedActionFromPreview(plan, preview, projectName),
+      projectId: plan.projectId,
+      projectName,
+      sourcePlanId: plan.id,
+      sourceActionId: preview.id,
+    }));
+    const count = addManyToQueue(inputs);
+    if (count > 0) setBulkAdded(true);
+  };
+
   return (
     <div>
-      <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
-        Ce que Gigi peut préparer maintenant
-      </p>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+          Ce que Gigi peut préparer maintenant
+        </p>
+        <button
+          type="button"
+          onClick={handleAddAllToQueue}
+          disabled={bulkAdded}
+          className="gigi-btn gigi-focus inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11.5px] font-medium disabled:opacity-70"
+        >
+          <ListPlus className="h-3 w-3" />
+          {bulkAdded ? "Ajoutées à la file" : "Ajouter à la file"}
+        </button>
+      </div>
+      {bulkAdded && (
+        <Link href="/actions" className="gigi-focus mt-1 inline-block text-[11px] text-emerald-400/90 underline">
+          Voir la file de validation
+        </Link>
+      )}
       <ul className="mt-2 space-y-2">
         {plan.possibleFutureActions.map((action) => (
           <li
@@ -76,7 +109,12 @@ export function ActionPlanFutureActions({
 
       {preparedAction && (
         <div className="mt-4">
-          <PreparedActionPanel action={preparedAction} />
+          <PreparedActionPanel
+            action={preparedAction}
+            projectName={projectName}
+            sourcePlanId={plan.id}
+            sourceActionId={expandedId ?? undefined}
+          />
         </div>
       )}
     </div>
