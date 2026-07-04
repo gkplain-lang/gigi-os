@@ -106,8 +106,9 @@ V1.8 — Controlled Action Preparation
 V1.9 — Action Queue & Validation Center
 V2.0 — Controlled Execution Bridge
 V2.1 — Execution Logs & Manual Completion
-V2.2 — Cursor/Git Workflow Assistant (planned)
-V2.3 — Multi-user SaaS (planned)
+V2.2 — Execution Report Review
+V2.3 — Follow-up Action Generator (planned)
+V2.4 — Multi-user SaaS (planned)
 ```
 
 ---
@@ -1232,11 +1233,57 @@ V2.1 is complete when:
 - conversation guides user to /actions without pretending to verify;
 - npm run build passes.
 
-See [EXECUTION_LOGS_MANUAL_COMPLETION.md](./EXECUTION_LOGS_MANUAL_COMPLETION.md). Links forward to V2.2 Cursor/Git Workflow Assistant.
+See [EXECUTION_LOGS_MANUAL_COMPLETION.md](./EXECUTION_LOGS_MANUAL_COMPLETION.md). Links forward to V2.2 Execution Report Review.
 
 ---
 
-# 24. V2.3 — SaaS Version (planned)
+# 24. V2.2 — Execution Report Review
+
+## Goal
+
+Analyze V2.1 manual execution logs locally and recommend what to do next — no auto-verification.
+
+## Core Question
+
+```text
+Can Gigi help the user decide if execution is really done, blocked, or needs a follow-up?
+```
+
+## Features
+
+```text
+Execution reviews module (modules/executionReviews/)
+Storage key gigi-os-v22-execution-reviews
+Local review engine with decisions and confidence score
+ExecutionReviewPanel under manual tracking in /actions
+Conversation intent execution_review
+Copyable review formatter
+Documentation (EXECUTION_REPORT_REVIEW.md)
+```
+
+## Not in V2.2
+
+```text
+Real verification of repo, build, Git or GitHub
+Command execution or external API calls
+Modification of v19/v20/v21 localStorage keys
+Automatic queue status changes
+```
+
+## Acceptance Criteria
+
+V2.2 is complete when:
+
+- user can generate a review from an execution log in /actions;
+- review persists in gigi-os-v22-execution-reviews;
+- conversation guides or summarizes without pretending to verify;
+- npm run build passes.
+
+See [EXECUTION_REPORT_REVIEW.md](./EXECUTION_REPORT_REVIEW.md). Links forward to V2.3 Follow-up Action Generator.
+
+---
+
+# 25. V2.4 — SaaS Version (planned)
 
 ## Goal
 

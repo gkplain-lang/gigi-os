@@ -29,6 +29,14 @@ import {
   EXECUTION_LOG_MANUAL_DISCLAIMER,
   detectExecutionLogIntent,
 } from "@/modules/executionLogs";
+import {
+  EXECUTION_REVIEW_DECISION_LABELS,
+  EXECUTION_REVIEW_DISCLAIMER,
+  buildReviewGuidanceHints,
+  createReviewFromLog,
+  detectExecutionReviewIntent,
+  findBestLogForReview,
+} from "@/modules/executionReviews";
 import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions/types";
 import type {
   ConversationContext,
@@ -333,6 +341,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   prepared_action: "Action préparée",
   execution_plan: "Plan d'exécution",
   execution_log: "Journal d'exécution",
+  execution_review: "Review d'exécution",
 };
 
 function clarificationResponse(): GigiConversationResponse {
@@ -369,6 +378,42 @@ function allDoneResponse(
 }
 
 // ---------------------------------------------------------------- main
+
+function buildExecutionReviewResponse(
+  objective: string,
+  projectId: string | null
+): GigiConversationResponse {
+  const hints = buildReviewGuidanceHints(objective);
+  const log = findBestLogForReview(projectId);
+
+  if (log && log.entries.length > 0) {
+    const review = createReviewFromLog(log);
+    return {
+      intent: "execution_review",
+      intentLabel: `${INTENT_LABELS.execution_review} · ${log.projectName}`,
+      listen:
+        "Voici ce que je peux déduire de ton journal manuel — je n'ai pas vérifié le repo, Git ou le build réel.",
+      needsClarification: false,
+      priorityProjectName: log.projectName,
+      executionReviewSummaryText: review.summary,
+      executionReviewDecisionLabel: EXECUTION_REVIEW_DECISION_LABELS[review.decision],
+      executionReviewGuidance: hints,
+      executionReviewBlockedMessage: EXECUTION_REVIEW_DISCLAIMER,
+      finalMessage: `Confiance ${review.confidence}% — ouvre /actions pour la review complète et copie le rapport.`,
+    };
+  }
+
+  return {
+    intent: "execution_review",
+    intentLabel: INTENT_LABELS.execution_review,
+    listen:
+      "Je peux analyser ton journal d'exécution — mais seulement si tu as déjà enregistré des entrées dans /actions.",
+    needsClarification: false,
+    executionReviewGuidance: hints,
+    executionReviewBlockedMessage: EXECUTION_REVIEW_DISCLAIMER,
+    finalMessage: "Valide une action, prépare l'exécution, puis remplis le suivi manuel avant de demander une review.",
+  };
+}
 
 function buildExecutionLogResponse(objective: string): GigiConversationResponse {
   const norm = objective.toLowerCase();
@@ -530,6 +575,15 @@ export function askGigi(
   _projects: unknown,
   context: ConversationContext = {}
 ): GigiConversationResponse {
+  const reviewIntent = detectExecutionReviewIntent(objective);
+  if (reviewIntent.isExecutionReview) {
+    const projectId =
+      reviewIntent.projectId ??
+      context.currentProjectId ??
+      detectProject(normalize(objective));
+    return buildExecutionReviewResponse(objective, projectId);
+  }
+
   const executionLogIntent = detectExecutionLogIntent(objective);
   if (executionLogIntent.isExecutionLog) {
     return buildExecutionLogResponse(objective);
@@ -713,6 +767,7 @@ export function askGigi(
     prepared_action: "Valide, copie, puis exécute toi-même.",
     execution_plan: "Exécute manuellement — Gigi ne lance rien.",
     execution_log: "Enregistre ton retour dans /actions — Gigi ne vérifie pas automatiquement.",
+    execution_review: "Review basée sur les logs manuels — ouvre /actions pour le détail.",
   };
 
   return {
