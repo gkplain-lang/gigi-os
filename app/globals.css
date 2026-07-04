@@ -36,18 +36,36 @@ body {
   background: var(--bg-base);
   color: var(--text-primary);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
-  line-height: 1.65;
+  line-height: 1.6;
+  letter-spacing: -0.005em;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Warm atelier ambient — deep, soft, almost imperceptible glow */
+.font-display {
+  font-feature-settings: "ss01";
+  letter-spacing: -0.02em;
+}
+
+/* Warm atelier scene — layered depth, low warm light from above, cool grounding below */
 .gigi-app-bg {
+  position: relative;
   background:
-    radial-gradient(115% 75% at 50% -18%, rgba(184, 115, 51, 0.1), transparent 55%),
-    radial-gradient(70% 45% at 100% 5%, rgba(196, 138, 74, 0.05), transparent 50%),
-    radial-gradient(95% 60% at 0% 105%, rgba(22, 42, 38, 0.4), transparent 55%),
-    linear-gradient(180deg, #07100f 0%, #050807 58%, #040706 100%);
+    radial-gradient(120% 80% at 50% -20%, rgba(184, 115, 51, 0.13), transparent 52%),
+    radial-gradient(60% 40% at 88% 8%, rgba(196, 138, 74, 0.06), transparent 55%),
+    radial-gradient(90% 60% at 5% 108%, rgba(24, 46, 42, 0.45), transparent 55%),
+    linear-gradient(180deg, #08110f 0%, #050807 55%, #030605 100%);
   background-color: #050807;
+}
+
+/* Fine grain + vignette to kill the flat "screen" feeling */
+.gigi-app-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(130% 130% at 50% 30%, transparent 55%, rgba(0, 0, 0, 0.4) 100%);
 }
 
 /* Very light surface — used sparingly, almost no frame */
@@ -57,73 +75,98 @@ body {
   backdrop-filter: blur(10px);
 }
 
-/* Barely-there secondary surface */
 .gigi-surface-soft {
   background: rgba(18, 26, 24, 0.28);
 }
 
-/* Diffuse copper halo — light behind content, fades to nothing, no edges */
+/* Big diffuse copper light behind the mission — this is the "stage light" */
 .gigi-halo {
   position: absolute;
-  inset: 0;
+  inset: -10% -8% -20% -12%;
   z-index: 0;
   pointer-events: none;
   background: radial-gradient(
-    70% 85% at 18% 22%,
-    rgba(184, 115, 51, 0.17),
-    rgba(184, 115, 51, 0.05) 42%,
-    transparent 70%
+    58% 70% at 16% 26%,
+    rgba(196, 138, 74, 0.2),
+    rgba(184, 115, 51, 0.07) 40%,
+    transparent 68%
   );
+  filter: blur(8px);
 }
 
-/* Softer, smaller halo for secondary featured zones */
 .gigi-halo-soft {
   position: absolute;
-  inset: 0;
+  inset: -6% -6% -12% -8%;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(
-    65% 80% at 20% 25%,
-    rgba(184, 115, 51, 0.1),
-    transparent 62%
-  );
+  background: radial-gradient(60% 75% at 18% 28%, rgba(184, 115, 51, 0.11), transparent 62%);
+  filter: blur(6px);
 }
 
-/* Premium dark-glass copper CTA — depth + soft reflection, never flashy */
+/* Premium dark-glass copper CTA — depth + soft reflection, tactile, never flashy */
 .gigi-cta {
-  background: linear-gradient(180deg, rgba(196, 138, 74, 0.24), rgba(184, 115, 51, 0.11));
+  position: relative;
+  background: linear-gradient(180deg, rgba(200, 145, 80, 0.26), rgba(160, 98, 44, 0.12));
   box-shadow:
-    inset 0 1px 0 rgba(255, 235, 205, 0.28),
-    inset 0 0 0 1px rgba(184, 115, 51, 0.34),
-    0 14px 32px -14px rgba(184, 115, 51, 0.3);
-  transition: all 0.22s ease;
+    inset 0 1px 0 rgba(255, 236, 208, 0.3),
+    inset 0 0 0 1px rgba(184, 115, 51, 0.36),
+    0 16px 36px -16px rgba(184, 115, 51, 0.36),
+    0 2px 6px -2px rgba(0, 0, 0, 0.5);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease;
 }
 
 .gigi-cta:hover {
-  background: linear-gradient(180deg, rgba(200, 145, 80, 0.32), rgba(184, 115, 51, 0.18));
+  background: linear-gradient(180deg, rgba(210, 155, 88, 0.36), rgba(176, 108, 50, 0.2));
   box-shadow:
-    inset 0 1px 0 rgba(255, 235, 205, 0.38),
-    inset 0 0 0 1px rgba(184, 115, 51, 0.5),
-    0 18px 40px -14px rgba(184, 115, 51, 0.42);
+    inset 0 1px 0 rgba(255, 240, 214, 0.42),
+    inset 0 0 0 1px rgba(196, 138, 74, 0.55),
+    0 22px 48px -16px rgba(196, 138, 74, 0.5),
+    0 2px 6px -2px rgba(0, 0, 0, 0.5);
+  transform: translateY(-1px);
+}
+
+.gigi-cta:active {
+  transform: translateY(0);
 }
 
 /* Gigi presence orb — warm, calm, slow breathing */
 .gigi-orb {
   position: relative;
-  background:
-    radial-gradient(circle at 34% 30%, rgba(255, 226, 184, 0.95), rgba(196, 138, 74, 0.55) 44%, rgba(120, 70, 30, 0.25) 74%, transparent 80%);
+  background: radial-gradient(
+    circle at 34% 30%,
+    rgba(255, 228, 188, 0.98),
+    rgba(200, 142, 78, 0.6) 42%,
+    rgba(120, 70, 30, 0.28) 74%,
+    transparent 80%
+  );
   box-shadow:
-    0 0 22px -4px rgba(196, 138, 74, 0.5),
-    inset 0 0 8px -2px rgba(255, 220, 180, 0.45);
+    0 0 26px -4px rgba(200, 142, 78, 0.55),
+    inset 0 0 8px -2px rgba(255, 222, 184, 0.5);
 }
 
 .gigi-orb::after {
   content: "";
   position: absolute;
-  inset: -7px;
+  inset: -8px;
   border-radius: 9999px;
-  background: radial-gradient(circle, rgba(196, 138, 74, 0.22), transparent 68%);
+  background: radial-gradient(circle, rgba(200, 142, 78, 0.24), transparent 68%);
   animation: gigi-breathe 4.5s ease-in-out infinite;
+}
+
+/* Completion / victory orb — calm green-gold, gentle glow */
+.gigi-orb-done {
+  background: radial-gradient(
+    circle at 36% 32%,
+    rgba(210, 232, 200, 0.98),
+    rgba(120, 170, 120, 0.55) 46%,
+    transparent 80%
+  );
+  box-shadow:
+    0 0 30px -4px rgba(140, 190, 140, 0.5),
+    inset 0 0 8px -2px rgba(220, 240, 210, 0.5);
 }
 
 @keyframes gigi-breathe {
@@ -138,10 +181,41 @@ body {
   }
 }
 
+/* In-progress pulse ring — subtle sense of "live / active" */
+.gigi-active-ring {
+  position: relative;
+}
+
+.gigi-active-ring::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  height: 7px;
+  width: 7px;
+  border-radius: 9999px;
+  background: var(--copper-soft);
+  transform: translateY(-50%);
+  box-shadow: 0 0 0 0 rgba(196, 138, 74, 0.5);
+  animation: gigi-pulse 2s ease-out infinite;
+}
+
+@keyframes gigi-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(196, 138, 74, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 9px rgba(196, 138, 74, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(196, 138, 74, 0);
+  }
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -150,5 +224,54 @@ body {
 }
 
 .animate-fade-in {
-  animation: fade-in 0.5s ease-out forwards;
+  animation: fade-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Staggered entrance for hero elements */
+.animate-rise {
+  opacity: 0;
+  animation: fade-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-rise-1 {
+  animation-delay: 0.05s;
+}
+.animate-rise-2 {
+  animation-delay: 0.14s;
+}
+.animate-rise-3 {
+  animation-delay: 0.24s;
+}
+.animate-rise-4 {
+  animation-delay: 0.34s;
+}
+
+@keyframes victory-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-victory {
+  animation: victory-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-rise,
+  .animate-victory,
+  .gigi-orb::after,
+  .gigi-active-ring::before {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }

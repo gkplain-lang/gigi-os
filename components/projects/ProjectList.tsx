@@ -23,16 +23,12 @@ export function ProjectList({
   return (
     <div className="animate-fade-in">
       {featured && (
-        <ProjectCard
-          project={featured}
-          featured
-          missionStatusLabel={featuredMissionLabel}
-        />
+        <ProjectCard project={featured} featured missionStatusLabel={featuredMissionLabel} />
       )}
 
       {others.length > 0 && (
-        <section className="mt-14">
-          <p className="mb-2 text-[13px] font-medium uppercase tracking-wide text-text-muted">
+        <section className="mt-16">
+          <p className="mb-3 text-[13px] font-medium uppercase tracking-wide text-text-muted">
             Le reste peut attendre
           </p>
           <div className="divide-y divide-white/[0.05]">

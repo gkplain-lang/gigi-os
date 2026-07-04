@@ -23,12 +23,13 @@ export function MissionActions({
         <PrimaryButton className="sm:w-auto" onClick={onComplete}>
           Terminer la mission
         </PrimaryButton>
+        <p className="text-sm text-text-muted">Prends ton temps. Une seule chose à la fois.</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+    <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
       <PrimaryButton className="sm:w-auto" onClick={onStart}>
         Démarrer la mission
       </PrimaryButton>

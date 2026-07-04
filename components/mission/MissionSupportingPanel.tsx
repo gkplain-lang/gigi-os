@@ -15,11 +15,11 @@ export function MissionSupportingPanel({ mission }: MissionSupportingPanelProps)
         Buildy Clear est ton chemin le plus court vers le revenu. Finaliser cette page débloque le
         lancement — le reste peut suivre après.
       </p>
-      <p className="mt-6 text-base text-text-muted">
+      <p className="mt-6 text-base leading-relaxed text-text-muted">
         Gigi est confiant à {mission.confidence}%.{" "}
         <Link
           href="/brain"
-          className="text-text-secondary underline-offset-4 hover:text-text-primary hover:underline"
+          className="text-text-secondary underline-offset-4 transition-colors hover:text-text-primary hover:underline"
         >
           Voir pourquoi il a choisi ça
         </Link>
