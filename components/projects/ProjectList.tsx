@@ -42,10 +42,10 @@ export function ProjectList({
     <div className="animate-fade-in space-y-8">
       {active && (
         <section>
-          <p className="mb-3 text-[12px] font-medium uppercase tracking-wide text-text-muted">
+          <p className="mb-3 text-[12px] font-medium uppercase tracking-wide text-accent-soft/90">
             Projet actif
           </p>
-          <div className="gigi-panel rounded-xl p-6">
+          <div className="gigi-panel-feature rounded-2xl p-6">
             <div>
               <div className="flex flex-wrap items-center gap-2.5">
                 <h2 className="text-[1.2rem] font-semibold text-text-primary">{active.name}</h2>
@@ -98,7 +98,7 @@ export function ProjectList({
                 <div
                   key={project.id}
                   className={cn(
-                    "flex items-center gap-4 px-5 py-4",
+                    "flex items-center gap-4 px-5 py-4 transition-colors hover:bg-white/[0.02]",
                     i > 0 && "border-t border-white/[0.05]"
                   )}
                 >

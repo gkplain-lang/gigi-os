@@ -9,8 +9,8 @@ interface StatusPillProps {
 }
 
 const variants: Record<PillVariant, string> = {
-  warm: "bg-white/[0.05] text-accent-soft",
-  muted: "bg-[rgba(20,28,26,0.7)] text-text-muted",
+  warm: "bg-accent-dim text-accent-soft ring-1 ring-inset ring-[rgba(124,140,255,0.28)]",
+  muted: "bg-white/[0.04] text-text-muted ring-1 ring-inset ring-white/[0.05]",
 };
 
 export function StatusPill({ label, variant = "warm", className }: StatusPillProps) {

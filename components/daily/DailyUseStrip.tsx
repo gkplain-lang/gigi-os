@@ -21,32 +21,32 @@ export function DailyUseStrip() {
   const isPrimary = nextAction.emphasis === "primary";
 
   return (
-    <div className="gigi-panel mb-4 rounded-xl p-4">
+    <div className="gigi-panel-feature mb-4 rounded-2xl p-4 md:p-5">
       <div className="flex flex-wrap items-start justify-between gap-2">
-        <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">
-          Aujourd&apos;hui · {summary.projectName}
+        <p className="text-[11px] font-medium uppercase tracking-wider text-accent-soft/90">
+          Aujourd&apos;hui · <span className="text-text-muted">{summary.projectName}</span>
         </p>
         <span
-          className="rounded-md border border-border bg-surface px-2 py-0.5 text-[10.5px] text-text-muted"
+          className="rounded-md border border-border bg-surface/80 px-2 py-0.5 text-[10.5px] text-text-muted"
           title={DAILY_USE_GUARDRAILS.long}
         >
           {DAILY_USE_GUARDRAILS.short}
         </span>
       </div>
 
-      <p className="mt-2 text-[15px] font-semibold leading-snug text-text-primary">
+      <p className="mt-2 text-[16px] font-semibold leading-snug text-text-primary">
         {summary.missionTitle}
       </p>
 
       <div
         className={cn(
-          "mt-3 rounded-lg border px-3 py-2.5",
+          "mt-3 rounded-xl border px-3.5 py-3",
           isPrimary
-            ? "border-[rgba(142,167,194,0.35)] bg-accent-dim/40"
+            ? "border-[rgba(124,140,255,0.32)] bg-accent-dim"
             : "border-border bg-surface/60"
         )}
       >
-        <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">
+        <p className="text-[11px] font-medium uppercase tracking-wider text-accent-soft/90">
           {nextAction.label}
         </p>
         <p className="mt-1 text-[13px] leading-relaxed text-text-secondary">{nextAction.hint}</p>
