@@ -22,6 +22,7 @@ import {
   markTestPassed,
   summarizeExecutionLog,
 } from "@/modules/executionLogs";
+import { ExecutionReviewPanel } from "@/components/executionReviews/ExecutionReviewPanel";
 import { cn } from "@/lib/utils";
 import { Check, Copy } from "lucide-react";
 
@@ -367,6 +368,17 @@ export function ExecutionLogPanel({
             </>
           )}
         </button>
+
+        <ExecutionReviewPanel
+          log={log}
+          plan={plan}
+          prominent={
+            log.status === "completed_manually" ||
+            log.status === "blocked" ||
+            log.status === "needs_fix" ||
+            log.status === "abandoned"
+          }
+        />
       </div>
     </section>
   );

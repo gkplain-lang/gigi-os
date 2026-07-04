@@ -147,6 +147,47 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
               ))}
             </div>
           </div>
+        ) : response.intent === "execution_review" ? (
+          <div className="mt-3 space-y-3">
+            {response.executionReviewBlockedMessage && (
+              <p className="text-[12.5px] leading-relaxed text-amber-200/90">
+                {response.executionReviewBlockedMessage}
+              </p>
+            )}
+            {response.executionReviewDecisionLabel && (
+              <div className="gigi-panel rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                  Décision recommandée
+                </p>
+                <p className="mt-1.5 text-[15px] font-medium text-text-primary">
+                  {response.executionReviewDecisionLabel}
+                </p>
+                {response.executionReviewSummaryText && (
+                  <p className="mt-2 text-[13.5px] leading-relaxed text-text-secondary">
+                    {response.executionReviewSummaryText}
+                  </p>
+                )}
+              </div>
+            )}
+            {response.executionReviewGuidance && response.executionReviewGuidance.length > 0 && (
+              <div className="gigi-panel rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                  Comment utiliser la review dans /actions
+                </p>
+                <ol className="mt-2.5 space-y-2">
+                  {response.executionReviewGuidance.map((hint, i) => (
+                    <li key={i} className="flex gap-2.5 text-[13.5px] leading-relaxed text-text-secondary">
+                      <span className="mt-0.5 font-medium tabular-nums text-accent-soft">{i + 1}.</span>
+                      {hint}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+            {response.finalMessage && (
+              <p className="text-[14px] font-medium text-text-primary">{response.finalMessage}</p>
+            )}
+          </div>
         ) : response.intent === "execution_log" ? (
           <div className="mt-3 space-y-3">
             {response.executionLogBlockedMessage && (

@@ -21,6 +21,10 @@ import {
   EXECUTION_LOG_STATUS_LABELS,
   getExecutionLogByQueuedActionId,
 } from "@/modules/executionLogs";
+import {
+  EXECUTION_REVIEW_DECISION_LABELS,
+  getExecutionReviewByLogId,
+} from "@/modules/executionReviews";
 import type { ExecutionLog } from "@/modules/executionLogs";
 import { cn } from "@/lib/utils";
 
@@ -62,6 +66,11 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
     if (!cached) return null;
     return getExecutionLogByQueuedActionId(action.id) ?? null;
   });
+
+  const executionReview = useMemo(() => {
+    if (!executionLog) return null;
+    return getExecutionReviewByLogId(executionLog.id) ?? null;
+  }, [executionLog]);
 
   const canPrepareExecution = action.status === "approved";
   const executionBlockedMessage = useMemo(() => {
@@ -123,6 +132,11 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
             {executionLog?.status === "started" && (
               <span className="rounded-full border border-sky-500/35 bg-sky-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-sky-200/90">
                 {EXECUTION_LOG_STATUS_LABELS.started}
+              </span>
+            )}
+            {executionReview && (
+              <span className="rounded-full border border-[rgba(124,140,255,0.35)] bg-[rgba(124,140,255,0.1)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent-soft">
+                Review · {EXECUTION_REVIEW_DECISION_LABELS[executionReview.decision]}
               </span>
             )}
             <span className="text-[11px] text-text-muted">{action.projectName}</span>
