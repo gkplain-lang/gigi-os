@@ -105,7 +105,7 @@ V1.7 — Action Plan Builder
 V1.8 — Controlled Action Preparation
 V1.9 — Action Queue & Validation Center
 V2.0 — Controlled Execution Bridge
-V2.1 — Execution Logs (planned)
+V2.1 — Execution Logs & Manual Completion
 V2.2 — Cursor/Git Workflow Assistant (planned)
 V2.3 — Multi-user SaaS (planned)
 ```
@@ -1189,7 +1189,54 @@ See [CONTROLLED_EXECUTION_BRIDGE.md](./CONTROLLED_EXECUTION_BRIDGE.md). Links fo
 
 ---
 
-# 23. V2.3 — SaaS Version (planned)
+# 23. V2.1 — Execution Logs & Manual Completion
+
+## Goal
+
+Let the user manually declare what happened during execution — local journal, no auto-verification.
+
+## Core Question
+
+```text
+Can the user track manual execution progress after an execution plan is generated?
+```
+
+## Features
+
+```text
+Execution logs module (modules/executionLogs/)
+Storage key gigi-os-v21-execution-logs
+ExecutionLogPanel with timeline and quick actions
+Manual tracking section in ExecutionPlanPanel
+Conversation intent execution_log
+Execution summary (status, tests, blockers, next step)
+Documentation (EXECUTION_LOGS_MANUAL_COMPLETION.md)
+```
+
+## Not in V2.1
+
+```text
+Real execution or command running
+Automatic verification of build/UI/Git
+Queue status change to "executed"
+Modification of v19/v20 localStorage keys
+External API calls, Supabase sync
+```
+
+## Acceptance Criteria
+
+V2.1 is complete when:
+
+- user can log started, notes, tests, blockers, manual completion in /actions;
+- logs persist in gigi-os-v21-execution-logs after reload;
+- conversation guides user to /actions without pretending to verify;
+- npm run build passes.
+
+See [EXECUTION_LOGS_MANUAL_COMPLETION.md](./EXECUTION_LOGS_MANUAL_COMPLETION.md). Links forward to V2.2 Cursor/Git Workflow Assistant.
+
+---
+
+# 24. V2.3 — SaaS Version (planned)
 
 ## Goal
 

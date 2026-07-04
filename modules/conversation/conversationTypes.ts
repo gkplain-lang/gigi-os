@@ -15,7 +15,8 @@ export type ConversationIntent =
   | "general"
   | "action_plan"
   | "prepared_action"
-  | "execution_plan";
+  | "execution_plan"
+  | "execution_log";
 
 export interface NotNowItem {
   projectName: string;
@@ -80,6 +81,10 @@ export interface GigiConversationResponse {
   executionPlan?: import("../executionPlans/types").ExecutionPlan;
   /** V2.0 — reminder when execution is manual-only */
   executionPlanBlockedMessage?: string;
+  /** V2.1 — guidance for manual execution logging */
+  executionLogGuidance?: string[];
+  /** V2.1 — reminder that Gigi does not auto-verify */
+  executionLogBlockedMessage?: string;
 }
 
 export interface ConversationContext {

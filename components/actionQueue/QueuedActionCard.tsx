@@ -17,6 +17,11 @@ import {
   markPlanCompletedManually,
   saveExecutionPlan,
 } from "@/modules/executionPlans";
+import {
+  EXECUTION_LOG_STATUS_LABELS,
+  getExecutionLogByQueuedActionId,
+} from "@/modules/executionLogs";
+import type { ExecutionLog } from "@/modules/executionLogs";
 import { cn } from "@/lib/utils";
 
 const STATUS_STYLE: Record<QueuedAction["status"], string> = {
@@ -52,6 +57,11 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
     getCachedExecutionPlan(action.id) ?? null
   );
   const [showExecutionPlan, setShowExecutionPlan] = useState(false);
+  const [executionLog, setExecutionLog] = useState<ExecutionLog | null>(() => {
+    const cached = getCachedExecutionPlan(action.id);
+    if (!cached) return null;
+    return getExecutionLogByQueuedActionId(action.id) ?? null;
+  });
 
   const canPrepareExecution = action.status === "approved";
   const executionBlockedMessage = useMemo(() => {
@@ -65,6 +75,7 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
     setExecutionPlan(plan);
     setShowExecutionPlan(true);
     setExpanded(true);
+    setExecutionLog(getExecutionLogByQueuedActionId(action.id) ?? null);
   }, [action]);
 
   const handleMarkCompleted = useCallback((planId: string) => {
@@ -74,7 +85,8 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
         ? { ...prev, status: "completed_manually", updatedAt: new Date().toISOString() }
         : prev
     );
-  }, []);
+    setExecutionLog(getExecutionLogByQueuedActionId(action.id) ?? null);
+  }, [action.id]);
 
   const handleCopy = useCallback(async () => {
     try {
@@ -103,6 +115,16 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
             >
               {QUEUED_STATUS_LABELS[action.status]}
             </span>
+            {executionLog?.status === "completed_manually" && (
+              <span className="rounded-full border border-emerald-500/35 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-300/90">
+                {EXECUTION_LOG_STATUS_LABELS.completed_manually}
+              </span>
+            )}
+            {executionLog?.status === "started" && (
+              <span className="rounded-full border border-sky-500/35 bg-sky-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-sky-200/90">
+                {EXECUTION_LOG_STATUS_LABELS.started}
+              </span>
+            )}
             <span className="text-[11px] text-text-muted">{action.projectName}</span>
           </div>
           <h3 className="mt-2 text-[15px] font-semibold text-text-primary">
@@ -195,6 +217,7 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
           <ExecutionPlanPanel
             plan={executionPlan}
             onMarkCompleted={handleMarkCompleted}
+            showManualTracking
           />
         </div>
       )}
