@@ -90,3 +90,13 @@ export {
 } from "@/modules/dailyReview";
 
 export type { DailyReviewSnapshot } from "@/modules/dailyReview";
+
+export {
+  applyAutomationProposals,
+  detectAutomationProposals,
+  V07_BLOCKED_REAL_MESSAGE,
+  V07_NO_EXECUTION_MESSAGE,
+  summarizeAutomationFoundation,
+} from "@/modules/automation";
+
+export type { AutomationProposal } from "@/modules/automation";

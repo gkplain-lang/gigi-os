@@ -4,6 +4,7 @@ import { enrichAiBrainRequest } from "./projectIntent";
 import { applyProjectIntentGuard } from "./projectIntentGuard";
 import { applyDecisionQuality } from "./decisionQuality/decisionFallback";
 import { applyAgentProposals } from "@/modules/agents";
+import { applyAutomationProposals } from "@/modules/automation";
 import { applyDailyReviewEnrichment } from "@/modules/dailyReview";
 import { parseProviderJsonToAiBrain } from "./responseAdapter";
 import type { AiBrainRequest, AiBrainResponse } from "./types";
@@ -22,6 +23,16 @@ function attachIntentMeta(response: AiBrainResponse, request: AiBrainRequest): A
   };
 }
 
+function enrichPipeline(request: AiBrainRequest, response: AiBrainResponse): AiBrainResponse {
+  return applyDailyReviewEnrichment(
+    request,
+    applyAutomationProposals(
+      request,
+      applyAgentProposals(request, applyDecisionQuality(request, response))
+    )
+  );
+}
+
 /**
  * AI Brain orchestrator — always returns a safe response.
  * Falls back to deterministic local brain on any failure.
@@ -34,13 +45,7 @@ export async function askAiBrain(
 
   const fallback = (): AiBrainResponse =>
     attachIntentMeta(
-      applyDailyReviewEnrichment(
-        enriched,
-        applyAgentProposals(
-          enriched,
-          applyDecisionQuality(enriched, assertResponseSafe(runLocalFallbackProvider(enriched)))
-        )
-      ),
+      enrichPipeline(enriched, assertResponseSafe(runLocalFallbackProvider(enriched))),
       enriched
     );
 
@@ -76,9 +81,7 @@ export async function askAiBrain(
   }
 
   response = applyProjectIntentGuard(enriched, response);
-  response = applyDecisionQuality(enriched, response);
-  response = applyAgentProposals(enriched, response);
-  response = applyDailyReviewEnrichment(enriched, response);
+  response = enrichPipeline(enriched, response);
   response = assertResponseSafe(response);
   return attachIntentMeta(response, enriched);
 }
@@ -96,8 +99,6 @@ export function finalizeServerAiResponse(
 
   let response = assertResponseSafe(mapped);
   response = applyProjectIntentGuard(enriched, response);
-  response = applyDecisionQuality(enriched, response);
-  response = applyAgentProposals(enriched, response);
-  response = applyDailyReviewEnrichment(enriched, response);
+  response = enrichPipeline(enriched, response);
   return attachIntentMeta(assertResponseSafe(response), enriched);
 }
