@@ -4,6 +4,7 @@ import type { ProjectMissionSuggestion } from "@/modules/projectMissions";
 import { getMissionAskGigiHref, getMissionPrepareHref } from "@/modules/projectMissions";
 import { getProjectPlanHref } from "@/modules/actionPlans";
 import type { Project } from "@/modules/projects/projectTypes";
+import { MissionFeedbackBadge } from "@/components/missionFeedback/MissionFeedbackBadge";
 import { cn } from "@/lib/utils";
 
 interface ProjectMissionCardProps {
@@ -32,6 +33,11 @@ export function ProjectMissionCard({ project, mission }: ProjectMissionCardProps
                 Recommandée
               </span>
             )}
+            <MissionFeedbackBadge
+              missionId={mission.id}
+              projectId={project.id}
+              title={mission.title}
+            />
           </div>
           <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
             {mission.description}

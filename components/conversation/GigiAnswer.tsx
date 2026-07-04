@@ -147,6 +147,52 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
               ))}
             </div>
           </div>
+        ) : response.intent === "mission_feedback" ? (
+          <div className="mt-3 space-y-3">
+            {response.missionFeedbackBlockedMessage && (
+              <p className="text-[12.5px] leading-relaxed text-amber-200/90">
+                {response.missionFeedbackBlockedMessage}
+              </p>
+            )}
+            {response.missionFeedbackTopMissionTitle && (
+              <div className="gigi-panel rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                  Mission suggérée (feedback local)
+                </p>
+                <p className="mt-1.5 text-[15px] font-medium text-text-primary">
+                  {response.missionFeedbackTopMissionTitle}
+                </p>
+                {response.missionFeedbackScoreLabel && (
+                  <p className="mt-1 text-[13px] text-accent-soft">
+                    {response.missionFeedbackScoreLabel}
+                  </p>
+                )}
+                {response.missionFeedbackSummaryText && (
+                  <p className="mt-2 text-[13.5px] leading-relaxed text-text-secondary">
+                    {response.missionFeedbackSummaryText}
+                  </p>
+                )}
+              </div>
+            )}
+            {response.missionFeedbackGuidance && response.missionFeedbackGuidance.length > 0 && (
+              <div className="gigi-panel rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                  Affiner les recommandations
+                </p>
+                <ol className="mt-2.5 space-y-2">
+                  {response.missionFeedbackGuidance.map((hint, i) => (
+                    <li key={i} className="flex gap-2.5 text-[13.5px] leading-relaxed text-text-secondary">
+                      <span className="mt-0.5 font-medium tabular-nums text-accent-soft">{i + 1}.</span>
+                      {hint}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+            {response.finalMessage && (
+              <p className="text-[14px] font-medium text-text-primary">{response.finalMessage}</p>
+            )}
+          </div>
         ) : response.intent === "history_learning" ? (
           <div className="mt-3 space-y-3">
             {response.historyLearningBlockedMessage && (

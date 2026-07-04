@@ -19,7 +19,8 @@ export type ConversationIntent =
   | "execution_log"
   | "execution_review"
   | "follow_up_action"
-  | "history_learning";
+  | "history_learning"
+  | "mission_feedback";
 
 export interface NotNowItem {
   projectName: string;
@@ -106,6 +107,16 @@ export interface GigiConversationResponse {
   historyLearningSummaryText?: string;
   /** V2.4 — disclaimer for local-only archive */
   historyLearningBlockedMessage?: string;
+  /** V2.5 — guidance for mission recommendation feedback */
+  missionFeedbackGuidance?: string[];
+  /** V2.5 — summary when feedback exists */
+  missionFeedbackSummaryText?: string;
+  /** V2.5 — top mission recommendation label */
+  missionFeedbackTopMissionTitle?: string;
+  /** V2.5 — score snippet */
+  missionFeedbackScoreLabel?: string;
+  /** V2.5 — disclaimer */
+  missionFeedbackBlockedMessage?: string;
 }
 
 export interface ConversationContext {
