@@ -147,6 +147,59 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
               ))}
             </div>
           </div>
+        ) : response.intent === "mission_decision" ? (
+          <div className="mt-3 space-y-3">
+            {response.missionDecisionBlockedMessage && (
+              <p className="text-[12.5px] leading-relaxed text-amber-200/90">
+                {response.missionDecisionBlockedMessage}
+              </p>
+            )}
+            {response.missionDecisionTopTitle && (
+              <div className="gigi-panel rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                  Mission recommandée (décision locale)
+                </p>
+                <p className="mt-1.5 text-[15px] font-medium text-text-primary">
+                  {response.missionDecisionTopTitle}
+                </p>
+                {response.missionDecisionStatusLabel && (
+                  <p className="mt-1 text-[13px] text-accent-soft">
+                    Statut : {response.missionDecisionStatusLabel}
+                  </p>
+                )}
+                {response.missionDecisionSummaryText && (
+                  <p className="mt-2 text-[13.5px] leading-relaxed text-text-secondary">
+                    {response.missionDecisionSummaryText}
+                  </p>
+                )}
+              </div>
+            )}
+            {response.missionDecisionComparisonText && (
+              <div className="gigi-panel rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                  Comparaison des candidates
+                </p>
+                <pre className="mt-2 whitespace-pre-wrap text-[12.5px] leading-relaxed text-text-secondary">
+                  {response.missionDecisionComparisonText}
+                </pre>
+              </div>
+            )}
+            {response.missionDecisionGuidance && response.missionDecisionGuidance.length > 0 && (
+              <div className="gigi-panel rounded-xl p-4">
+                <ol className="space-y-2">
+                  {response.missionDecisionGuidance.map((hint, i) => (
+                    <li key={i} className="flex gap-2.5 text-[13.5px] leading-relaxed text-text-secondary">
+                      <span className="mt-0.5 font-medium tabular-nums text-accent-soft">{i + 1}.</span>
+                      {hint}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+            {response.finalMessage && (
+              <p className="text-[14px] font-medium text-text-primary">{response.finalMessage}</p>
+            )}
+          </div>
         ) : response.intent === "mission_feedback" ? (
           <div className="mt-3 space-y-3">
             {response.missionFeedbackBlockedMessage && (
