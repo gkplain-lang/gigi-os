@@ -435,6 +435,9 @@ export function DevAiPanel() {
         <Link href="/dev/controls" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           Dev · Controls →
         </Link>
+        <Link href="/dev/execution" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
+          Dev · Execution →
+        </Link>
         {!IS_PROD && (
           <Link href="/memory" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
             /memory →

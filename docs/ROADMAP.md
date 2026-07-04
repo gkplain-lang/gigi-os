@@ -440,6 +440,8 @@ No team accounts
 
 > **V0.5.3 (decision quality)** — voir `docs/AI_DECISION_QUALITY.md` : contrat de décision structuré (mission + 3 tâches + ignorer + risque + prochaine étape).
 
+> **V0.5.4 (execution loop)** — voir `docs/MISSION_EXECUTION_LOOP.md` : boucle d'exécution mission (démarrer, terminer, reporter, historique enrichi).
+
 ## Goal
 
 Add AI carefully to improve clarity and usefulness.

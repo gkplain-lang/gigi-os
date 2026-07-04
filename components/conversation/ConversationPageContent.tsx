@@ -95,7 +95,11 @@ export function ConversationPageContent() {
 
   const applyLatest = () => {
     if (!latest?.response.mission) return;
-    applyRecommendedMission(latest.response.mission);
+    applyRecommendedMission(latest.response.mission, {
+      tasks: latest.response.tasks,
+      nextStep: latest.response.nextStep ?? null,
+      reason: latest.response.why ?? null,
+    });
     setExchanges((prev) =>
       prev.map((x) => (x.id === latest.id ? { ...x, applied: true } : x))
     );
@@ -133,6 +137,16 @@ export function ConversationPageContent() {
             </div>
           ) : (
             <div className="mt-4 space-y-2">
+              {latest.response.tasks?.[0] && (
+                <p className="text-[12.5px] leading-relaxed text-text-muted">
+                  Première tâche :{" "}
+                  <span className="text-text-secondary">{latest.response.tasks[0]}</span>
+                </p>
+              )}
+              <p className="text-[11.5px] text-text-muted/80">
+                Appliquer enregistre la mission et ses tâches en local. Tu pourras la démarrer
+                puis la terminer depuis l&apos;accueil.
+              </p>
               <button
                 type="button"
                 onClick={applyLatest}

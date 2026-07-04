@@ -6,7 +6,6 @@ import { MissionSidebar } from "@/components/mission/MissionSidebar";
 import { MissionDone } from "@/components/mission/MissionDone";
 import { TaskChecklist } from "@/components/mission/TaskChecklist";
 import { useGigi } from "@/components/providers/GigiProvider";
-import { getCatalogMission } from "@/modules/conversation/missionCatalog";
 import { askGigi } from "@/modules/conversation/conversationBrain";
 
 const STATUS_BADGE: Record<string, string> = {
@@ -21,6 +20,7 @@ export function MissionPageContent() {
   const {
     state,
     isHydrated,
+    execution,
     startMission,
     completeMission,
     postponeMission,
@@ -32,7 +32,7 @@ export function MissionPageContent() {
   if (!isHydrated) return null;
 
   const { mission } = state;
-  const tasks = getCatalogMission(mission.id)?.subtasks?.slice(0, 3) ?? [];
+  const tasks = execution.tasks;
   const active = mission.status === "recommended" || mission.status === "in_progress";
 
   const badge = (
