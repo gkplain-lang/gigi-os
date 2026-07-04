@@ -55,16 +55,18 @@ Ne modifie **pas** localStorage ni l'état React.
 
 ---
 
-## 4. Stratégie remote → local (future V0.4.5+)
+## 4. Stratégie remote → local (V0.4.5 diagnostic / V0.4.6+ restore)
 
-Prévue mais **non activée** en V0.4.4 :
+V0.4.5 introduit le module `modules/persistence/` :
 
-1. Charger snapshot Supabase (`loadRemoteSnapshot`)
-2. Comparer avec état local (conflits ids, statuts, dates)
-3. Proposer résolution : garder local / fusionner / importer
-4. Écrire dans localStorage seulement après confirmation explicite
+1. Charger snapshot Supabase (`loadRemoteSnapshot`) — **manuel**
+2. Comparer avec état local via `evaluatePersistenceStrategy`
+3. Afficher recommandation sur `/dev/persistence`
+4. **Aucune** écriture localStorage en V0.4.5
 
-`loadRemoteSnapshot()` en V0.4.4 sert **uniquement au diagnostic** sur `/dev/sync`.
+Restore guidé avec consentement : **V0.4.6** (voir `docs/PERSISTENCE_STRATEGY.md`).
+
+`loadRemoteSnapshot()` sert au diagnostic sur `/dev/sync` et `/dev/persistence`.
 
 ---
 
@@ -80,16 +82,25 @@ Prévue mais **non activée** en V0.4.4 :
 
 ---
 
-## 6. Plan V0.4.5 — Migration guidée
+## 6. Plan V0.4.5 — Stratégie de persistance ✅
 
-- UI de comparaison local vs remote
+- Module `modules/persistence/` — diagnostic local vs remote
+- Page `/dev/persistence` — modes, recommandations, conflits
+- **Aucune** migration ni restore automatique
+- Voir `docs/PERSISTENCE_STRATEGY.md`
+
+---
+
+## 7. Plan V0.4.6 — Migration / restore guidé
+
+- UI de comparaison local vs remote détaillée
 - Import sélectif (projets, missions, historique)
 - Première écriture localStorage depuis Supabase **avec consentement**
 - Journal de migration dans `history_events`
 
 ---
 
-## 7. Plan V0.4.6 — Sync continue (optionnelle)
+## 8. Plan V0.4.7 — Sync continue (optionnelle)
 
 - Sync background après actions importantes (mission terminée)
 - File d'attente offline
@@ -99,7 +110,7 @@ Toujours **opt-in** ; localStorage reste fallback offline.
 
 ---
 
-## 8. Règles de sécurité
+## 9. Règles de sécurité
 
 - Clé `anon public` uniquement côté client
 - **RLS** sur toutes les tables — aucune donnée publique
@@ -110,7 +121,7 @@ Toujours **opt-in** ; localStorage reste fallback offline.
 
 ---
 
-## 9. Fichiers V0.4.4
+## 10. Fichiers V0.4.4
 
 ```
 modules/supabase/sync/
@@ -127,7 +138,7 @@ app/dev/sync/        — page diagnostic sync
 
 ---
 
-## 10. Tests manuels V0.4.4
+## 11. Tests manuels V0.4.4
 
 1. Sans connexion : app OK, `/dev/sync` invite à se connecter
 2. Connecté : sauvegarde local → Supabase, vérifier tables Supabase

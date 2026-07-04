@@ -291,6 +291,18 @@ export function DevSupabaseStatus() {
         >
           Dev · Sync →
         </Link>
+        <Link
+          href="/dev/persistence"
+          style={{
+            display: "inline-block",
+            marginTop: 10,
+            fontSize: 13,
+            color: "#71767f",
+            textDecoration: "none",
+          }}
+        >
+          Dev · Persistence →
+        </Link>
       </div>
     </>
   );

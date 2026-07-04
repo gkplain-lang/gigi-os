@@ -1,10 +1,10 @@
 "use client";
 
-import { DevSyncPanel } from "./DevSyncPanel";
+import { DevPersistencePanel } from "./DevPersistencePanel";
 
 const IS_PROD = process.env.NODE_ENV === "production";
 
-export default function DevSyncPage() {
+export default function DevPersistencePage() {
   if (IS_PROD) {
     return (
       <div style={{ padding: "2rem", color: "#a1a1aa", fontFamily: "system-ui" }}>
@@ -25,30 +25,19 @@ export default function DevSyncPage() {
     >
       <div style={{ maxWidth: 560, margin: "0 auto" }}>
         <p style={{ fontSize: 12, letterSpacing: 1, textTransform: "uppercase", color: "#71767f" }}>
-          Dev · Sync
+          Dev · Persistence
         </p>
         <h1 style={{ fontSize: 22, fontWeight: 600, marginTop: 6 }}>
-          Synchronisation Supabase
+          Stratégie de persistance
         </h1>
 
-        <DevSyncPanel />
+        <DevPersistencePanel />
 
         <p style={{ marginTop: 18, fontSize: 13, lineHeight: 1.6, color: "#71767f" }}>
-          V0.4.4 prépare la synchronisation. localStorage reste la source principale (
+          V0.4.5 analyse la stratégie de persistance. Aucune donnée n&apos;est restaurée ou
+          écrasée automatiquement. localStorage reste la source principale (
           <code style={{ color: "#a1a1aa" }}>gigi-os-v03-state</code>).
         </p>
-        <a
-          href="/dev/persistence"
-          style={{
-            display: "inline-block",
-            marginTop: 10,
-            fontSize: 13,
-            color: "#71767f",
-            textDecoration: "none",
-          }}
-        >
-          Dev · Persistence →
-        </a>
       </div>
     </main>
   );
