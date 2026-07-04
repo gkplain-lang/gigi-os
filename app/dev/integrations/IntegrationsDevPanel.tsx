@@ -171,6 +171,9 @@ export function IntegrationsDevPanel() {
         <Link href="/dev/ai" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           Dev · AI →
         </Link>
+        <Link href="/dev/beta" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
+          Dev · Beta →
+        </Link>
         <Link href="/conversation" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           /conversation →
         </Link>
