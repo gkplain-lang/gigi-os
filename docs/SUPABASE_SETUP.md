@@ -147,6 +147,91 @@ L'authentification et la migration arriveront plus tard (voir `docs/SUPABASE_PLA
 
 ---
 
+## V0.4.3 — Authentification (magic link)
+
+Cette étape ajoute une **fondation d'authentification** optionnelle par email (magic link / OTP).
+L'app reste **entièrement utilisable sans connexion** — localStorage reste la source principale.
+
+### 1. Activer Supabase Auth dans le dashboard
+
+Dans ton projet Supabase :
+
+1. **Authentication → Providers → Email** : vérifie que **Email** est activé.
+2. **Authentication → URL Configuration → Redirect URLs** : ajoute les URLs locales :
+
+```
+http://localhost:3000/auth/callback
+http://localhost:3001/auth/callback
+http://localhost:3002/auth/callback
+```
+
+> L'app construit dynamiquement l'URL de redirection avec `window.location.origin + "/auth/callback"`.
+> Les URLs ci-dessus doivent correspondre au port que tu utilises.
+
+3. **Site URL** (optionnel en local) : `http://localhost:3000` (ou ton port actif).
+
+### 2. Variables d'environnement
+
+Si ce n'est pas déjà fait :
+
+```bash
+cp .env.local.example .env.local
+```
+
+Remplis `NEXT_PUBLIC_SUPABASE_URL` et `NEXT_PUBLIC_SUPABASE_ANON_KEY` dans `.env.local`.
+
+> ⚠️ **Ne commite jamais `.env.local`** — il est ignoré par git.
+
+Redémarre le serveur après modification :
+
+```bash
+npm run dev
+```
+
+### 3. Tester la connexion
+
+1. Ouvre **[http://localhost:3000/auth](http://localhost:3000/auth)** (ou ton port).
+2. Entre ton email et clique **Recevoir le lien de connexion**.
+3. Clique le lien reçu par email → tu es redirigé vers `/auth/callback` puis `/`.
+4. Vérifie sur **[http://localhost:3000/dev/supabase](http://localhost:3000/dev/supabase)** :
+   - **Connexion Supabase** : Connecté (accès données limité par RLS possible sans auth sur certaines requêtes)
+   - **Auth** : Connecté, email affiché, profil détecté
+
+### 4. Statuts attendus
+
+**Sans connexion** (utilisateur anonyme) :
+
+- Sidebar : « Local » + lien « Connexion »
+- `/dev/supabase` → Auth : **Anonyme**
+- L'app fonctionne normalement via localStorage
+
+**Après connexion magic link** :
+
+- Sidebar : email court + « Déconnexion »
+- `/dev/supabase` → Auth : **Connecté**, profil : **Oui**
+- Un profil est créé automatiquement dans `public.profiles` (RLS respectée)
+
+**Supabase non configuré** :
+
+- Sidebar : « Mode local »
+- Pas de blocage de l'app
+
+### 5. Ce que fait / ne fait pas la V0.4.3
+
+- ✅ Magic link / OTP par email (`/auth`, `/auth/callback`)
+- ✅ Session Supabase optionnelle (AuthProvider)
+- ✅ Création/récupération automatique du profil (`profiles`)
+- ✅ Indicateur discret dans la sidebar + lien mobile
+- ✅ Page `/dev/supabase` enrichie (statut auth)
+- ✅ **localStorage reste la source principale** (`gigi-os-v03-state`)
+- ❌ Pas de migration des données locales
+- ❌ Pas d'obligation de se connecter
+- ❌ Pas de OAuth, mot de passe, paywall
+
+La migration des données est prévue en **V0.4.4 / V0.4.5** (voir `docs/SUPABASE_PLAN.md`).
+
+---
+
 ## Rappel sécurité
 
 - Clé `anon public` uniquement côté client.

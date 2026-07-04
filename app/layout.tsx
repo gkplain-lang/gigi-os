@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Geist } from "next/font/google";
 import { AppShell } from "@/components/ui/AppShell";
 import { GigiProvider } from "@/components/providers/GigiProvider";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -29,7 +30,9 @@ export default function RootLayout({
     <html lang="fr" className={`${geistSans.variable} ${fraunces.variable} h-full antialiased`}>
       <body className="min-h-full">
         <GigiProvider>
-          <AppShell>{children}</AppShell>
+          <AuthProvider>
+            <AppShell>{children}</AppShell>
+          </AuthProvider>
         </GigiProvider>
       </body>
     </html>

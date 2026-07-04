@@ -1,10 +1,36 @@
 /**
- * V0.4.1 — Supabase row types.
+ * V0.4.1+ — Supabase row types.
  * Aligned with docs/SUPABASE_PLAN.md and supabase/schema.sql.
  *
- * These types describe the future persistent schema. The app does NOT use them
- * yet — it still relies on localStorage (`gigi-os-v03-state`) until V0.4.2/V0.4.3.
+ * V0.4.3 adds auth types. Data persistence still uses localStorage until V0.4.4+.
  */
+
+import type { Session, User } from "@supabase/supabase-js";
+
+/** Auth lifecycle exposed to the UI. */
+export type AuthStatus =
+  | "loading"
+  | "anonymous"
+  | "authenticated"
+  | "not_configured"
+  | "error";
+
+export interface AuthState {
+  status: AuthStatus;
+  session: Session | null;
+  user: User | null;
+  profile: AuthUserProfile | null;
+  errorMessage?: string;
+}
+
+/** Profile row as returned by auth helpers. */
+export type AuthUserProfile = Profile;
+
+export interface AuthResult {
+  ok: boolean;
+  error?: string;
+  profile?: AuthUserProfile;
+}
 
 export type MissionStatusRow =
   | "recommended"
@@ -43,6 +69,16 @@ export interface Profile {
   created_at: string;
   updated_at: string;
 }
+
+export type ProfileInsert = {
+  id: string;
+  email?: string | null;
+  display_name?: string | null;
+};
+
+export type ProfileUpdate = Partial<
+  Pick<Profile, "email" | "display_name" | "updated_at">
+>;
 
 export interface ProjectRow {
   id: string;
@@ -139,42 +175,48 @@ export interface UserSettingsRow {
 
 /**
  * Minimal Database shape for the typed Supabase client.
- * Kept intentionally light for V0.4.1 (Row types only).
+ * Relationships required by @supabase/postgrest-js v2.109+.
  */
+type TableDef<Row, Insert, Update> = {
+  Row: Row;
+  Insert: Insert;
+  Update: Update;
+  Relationships: [];
+};
+
 export interface Database {
   public: {
     Tables: {
-      profiles: { Row: Profile; Insert: Partial<Profile>; Update: Partial<Profile> };
-      projects: { Row: ProjectRow; Insert: Partial<ProjectRow>; Update: Partial<ProjectRow> };
-      missions: { Row: MissionRow; Insert: Partial<MissionRow>; Update: Partial<MissionRow> };
-      history_events: {
-        Row: HistoryEventRow;
-        Insert: Partial<HistoryEventRow>;
-        Update: Partial<HistoryEventRow>;
-      };
-      conversation_messages: {
-        Row: ConversationMessageRow;
-        Insert: Partial<ConversationMessageRow>;
-        Update: Partial<ConversationMessageRow>;
-      };
-      decision_logs: {
-        Row: DecisionLogRow;
-        Insert: Partial<DecisionLogRow>;
-        Update: Partial<DecisionLogRow>;
-      };
-      autonomy_logs: {
-        Row: AutonomyLogRow;
-        Insert: Partial<AutonomyLogRow>;
-        Update: Partial<AutonomyLogRow>;
-      };
-      user_settings: {
-        Row: UserSettingsRow;
-        Insert: Partial<UserSettingsRow>;
-        Update: Partial<UserSettingsRow>;
-      };
+      profiles: TableDef<Profile, ProfileInsert, ProfileUpdate>;
+      projects: TableDef<ProjectRow, Partial<ProjectRow>, Partial<ProjectRow>>;
+      missions: TableDef<MissionRow, Partial<MissionRow>, Partial<MissionRow>>;
+      history_events: TableDef<
+        HistoryEventRow,
+        Partial<HistoryEventRow>,
+        Partial<HistoryEventRow>
+      >;
+      conversation_messages: TableDef<
+        ConversationMessageRow,
+        Partial<ConversationMessageRow>,
+        Partial<ConversationMessageRow>
+      >;
+      decision_logs: TableDef<
+        DecisionLogRow,
+        Partial<DecisionLogRow>,
+        Partial<DecisionLogRow>
+      >;
+      autonomy_logs: TableDef<
+        AutonomyLogRow,
+        Partial<AutonomyLogRow>,
+        Partial<AutonomyLogRow>
+      >;
+      user_settings: TableDef<
+        UserSettingsRow,
+        Partial<UserSettingsRow>,
+        Partial<UserSettingsRow>
+      >;
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
-    Enums: Record<string, never>;
   };
 }

@@ -6,6 +6,7 @@ import { Target, MessageCircle, Layers, Compass, Clock } from "lucide-react";
 import { APP_NAME, NAV_ITEMS } from "@/lib/constants";
 import { GigiOrb } from "./GigiOrb";
 import { LocalResetButton } from "./LocalResetButton";
+import { AuthAccountStrip } from "./AuthAccountStrip";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { cn } from "@/lib/utils";
 
@@ -77,7 +78,8 @@ export function SideNav() {
       </p>
       <nav className="flex flex-col gap-0.5">{secondary.map(renderLink)}</nav>
 
-      <div className="mt-auto border-t border-border px-3 pt-4">
+      <div className="mt-auto space-y-3 border-t border-border px-3 pt-4">
+        <AuthAccountStrip />
         <LocalResetButton onReset={resetLocalData} />
       </div>
     </aside>
