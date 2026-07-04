@@ -110,7 +110,7 @@ export function ProjectCard({
             </p>
           )}
 
-          <div className={cn("mt-3", isPrimary && "mt-4 rounded-lg border border-white/[0.06] bg-white/[0.02] p-3")}>
+          <div className="mt-3 rounded-lg border border-border bg-surface-2/60 p-3">
             <p className="text-[10px] font-semibold uppercase tracking-wider text-accent-soft/75">
               {isPrimary ? "Rôle aujourd'hui" : "Prochaine action"}
             </p>

@@ -259,7 +259,7 @@ export function ConversationPageContent() {
             )}
 
             {latest?.response.mission && !latest.applied && (
-              <div className="border-t border-white/[0.06] px-4 py-4 lg:hidden">
+              <div className="border-t border-border px-4 py-4 lg:hidden">
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
@@ -280,7 +280,7 @@ export function ConversationPageContent() {
               </div>
             )}
 
-            <div className="border-t border-white/[0.06] p-4 md:p-5">
+            <div className="border-t border-border p-4 md:p-5">
               <div className="gigi-input-premium flex items-end gap-2 rounded-2xl p-2 pl-4">
                 <textarea
                   value={input}

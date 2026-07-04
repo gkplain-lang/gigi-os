@@ -383,8 +383,11 @@ body {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 45%),
     var(--surface);
-  border: 1px solid rgba(var(--accent-rgb), 0.3);
-  box-shadow: 0 0 28px -16px rgba(var(--accent-rgb), 0.35);
+  border: 1px solid rgba(var(--accent-rgb), 0.38);
+  box-shadow:
+    var(--shadow-card),
+    0 0 28px -16px rgba(var(--accent-rgb), 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
   transition: border-color 0.15s ease, box-shadow 0.18s ease;
 }
 
@@ -615,34 +618,43 @@ body {
   position: relative;
   overflow: hidden;
   border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.035), transparent 45%),
     var(--surface);
   padding: 1.2rem 1.35rem;
+  box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.04);
   transition: border-color 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
 }
 
 .gigi-project-card:hover {
-  border-color: rgba(var(--accent-rgb), 0.28);
-  box-shadow: 0 8px 28px -16px rgba(var(--accent-rgb), 0.35);
+  border-color: rgba(var(--accent-rgb), 0.38);
+  box-shadow:
+    var(--shadow-card),
+    0 8px 28px -16px rgba(var(--accent-rgb), 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .gigi-project-card-primary {
-  border-color: rgba(var(--accent-rgb), 0.42);
+  border: 1px solid rgba(var(--accent-rgb), 0.42);
   background:
     radial-gradient(120% 80% at 0% 0%, rgba(var(--accent-rgb), 0.2), transparent 50%),
     radial-gradient(60% 50% at 100% 100%, rgba(var(--accent-2-rgb), 0.08), transparent 55%),
     linear-gradient(165deg, rgba(255, 255, 255, 0.04), transparent 42%),
     var(--surface);
-  box-shadow: var(--glow-feature), var(--shadow-elevated);
+  box-shadow:
+    var(--glow-feature),
+    var(--shadow-elevated),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
   padding: 1.5rem 1.65rem;
 }
 
 .gigi-project-card-muted {
-  opacity: 0.78;
-  border-color: rgba(255, 255, 255, 0.05);
-  background: rgba(255, 255, 255, 0.012);
+  opacity: 0.88;
+  border-color: rgba(148, 163, 184, 0.18);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 42%),
+    var(--surface);
 }
 
 .gigi-project-card-muted:hover {
@@ -709,12 +721,15 @@ body {
   position: relative;
   overflow: hidden;
   border-radius: 1.25rem;
-  border: 1px solid rgba(var(--accent-rgb), 0.3);
+  border: 1px solid rgba(var(--accent-rgb), 0.38);
   background:
     radial-gradient(90% 70% at 50% -20%, rgba(var(--accent-rgb), 0.18), transparent 60%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 50%),
     var(--surface);
-  box-shadow: 0 0 48px -24px rgba(var(--accent-rgb), 0.45);
+  box-shadow:
+    var(--shadow-card),
+    0 0 48px -24px rgba(var(--accent-rgb), 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .gigi-assistant-header {
@@ -722,7 +737,7 @@ body {
   align-items: center;
   gap: 1rem;
   padding: 1.15rem 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--border);
 }
 
 .gigi-assistant-prompt-zone {
@@ -737,7 +752,7 @@ body {
 
 .gigi-premium-chip {
   border-radius: 9999px;
-  border: 1px solid rgba(var(--accent-rgb), 0.32);
+  border: 1px solid rgba(var(--accent-rgb), 0.38);
   background: linear-gradient(
     180deg,
     rgba(var(--accent-rgb), 0.14),
@@ -746,6 +761,7 @@ body {
   padding: 0.5rem 1.05rem;
   font-size: 0.8125rem;
   color: var(--text-secondary);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
   transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -758,11 +774,14 @@ body {
 
 .gigi-mission-proposal {
   border-radius: 1rem;
-  border: 1px solid rgba(var(--accent-rgb), 0.38);
+  border: 1px solid rgba(var(--accent-rgb), 0.42);
   background:
     radial-gradient(100% 80% at 0% 0%, rgba(var(--accent-rgb), 0.14), transparent 55%),
     var(--surface);
-  box-shadow: 0 12px 32px -20px rgba(var(--accent-rgb), 0.35);
+  box-shadow:
+    var(--shadow-card),
+    0 12px 32px -20px rgba(var(--accent-rgb), 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .gigi-memory-vault {
