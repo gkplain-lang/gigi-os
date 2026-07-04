@@ -40,49 +40,58 @@ export function MissionPageContent() {
   const active = mission.status === "recommended" || mission.status === "in_progress";
 
   const badge = (
-    <span className="rounded-md border border-border bg-surface px-2.5 py-1 text-[12px] text-text-secondary">
+    <span className="rounded-full border border-[rgba(124,140,255,0.45)] bg-[rgba(124,140,255,0.18)] px-3 py-1 text-[12px] font-semibold text-accent-soft shadow-[0_0_16px_-4px_rgba(124,140,255,0.6)]">
       {STATUS_BADGE[mission.status]}
     </span>
   );
 
-  // Completed — active guiding screen
   if (mission.status === "completed") {
     const next = askGigi("Quelle est la prochaine mission ?", state.projects, {
       completedMissionIds: state.completedMissionIds,
     });
     return (
-      <div className="animate-fade-in">
-        <PageHeader
-          title="Mission du jour"
-          meta={getRefinedMissionPageMeta("completed")}
-          right={badge}
-        />
-        {!isOnboardingComplete && <OnboardingBanner />}
-        <DailyUseStrip />
-        <MissionDone
-          completedTitle={mission.title}
-          nextTitle={next.mission?.title}
-          onNext={applyNextMission}
-        />
+      <div className="gigi-shell-glow animate-fade-in">
+        <div className="relative z-[1]">
+          <PageHeader
+            title="Mission du jour"
+            meta={getRefinedMissionPageMeta("completed")}
+            right={badge}
+          />
+          {!isOnboardingComplete && <OnboardingBanner />}
+          <DailyUseStrip />
+          <MissionDone
+            completedTitle={mission.title}
+            nextTitle={next.mission?.title}
+            onNext={applyNextMission}
+          />
+        </div>
       </div>
     );
   }
 
-  // Postponed / rejected
   if (!active) {
     return (
-      <div className="animate-fade-in">
-        <PageHeader title="Mission du jour" meta={getRefinedMissionPageMeta(mission.status)} right={badge} />
-        {!isOnboardingComplete && <OnboardingBanner />}
-        <DailyUseStrip />
-        <div className="max-w-2xl">
-          <MissionCard
-            mission={mission}
-            onStart={startMission}
-            onComplete={completeMission}
-            onPostpone={postponeMission}
-            onReject={rejectMission}
+      <div className="gigi-shell-glow animate-fade-in">
+        <div className="relative z-[1]">
+          <PageHeader
+            title="Mission du jour"
+            meta={getRefinedMissionPageMeta(mission.status)}
+            right={badge}
           />
+          {!isOnboardingComplete && <OnboardingBanner />}
+          <DailyUseStrip />
+          <div className="gigi-mission-control relative max-w-3xl">
+            <div className="gigi-mission-spotlight" aria-hidden />
+            <div className="relative z-[1]">
+              <MissionCard
+                mission={mission}
+                onStart={startMission}
+                onComplete={completeMission}
+                onPostpone={postponeMission}
+                onReject={rejectMission}
+              />
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -92,24 +101,40 @@ export function MissionPageContent() {
   const meta = getRefinedMissionPageMeta(mission.status);
 
   return (
-    <div className="animate-fade-in">
-      <PageHeader title="Mission du jour" meta={meta} right={badge} />
-      {!isOnboardingComplete && <OnboardingBanner />}
-      <DailyUseStrip />
-
-      <div className="grid gap-4 lg:grid-cols-3 lg:items-start">
-        <div className="space-y-4 lg:col-span-2">
-          <MissionCard
-            mission={mission}
-            onStart={startMission}
-            onComplete={completeMission}
-            onPostpone={postponeMission}
-            onReject={rejectMission}
-          />
-          <TaskChecklist tasks={tasks} title={mission.status === "in_progress" ? "Tes étapes" : "Tes 3 tâches"} />
+    <div className="gigi-shell-glow animate-fade-in">
+      <div className="relative z-[1]">
+        <div className="gigi-mission-hero-strip">
+          <div>
+            <p className="gigi-mission-control-label">Mission Control</p>
+            <h1 className="text-[21px] font-bold tracking-tight text-text-primary md:text-[24px]">
+              Mission du jour
+            </h1>
+            <p className="mt-1.5 text-[14px] text-text-secondary">{meta}</p>
+          </div>
+          {badge}
         </div>
 
-        <div className="lg:col-span-1">
+        {!isOnboardingComplete && <OnboardingBanner />}
+        <DailyUseStrip />
+
+        <div className="gigi-mission-control grid gap-5 lg:grid-cols-[minmax(0,1fr)_260px] lg:items-start">
+          <div className="relative space-y-4">
+            <div className="gigi-mission-spotlight" aria-hidden />
+            <div className="relative z-[1]">
+              <MissionCard
+                mission={mission}
+                onStart={startMission}
+                onComplete={completeMission}
+                onPostpone={postponeMission}
+                onReject={rejectMission}
+              />
+            </div>
+            <TaskChecklist
+              tasks={tasks}
+              title={mission.status === "in_progress" ? "Tes étapes" : "Tes 3 tâches"}
+            />
+          </div>
+
           <MissionSidebar mission={mission} ignored={ignored} />
         </div>
       </div>

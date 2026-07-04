@@ -35,8 +35,8 @@ export function AegisMark({ size = "sm", className, title }: AegisMarkProps) {
       {title ? <title>{title}</title> : null}
       <defs>
         <linearGradient id={shieldFillId} x1="16" y1="4" x2="16" y2="28" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#7c8cff" stopOpacity="0.18" />
-          <stop offset="1" stopColor="#7c8cff" stopOpacity="0.04" />
+          <stop stopColor="#7c8cff" stopOpacity="0.32" />
+          <stop offset="1" stopColor="#7c8cff" stopOpacity="0.08" />
         </linearGradient>
         <linearGradient id={aStrokeId} x1="16" y1="10" x2="16" y2="22" gradientUnits="userSpaceOnUse">
           <stop stopColor="#e9eeff" />
@@ -49,7 +49,7 @@ export function AegisMark({ size = "sm", className, title }: AegisMarkProps) {
         d="M16 3.5L26.25 8.25V17.25C26.25 22.1 16 27.5 16 27.5C16 27.5 5.75 22.1 5.75 17.25V8.25L16 3.5Z"
         fill={`url(#${shieldFillId})`}
         stroke="#7c8cff"
-        strokeWidth="1.15"
+        strokeWidth="1.25"
         strokeLinejoin="round"
       />
 
@@ -59,7 +59,7 @@ export function AegisMark({ size = "sm", className, title }: AegisMarkProps) {
         stroke="#38bdf8"
         strokeWidth="0.65"
         strokeLinecap="round"
-        strokeOpacity="0.55"
+        strokeOpacity="0.75"
       />
 
       {/* Stylized A — decision / direction */}

@@ -19,9 +19,9 @@ export function HistoryTimeline({ events }: HistoryTimelineProps) {
   if (events.length === 0) {
     const empty = REFINED_EMPTY_STATES.history;
     return (
-      <div className="py-6 text-center">
-        <p className="text-[15px] font-medium text-text-primary">{empty.title}</p>
-        <p className="mx-auto mt-2 max-w-sm text-[13.5px] leading-relaxed text-text-muted">
+      <div className="gigi-empty-state rounded-xl px-6 py-8 text-center">
+        <p className="text-[15px] font-semibold text-text-primary">{empty.title}</p>
+        <p className="mx-auto mt-2 max-w-sm text-[13.5px] leading-relaxed text-text-secondary">
           {empty.body}
         </p>
         {empty.actionHref && empty.actionLabel && (
@@ -44,12 +44,12 @@ export function HistoryTimeline({ events }: HistoryTimelineProps) {
 
         return (
           <section key={group}>
-            <h2 className="mb-5 text-[13px] font-medium uppercase tracking-wide text-text-secondary">
+            <h2 className="mb-5 text-[13px] font-semibold uppercase tracking-wide text-accent-soft/80">
               {groupLabels[group]}
             </h2>
             <div className="relative space-y-6">
               <span
-                className="pointer-events-none absolute left-4 top-2 bottom-2 w-px -translate-x-1/2 bg-white/[0.06]"
+                className="pointer-events-none absolute left-4 top-2 bottom-2 w-px -translate-x-1/2 bg-gradient-to-b from-accent/40 via-accent/15 to-transparent"
                 aria-hidden
               />
               {groupEvents.map((event) => (

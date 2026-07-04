@@ -110,8 +110,8 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
     <div className="animate-fade-in flex gap-3">
       <GigiOrb size="sm" className="mt-1" />
 
-      <div className="min-w-0 flex-1">
-        <div className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-2 py-0.5">
+      <div className="min-w-0 flex-1 rounded-xl border border-[rgba(124,140,255,0.16)] bg-[rgba(124,140,255,0.04)] p-4 shadow-[0_0_24px_-16px_rgba(124,140,255,0.35)]">
+        <div className="inline-flex items-center gap-1.5 rounded-md border border-[rgba(124,140,255,0.28)] bg-surface px-2 py-0.5">
           <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
           <span className="text-[11.5px] font-medium text-text-secondary">
             {response.intentLabel}

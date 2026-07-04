@@ -1,10 +1,7 @@
 "use client";
 
-import type { Project, ProjectStatus } from "@/modules/projects/projectTypes";
-import { PROJECT_CONTEXT_LABELS } from "@/data/projectLabels";
-import { StatusPill } from "@/components/ui/StatusPill";
-import { ProgressBar } from "@/components/ui/ProgressBar";
-import { cn } from "@/lib/utils";
+import type { Project } from "@/modules/projects/projectTypes";
+import { ProjectCard } from "@/components/projects/ProjectCard";
 
 interface ProjectListProps {
   projects: Project[];
@@ -13,128 +10,66 @@ interface ProjectListProps {
   missionStatusLabel?: string;
 }
 
-const STATUS_LABEL: Record<ProjectStatus, string> = {
-  active: "Actif",
-  paused: "En pause",
-  postponed: "Reporté",
-  future: "Futur",
-  completed: "Terminé",
-  archived: "Archivé",
-};
-
-const PRIORITY_LABEL: Record<string, string> = {
-  critical: "Critique",
-  high: "Haute",
-  medium: "Moyenne",
-  low: "Basse",
-};
-
 export function ProjectList({
   projects,
   missionProjectId,
   missionTitle,
   missionStatusLabel,
 }: ProjectListProps) {
-  const active = projects.find((p) => p.id === (missionProjectId ?? "buildy-clear"));
-  const others = projects.filter((p) => p.id !== active?.id);
+  const primary = projects.find((p) => p.id === (missionProjectId ?? "buildy-clear"));
+  const activeOthers = projects.filter(
+    (p) => p.id !== primary?.id && p.status === "active"
+  );
+  const resting = projects.filter(
+    (p) => p.id !== primary?.id && p.status !== "active"
+  );
+
+  if (!primary && projects.length === 0) {
+    return (
+      <div className="gigi-empty-state rounded-xl px-6 py-10 text-center">
+        <p className="text-[15px] font-semibold text-text-primary">Aucun projet pour l&apos;instant</p>
+        <p className="mx-auto mt-2 max-w-sm text-[13.5px] leading-relaxed text-text-secondary">
+          Ajoute tes projets via l&apos;onboarding pour que Gigi puisse prioriser.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="animate-fade-in space-y-8">
-      {active && (
+      {primary && (
         <section>
-          <p className="mb-3 text-[12px] font-medium uppercase tracking-wide text-accent-soft/90">
-            Projet actif
-          </p>
-          <div className="gigi-panel-feature rounded-2xl p-6">
-            <div>
-              <div className="flex flex-wrap items-center gap-2.5">
-                <h2 className="text-[1.2rem] font-semibold text-text-primary">{active.name}</h2>
-                <StatusPill label={missionStatusLabel ?? "Priorité active"} variant="warm" />
-              </div>
-              <p className="mt-2 text-[14px] leading-relaxed text-text-secondary">
-                {active.description}
-              </p>
+          <p className="gigi-mission-control-label mb-3">Décision du jour</p>
+          <ProjectCard
+            project={primary}
+            variant="primary"
+            missionTitle={missionTitle}
+            missionStatusLabel={missionStatusLabel}
+            showMissionLink={missionProjectId === primary.id}
+          />
+        </section>
+      )}
 
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-lg border border-border bg-surface-2 p-4">
-                  <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">
-                    Mission liée
-                  </p>
-                  <p className="mt-1.5 text-[14px] text-text-primary">
-                    {missionProjectId === active.id && missionTitle
-                      ? missionTitle
-                      : active.nextAction}
-                  </p>
-                </div>
-                <div className="rounded-lg border border-border bg-surface-2 p-4">
-                  <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">
-                    Prochaine action
-                  </p>
-                  <p className="mt-1.5 text-[14px] text-text-secondary">{active.nextAction}</p>
-                </div>
-              </div>
-
-              <div className="mt-5 flex items-center gap-4">
-                <span className="text-[13px] text-text-muted">Progression</span>
-                <ProgressBar value={active.progress} className="flex-1" />
-                <span className="text-[13px] tabular-nums text-text-secondary">
-                  {active.progress}%
-                </span>
-              </div>
-            </div>
+      {activeOthers.length > 0 && (
+        <section>
+          <p className="gigi-mission-control-label mb-3">En cours</p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {activeOthers.map((project) => (
+              <ProjectCard key={project.id} project={project} variant="default" />
+            ))}
           </div>
         </section>
       )}
 
-      {others.length > 0 && (
+      {resting.length > 0 && (
         <section>
-          <p className="mb-3 text-[12px] font-medium uppercase tracking-wide text-text-muted">
-            Portefeuille
+          <p className="mb-3 text-[11px] font-medium uppercase tracking-wide text-text-muted">
+            Pause &amp; futur
           </p>
-          <div className="gigi-panel overflow-hidden rounded-xl">
-            {others.map((project, i) => {
-              const dimmed = project.status !== "active";
-              return (
-                <div
-                  key={project.id}
-                  className={cn(
-                    "flex items-center gap-4 px-5 py-4 transition-colors hover:bg-white/[0.02]",
-                    i > 0 && "border-t border-white/[0.05]"
-                  )}
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span
-                        className={cn(
-                          "text-[15px] font-medium",
-                          dimmed ? "text-text-secondary" : "text-text-primary"
-                        )}
-                      >
-                        {project.name}
-                      </span>
-                      <StatusPill
-                        label={STATUS_LABEL[project.status]}
-                        variant={project.status === "active" ? "warm" : "muted"}
-                      />
-                    </div>
-                    <p className="mt-1 truncate text-[13px] text-text-muted">
-                      {PROJECT_CONTEXT_LABELS[project.id] ?? project.description}
-                    </p>
-                  </div>
-
-                  <span className="hidden w-20 shrink-0 text-[12px] text-text-muted sm:block">
-                    {PRIORITY_LABEL[project.priority]}
-                  </span>
-
-                  <div className="hidden w-28 shrink-0 items-center gap-2 md:flex">
-                    <ProgressBar value={project.progress} muted={dimmed} className="flex-1" />
-                    <span className="w-8 text-right text-[12px] tabular-nums text-text-muted">
-                      {project.progress}%
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+            {resting.map((project) => (
+              <ProjectCard key={project.id} project={project} variant="muted" />
+            ))}
           </div>
         </section>
       )}

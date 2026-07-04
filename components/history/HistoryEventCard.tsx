@@ -54,12 +54,12 @@ export function HistoryEventCard({ event }: HistoryEventCardProps) {
       <span
         className={cn(
           "relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
-          warm ? "bg-white/[0.06] text-accent-soft" : "bg-white/[0.03] text-text-muted"
+          warm ? "bg-accent/15 text-accent-soft shadow-[0_0_12px_-6px_rgba(124,140,255,0.5)]" : "bg-white/[0.04] text-text-secondary"
         )}
       >
         <Icon className="h-4 w-4" strokeWidth={2} />
       </span>
-      <div className="min-w-0 flex-1 pb-1">
+      <div className="min-w-0 flex-1 rounded-lg gigi-panel-subtle px-3 py-2.5 pb-1">
         <div className="flex items-baseline justify-between gap-3">
           <p className="text-[15px] font-medium leading-snug text-text-primary">{event.title}</p>
           <span className="shrink-0 text-[12px] tabular-nums text-text-muted">

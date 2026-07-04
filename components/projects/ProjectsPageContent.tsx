@@ -13,14 +13,17 @@ export function ProjectsPageContent() {
   const missionStatusLabel = getMissionProjectLabel(state.mission.projectId);
 
   return (
-    <div className="animate-fade-in">
-      <PageHeader title="Projets" meta={REFINED_PAGE_META.projects} />
-      <ProjectList
+    <div className="gigi-page-shell animate-fade-in">
+      <div className="gigi-page-spotlight" aria-hidden />
+      <div className="gigi-page-content">
+        <PageHeader title="Projets" meta={REFINED_PAGE_META.projects} />
+        <ProjectList
         projects={state.projects}
         missionProjectId={state.mission.projectId}
         missionTitle={state.mission.title}
         missionStatusLabel={missionStatusLabel}
-      />
+        />
+      </div>
     </div>
   );
 }
