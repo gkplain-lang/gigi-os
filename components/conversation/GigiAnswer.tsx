@@ -147,6 +147,42 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
               ))}
             </div>
           </div>
+        ) : response.intent === "history_learning" ? (
+          <div className="mt-3 space-y-3">
+            {response.historyLearningBlockedMessage && (
+              <p className="text-[12.5px] leading-relaxed text-amber-200/90">
+                {response.historyLearningBlockedMessage}
+              </p>
+            )}
+            {response.historyLearningSummaryText && (
+              <div className="gigi-panel rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                  Synthèse locale
+                </p>
+                <p className="mt-1.5 text-[15px] font-medium text-text-primary">
+                  {response.historyLearningSummaryText}
+                </p>
+              </div>
+            )}
+            {response.historyLearningGuidance && response.historyLearningGuidance.length > 0 && (
+              <div className="gigi-panel rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                  Boucle d&apos;apprentissage · /history
+                </p>
+                <ol className="mt-2.5 space-y-2">
+                  {response.historyLearningGuidance.map((hint, i) => (
+                    <li key={i} className="flex gap-2.5 text-[13.5px] leading-relaxed text-text-secondary">
+                      <span className="mt-0.5 font-medium tabular-nums text-accent-soft">{i + 1}.</span>
+                      {hint}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+            {response.finalMessage && (
+              <p className="text-[14px] font-medium text-text-primary">{response.finalMessage}</p>
+            )}
+          </div>
         ) : response.intent === "follow_up_action" ? (
           <div className="mt-3 space-y-3">
             {response.followUpBlockedMessage && (

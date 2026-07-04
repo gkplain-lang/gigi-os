@@ -18,6 +18,7 @@ import {
   updateFollowUpProposalStatus,
 } from "@/modules/followUpActions";
 import { useActionQueue } from "@/components/providers/ActionQueueProvider";
+import { HistoryLearningQuickActions } from "@/components/historyLearning/HistoryLearningQuickActions";
 import { cn } from "@/lib/utils";
 
 const RISK_STYLE: Record<FollowUpActionProposal["riskLevel"], string> = {
@@ -271,6 +272,7 @@ export function FollowUpActionPanel({ review, className }: FollowUpActionPanelPr
                       Ignorer
                     </button>
                   </div>
+                  <HistoryLearningQuickActions followUp={proposal} className="mt-2" />
                 </li>
               ))}
             </ul>

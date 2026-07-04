@@ -18,7 +18,8 @@ export type ConversationIntent =
   | "execution_plan"
   | "execution_log"
   | "execution_review"
-  | "follow_up_action";
+  | "follow_up_action"
+  | "history_learning";
 
 export interface NotNowItem {
   projectName: string;
@@ -99,6 +100,12 @@ export interface GigiConversationResponse {
   followUpGuidance?: string[];
   /** V2.3 — disclaimer for local proposals */
   followUpBlockedMessage?: string;
+  /** V2.4 — guidance for history & learning loop */
+  historyLearningGuidance?: string[];
+  /** V2.4 — global summary snippet when entries exist */
+  historyLearningSummaryText?: string;
+  /** V2.4 — disclaimer for local-only archive */
+  historyLearningBlockedMessage?: string;
 }
 
 export interface ConversationContext {

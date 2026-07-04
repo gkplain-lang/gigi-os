@@ -15,6 +15,7 @@ import {
 } from "@/modules/executionReviews";
 import { cn } from "@/lib/utils";
 import { FollowUpActionPanel } from "@/components/followUpActions/FollowUpActionPanel";
+import { HistoryLearningQuickActions } from "@/components/historyLearning/HistoryLearningQuickActions";
 
 const DECISION_STYLE: Record<ExecutionReview["decision"], string> = {
   completed_confirmed: "border-emerald-500/35 bg-emerald-500/10 text-emerald-300/90",
@@ -251,6 +252,7 @@ export function ExecutionReviewPanel({
               </button>
             </div>
 
+            <HistoryLearningQuickActions review={review} log={log} className="border-t border-border pt-3" />
             {review && <FollowUpActionPanel review={review} />}
           </>
         )}

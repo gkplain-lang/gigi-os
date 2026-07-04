@@ -108,8 +108,8 @@ V2.0 — Controlled Execution Bridge
 V2.1 — Execution Logs & Manual Completion
 V2.2 — Execution Report Review
 V2.3 — Follow-up Action Generator
-V2.4 — History & Learning Loop (planned)
-V2.5 — Multi-user SaaS (planned)
+V2.4 — History & Learning Loop
+V2.5 — Mission Recommendation Feedback Loop (planned)
 ```
 
 ---
@@ -1330,7 +1330,79 @@ See [FOLLOW_UP_ACTION_GENERATOR.md](./FOLLOW_UP_ACTION_GENERATOR.md). Links forw
 
 ---
 
-# 26. V2.5 — SaaS Version (planned)
+# 26. V2.4 — History & Learning Loop
+
+## Goal
+
+Archive completed execution chains into a local learning history with signals, notes, and future recommendations.
+
+## Core Question
+
+```text
+Can Gigi keep a useful local trace when an action finishes its chain?
+```
+
+## Features
+
+```text
+History learning module (modules/historyLearning/)
+Storage key gigi-os-v24-history-learning-loop
+Engine: signals from reviews, logs, follow-ups
+HistoryLearningPanel on /history (alongside existing timeline)
+Quick archive from ExecutionReviewPanel and FollowUpActionPanel
+Conversation intent history_learning
+Documentation (HISTORY_LEARNING_LOOP.md)
+```
+
+## Not in V2.4
+
+```text
+Automatic deletion of source actions/reviews/logs
+External API calls or cloud sync
+Modification of v19-v23 localStorage keys
+Repo verification or real execution
+```
+
+## Acceptance Criteria
+
+V2.4 is complete when:
+
+- user can archive a review or follow-up into local history;
+- entries persist in gigi-os-v24-history-learning-loop;
+- /history shows learning loop without breaking mission timeline;
+- conversation explains local-only limits;
+- npm run build passes.
+
+See [HISTORY_LEARNING_LOOP.md](./HISTORY_LEARNING_LOOP.md). Links forward to V2.5 Mission Recommendation Feedback Loop.
+
+---
+
+# 27. V2.5 — Mission Recommendation Feedback Loop (planned)
+
+## Goal
+
+Use V2.4 local history to improve future mission recommendations — clearer missions, fewer recurring blockers, better daily focus.
+
+## Core Question
+
+```text
+Can Gigi learn from local execution history to recommend better missions?
+```
+
+## Features (planned)
+
+```text
+Feedback from history signals and outcomes
+Avoid overly vague missions
+Prioritize missions that unblock projects
+Account for recurring blockers and abandoned actions
+Improve daily mission selection
+Still no real execution
+```
+
+---
+
+# 28. Later — SaaS Version (planned)
 
 ## Goal
 
