@@ -147,6 +147,32 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
               ))}
             </div>
           </div>
+        ) : response.intent === "follow_up_action" ? (
+          <div className="mt-3 space-y-3">
+            {response.followUpBlockedMessage && (
+              <p className="text-[12.5px] leading-relaxed text-amber-200/90">
+                {response.followUpBlockedMessage}
+              </p>
+            )}
+            {response.followUpGuidance && response.followUpGuidance.length > 0 && (
+              <div className="gigi-panel rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                  Générer une action de suivi dans /actions
+                </p>
+                <ol className="mt-2.5 space-y-2">
+                  {response.followUpGuidance.map((hint, i) => (
+                    <li key={i} className="flex gap-2.5 text-[13.5px] leading-relaxed text-text-secondary">
+                      <span className="mt-0.5 font-medium tabular-nums text-accent-soft">{i + 1}.</span>
+                      {hint}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+            {response.finalMessage && (
+              <p className="text-[14px] font-medium text-text-primary">{response.finalMessage}</p>
+            )}
+          </div>
         ) : response.intent === "execution_review" ? (
           <div className="mt-3 space-y-3">
             {response.executionReviewBlockedMessage && (
