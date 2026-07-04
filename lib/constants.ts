@@ -1,5 +1,6 @@
 export const NAV_ITEMS = [
   { href: "/", label: "Mission", icon: "target" as const },
+  { href: "/conversation", label: "Gigi", icon: "message" as const },
   { href: "/projects", label: "Projets", icon: "layers" as const },
   { href: "/brain", label: "Décision", icon: "brain" as const },
   { href: "/history", label: "Historique", icon: "clock" as const },
@@ -12,6 +13,10 @@ export const PAGE_META = {
   "/": {
     title: "Mission",
     subtitle: "La seule chose qui compte aujourd'hui.",
+  },
+  "/conversation": {
+    title: "Gigi",
+    subtitle: "Dis-moi ton objectif. Je choisis pour toi.",
   },
   "/projects": {
     title: "Projets",

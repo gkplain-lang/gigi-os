@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import type { GigiLocalState } from "@/modules/storage/gigiStateTypes";
+import type { Mission } from "@/modules/missions/missionTypes";
 import { createInitialState } from "@/modules/storage/initialState";
 import { loadState, saveState } from "@/modules/storage/localStorage";
 import { createHistoryEntry } from "@/modules/history/historyUtils";
@@ -23,6 +24,7 @@ interface GigiContextValue {
   postponeMission: () => void;
   rejectMission: () => void;
   resetLocalData: () => void;
+  applyRecommendedMission: (mission: Mission) => void;
   getDecision: () => ReturnType<typeof explainDecisionFromProjects>;
   getMissionProjectLabel: (projectId: string) => string | undefined;
 }
@@ -69,18 +71,26 @@ export function GigiProvider({ children }: { children: ReactNode }) {
   }, [updateState]);
 
   const completeMission = useCallback(() => {
-    updateState((prev) => ({
-      ...prev,
-      mission: { ...prev.mission, status: "completed" },
-      completedMissionIds: [...prev.completedMissionIds, prev.mission.id],
-      history: [
-        createHistoryEntry(
-          "mission_completed",
-          `Mission terminée : ${prev.mission.title.replace(/\.$/, "")}.`
+    updateState((prev) => {
+      const alreadyCompleted = prev.completedMissionIds.includes(prev.mission.id);
+      return {
+        ...prev,
+        mission: { ...prev.mission, status: "completed" },
+        completedMissionIds: alreadyCompleted
+          ? prev.completedMissionIds
+          : [...prev.completedMissionIds, prev.mission.id],
+        projects: prev.projects.map((p) =>
+          p.id === prev.mission.projectId ? { ...p } : p
         ),
-        ...prev.history,
-      ],
-    }));
+        history: [
+          createHistoryEntry(
+            "mission_completed",
+            `Mission terminée : ${prev.mission.title.replace(/\.$/, "")}.`
+          ),
+          ...prev.history,
+        ],
+      };
+    });
   }, [updateState]);
 
   const postponeMission = useCallback(() => {
@@ -124,6 +134,23 @@ export function GigiProvider({ children }: { children: ReactNode }) {
     setState(next);
   }, []);
 
+  const applyRecommendedMission = useCallback(
+    (mission: Mission) => {
+      updateState((prev) => ({
+        ...prev,
+        mission: { ...mission, status: "recommended" },
+        history: [
+          createHistoryEntry(
+            "decision_created",
+            `Gigi a recommandé : ${mission.title.replace(/\.$/, "")}.`
+          ),
+          ...prev.history,
+        ],
+      }));
+    },
+    [updateState]
+  );
+
   const getDecision = useCallback(() => explainDecisionFromProjects(state.projects), [state.projects]);
 
   const getMissionProjectLabel = useCallback(
@@ -144,6 +171,7 @@ export function GigiProvider({ children }: { children: ReactNode }) {
       postponeMission,
       rejectMission,
       resetLocalData,
+      applyRecommendedMission,
       getDecision,
       getMissionProjectLabel,
     }),
@@ -155,6 +183,7 @@ export function GigiProvider({ children }: { children: ReactNode }) {
       postponeMission,
       rejectMission,
       resetLocalData,
+      applyRecommendedMission,
       getDecision,
       getMissionProjectLabel,
     ]

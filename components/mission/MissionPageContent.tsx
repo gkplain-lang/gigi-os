@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { MessageCircle } from "lucide-react";
 import { GigiMessage } from "@/components/ui/GigiMessage";
 import { MissionCard } from "@/components/mission/MissionCard";
 import { MissionSupportingPanel } from "@/components/mission/MissionSupportingPanel";
@@ -73,6 +75,19 @@ export function MissionPageContent() {
           <MissionSupportingPanel mission={mission} />
         </>
       )}
+
+      <div className="mt-14 max-w-2xl md:mt-16">
+        <Link
+          href="/conversation"
+          className="group inline-flex items-center gap-3 rounded-2xl px-4 py-3 text-[15px] text-text-muted transition-colors hover:bg-white/[0.03] hover:text-text-secondary"
+        >
+          <MessageCircle className="h-[18px] w-[18px] text-copper-soft" />
+          Parler à Gigi
+          <span className="text-text-muted/50 transition-transform group-hover:translate-x-0.5">
+            →
+          </span>
+        </Link>
+      </div>
     </div>
   );
 }

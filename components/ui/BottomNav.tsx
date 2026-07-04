@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Brain, Clock, Layers, Target } from "lucide-react";
+import { Brain, Clock, Layers, MessageCircle, Target } from "lucide-react";
 import { NAV_ITEMS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 const iconMap = {
   target: Target,
+  message: MessageCircle,
   layers: Layers,
   brain: Brain,
   clock: Clock,

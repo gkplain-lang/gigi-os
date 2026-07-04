@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Brain, Clock, Layers, Target } from "lucide-react";
+import { Brain, Clock, Layers, MessageCircle, Target } from "lucide-react";
 import { APP_NAME, APP_TAGLINE, NAV_ITEMS } from "@/lib/constants";
 import { GigiOrb } from "./GigiOrb";
 import { GigiPresence } from "./GigiPresence";
@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 
 const iconMap = {
   target: Target,
+  message: MessageCircle,
   layers: Layers,
   brain: Brain,
   clock: Clock,
