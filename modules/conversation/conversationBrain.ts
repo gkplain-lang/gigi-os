@@ -36,7 +36,14 @@ import {
   createReviewFromLog,
   detectExecutionReviewIntent,
   findBestLogForReview,
+  getLatestReviewForLog,
 } from "@/modules/executionReviews";
+import {
+  FOLLOW_UP_DISCLAIMER,
+  buildFollowUpGuidanceHints,
+  detectFollowUpActionIntent,
+  getFollowUpProposalsForReview,
+} from "@/modules/followUpActions";
 import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions/types";
 import type {
   ConversationContext,
@@ -342,6 +349,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   execution_plan: "Plan d'exécution",
   execution_log: "Journal d'exécution",
   execution_review: "Review d'exécution",
+  follow_up_action: "Action de suivi",
 };
 
 function clarificationResponse(): GigiConversationResponse {
@@ -378,6 +386,44 @@ function allDoneResponse(
 }
 
 // ---------------------------------------------------------------- main
+
+function buildFollowUpActionResponse(
+  objective: string,
+  projectId: string | null
+): GigiConversationResponse {
+  const hints = buildFollowUpGuidanceHints(objective);
+  const log = findBestLogForReview(projectId);
+  const review = log ? getLatestReviewForLog(log.id) : undefined;
+  const existing = review ? getFollowUpProposalsForReview(review.id) : [];
+
+  if (review) {
+    return {
+      intent: "follow_up_action",
+      intentLabel: `${INTENT_LABELS.follow_up_action} · ${log?.projectName ?? "projet"}`,
+      listen:
+        existing.length > 0
+          ? `Tu as ${existing.length} proposition(s) de suivi locale(s) — je ne corrige rien automatiquement.`
+          : "Génère les actions de suivi depuis la review dans /actions — ce sont des propositions, pas des exécutions.",
+      needsClarification: false,
+      priorityProjectName: log?.projectName,
+      followUpGuidance: hints,
+      followUpBlockedMessage: FOLLOW_UP_DISCLAIMER,
+      finalMessage:
+        "Ouvre /actions → review → « Actions de suivi ». Ajoute manuellement à la file si tu retiens une proposition.",
+    };
+  }
+
+  return {
+    intent: "follow_up_action",
+    intentLabel: INTENT_LABELS.follow_up_action,
+    listen:
+      "Pour proposer une action de suivi, il faut d'abord un journal et une review dans /actions.",
+    needsClarification: false,
+    followUpGuidance: hints,
+    followUpBlockedMessage: FOLLOW_UP_DISCLAIMER,
+    finalMessage: "Valide → exécute → journal → review, puis génère les follow-up actions.",
+  };
+}
 
 function buildExecutionReviewResponse(
   objective: string,
@@ -575,6 +621,15 @@ export function askGigi(
   _projects: unknown,
   context: ConversationContext = {}
 ): GigiConversationResponse {
+  const followUpIntent = detectFollowUpActionIntent(objective);
+  if (followUpIntent.isFollowUpAction) {
+    const projectId =
+      followUpIntent.projectId ??
+      context.currentProjectId ??
+      detectProject(normalize(objective));
+    return buildFollowUpActionResponse(objective, projectId);
+  }
+
   const reviewIntent = detectExecutionReviewIntent(objective);
   if (reviewIntent.isExecutionReview) {
     const projectId =
@@ -768,6 +823,7 @@ export function askGigi(
     execution_plan: "Exécute manuellement — Gigi ne lance rien.",
     execution_log: "Enregistre ton retour dans /actions — Gigi ne vérifie pas automatiquement.",
     execution_review: "Review basée sur les logs manuels — ouvre /actions pour le détail.",
+    follow_up_action: "Propositions locales — ajoute manuellement à la file si tu retiens.",
   };
 
   return {

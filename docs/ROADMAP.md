@@ -107,8 +107,9 @@ V1.9 — Action Queue & Validation Center
 V2.0 — Controlled Execution Bridge
 V2.1 — Execution Logs & Manual Completion
 V2.2 — Execution Report Review
-V2.3 — Follow-up Action Generator (planned)
-V2.4 — Multi-user SaaS (planned)
+V2.3 — Follow-up Action Generator
+V2.4 — History & Learning Loop (planned)
+V2.5 — Multi-user SaaS (planned)
 ```
 
 ---
@@ -1283,7 +1284,53 @@ See [EXECUTION_REPORT_REVIEW.md](./EXECUTION_REPORT_REVIEW.md). Links forward to
 
 ---
 
-# 25. V2.4 — SaaS Version (planned)
+# 25. V2.3 — Follow-up Action Generator
+
+## Goal
+
+Transform a V2.2 execution review into local follow-up action proposals — manual queue add only.
+
+## Core Question
+
+```text
+Can Gigi propose concrete next actions after reviewing manual execution logs?
+```
+
+## Features
+
+```text
+Follow-up actions module (modules/followUpActions/)
+Storage key gigi-os-v23-followup-actions
+Proposal engine mapped from review decisions
+FollowUpActionPanel under ExecutionReviewPanel
+Manual add to action queue (pending_review only)
+Conversation intent follow_up_action
+Documentation (FOLLOW_UP_ACTION_GENERATOR.md)
+```
+
+## Not in V2.3
+
+```text
+Automatic approval or execution
+External API calls
+Modification of v19-v22 localStorage keys
+Real code fixes or Git operations
+```
+
+## Acceptance Criteria
+
+V2.3 is complete when:
+
+- user can generate follow-up proposals from a review in /actions;
+- proposals persist in gigi-os-v23-followup-actions;
+- manual "Add to validate" enqueues as pending_review;
+- npm run build passes.
+
+See [FOLLOW_UP_ACTION_GENERATOR.md](./FOLLOW_UP_ACTION_GENERATOR.md). Links forward to V2.4 History & Learning Loop.
+
+---
+
+# 26. V2.5 — SaaS Version (planned)
 
 ## Goal
 
@@ -1325,7 +1372,7 @@ Team plan
 
 ## Acceptance Criteria
 
-V2.3 is complete when:
+V2.5 is complete when:
 
 - users can sign up;
 - users can pay;

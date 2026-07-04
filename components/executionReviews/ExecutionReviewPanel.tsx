@@ -14,6 +14,7 @@ import {
   regenerateReview,
 } from "@/modules/executionReviews";
 import { cn } from "@/lib/utils";
+import { FollowUpActionPanel } from "@/components/followUpActions/FollowUpActionPanel";
 
 const DECISION_STYLE: Record<ExecutionReview["decision"], string> = {
   completed_confirmed: "border-emerald-500/35 bg-emerald-500/10 text-emerald-300/90",
@@ -249,6 +250,8 @@ export function ExecutionReviewPanel({
                 )}
               </button>
             </div>
+
+            {review && <FollowUpActionPanel review={review} />}
           </>
         )}
       </div>

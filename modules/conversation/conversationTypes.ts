@@ -17,7 +17,8 @@ export type ConversationIntent =
   | "prepared_action"
   | "execution_plan"
   | "execution_log"
-  | "execution_review";
+  | "execution_review"
+  | "follow_up_action";
 
 export interface NotNowItem {
   projectName: string;
@@ -94,6 +95,10 @@ export interface GigiConversationResponse {
   executionReviewDecisionLabel?: string;
   /** V2.2 — disclaimer for manual-only review */
   executionReviewBlockedMessage?: string;
+  /** V2.3 — guidance for follow-up action generation */
+  followUpGuidance?: string[];
+  /** V2.3 — disclaimer for local proposals */
+  followUpBlockedMessage?: string;
 }
 
 export interface ConversationContext {
