@@ -1,5 +1,7 @@
 # Gigi OS — AI Modules
 
+> **V0.5.0 foundation livrée** — module `modules/ai/`, IA optionnelle, fallback local via `askGigi()`. Détails : `docs/AI_BRAIN_FOUNDATION.md`.
+
 > **AI should improve decisions, not create chaos.**
 
 Version: `0.1`  

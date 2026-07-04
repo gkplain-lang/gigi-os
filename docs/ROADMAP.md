@@ -434,6 +434,8 @@ No team accounts
 
 # 9. V0.5 — AI-Assisted MVP
 
+> **V0.5.0 (foundation)** — voir `docs/AI_BRAIN_FOUNDATION.md` pour l'implémentation actuelle : module `modules/ai/`, fallback local obligatoire, route `/api/ai/brain`, page `/dev/ai`.
+
 ## Goal
 
 Add AI carefully to improve clarity and usefulness.

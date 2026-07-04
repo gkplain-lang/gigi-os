@@ -1,5 +1,7 @@
 # Gigi OS — Operating Rules
 
+> **V0.5** — L'IA suggère via `askAiBrain()` ; le cerveau local reste fallback. Aucune action automatique. Voir `docs/AI_BRAIN_FOUNDATION.md`.
+
 > **Clarity before action. Action before expansion.**
 
 Version: `0.1`  

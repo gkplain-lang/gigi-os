@@ -5,7 +5,9 @@ import Link from "next/link";
 import { ArrowUp, Check, RefreshCw } from "lucide-react";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { askGigi } from "@/modules/conversation/conversationBrain";
+import { AiEngineBadge } from "@/components/ai/AiEngineBadge";
+import { askAiBrain, aiBrainToGigiResponse, useAiAvailability } from "@/modules/ai";
+import type { AiBrainMode } from "@/modules/ai";
 import type {
   ConversationContext,
   ConversationExchange,
@@ -21,21 +23,48 @@ const PROMPT_CHIPS = [
 
 export function ConversationPageContent() {
   const { state, isHydrated, applyRecommendedMission } = useGigi();
+  const { isAiConfigured } = useAiAvailability();
   const [input, setInput] = useState("");
   const [exchanges, setExchanges] = useState<ConversationExchange[]>([]);
+  const [brainMode, setBrainMode] = useState<AiBrainMode>("local_only");
+  const [asking, setAsking] = useState(false);
 
   if (!isHydrated) return null;
 
-  const ask = (objective: string, contextOverride?: ConversationContext) => {
+  const ask = async (objective: string, contextOverride?: ConversationContext) => {
     const trimmed = objective.trim();
-    if (!trimmed) return;
+    if (!trimmed || asking) return;
+
     const context: ConversationContext = {
       currentMissionId: state.mission.id,
       currentProjectId: state.mission.projectId,
       completedMissionIds: state.completedMissionIds,
       ...contextOverride,
     };
-    const response = askGigi(trimmed, state.projects, context);
+
+    setAsking(true);
+
+    const aiResult = await askAiBrain(
+      {
+        userMessage: trimmed,
+        currentMission: state.mission,
+        projects: state.projects,
+        history: state.history.map((h) => ({
+          title: h.title,
+          type: h.type,
+          date: h.date,
+        })),
+        completedMissionIds: state.completedMissionIds,
+        postponedMissionIds: state.postponedMissionIds,
+        rejectedMissionIds: state.rejectedMissionIds,
+        conversationContext: context,
+      },
+      { preferLocal: !isAiConfigured }
+    );
+
+    setBrainMode(aiResult.mode);
+    const response = aiBrainToGigiResponse(aiResult);
+
     setExchanges((prev) => [
       ...prev,
       {
@@ -46,6 +75,7 @@ export function ConversationPageContent() {
       },
     ]);
     setInput("");
+    setAsking(false);
   };
 
   const latest = exchanges[exchanges.length - 1];
@@ -60,7 +90,7 @@ export function ConversationPageContent() {
 
   const alternativeLatest = () => {
     if (!latest) return;
-    ask("Propose autre chose", {
+    void ask("Propose autre chose", {
       excludeMissionId: latest.response.mission?.id,
       excludeProjectId: latest.response.mission?.projectId,
     });
@@ -119,7 +149,11 @@ export function ConversationPageContent() {
 
   return (
     <div className="animate-fade-in">
-      <PageHeader title="Gigi" meta="Ton assistant de décision. Dis-lui où tu veux aller." />
+      <PageHeader
+        title="Gigi"
+        meta="Ton assistant de décision. Dis-lui où tu veux aller."
+        right={<AiEngineBadge mode={brainMode} />}
+      />
 
       <div className="grid gap-5 lg:grid-cols-3 lg:items-start">
         {/* Conversation column */}
@@ -130,7 +164,7 @@ export function ConversationPageContent() {
                 <button
                   key={chip}
                   type="button"
-                  onClick={() => ask(chip)}
+                  onClick={() => void ask(chip)}
                   className="gigi-chip gigi-focus rounded-lg px-3.5 py-2 text-[13.5px]"
                 >
                   {chip}
@@ -191,8 +225,8 @@ export function ConversationPageContent() {
               />
               <button
                 type="button"
-                onClick={() => ask(input)}
-                disabled={!input.trim()}
+                onClick={() => void ask(input)}
+                disabled={!input.trim() || asking}
                 aria-label="Envoyer à Gigi"
                 className="gigi-btn-primary gigi-focus flex h-9 w-9 shrink-0 items-center justify-center rounded-lg disabled:opacity-40"
               >
@@ -205,7 +239,7 @@ export function ConversationPageContent() {
                   <button
                     key={chip}
                     type="button"
-                    onClick={() => ask(chip)}
+                    onClick={() => void ask(chip)}
                     className="gigi-chip gigi-focus rounded-lg px-3 py-1.5 text-[12.5px]"
                   >
                     {chip}

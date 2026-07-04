@@ -1,13 +1,16 @@
 "use client";
 
 import { PageHeader } from "@/components/ui/PageHeader";
+import { AiAvailabilityBadge } from "@/components/ai/AiEngineBadge";
 import { DecisionReason } from "@/components/brain/DecisionReason";
 import { ScoreBreakdown } from "@/components/brain/ScoreBreakdown";
 import { AlternativesList } from "@/components/brain/AlternativesList";
 import { useGigi } from "@/components/providers/GigiProvider";
+import { useAiAvailability } from "@/modules/ai";
 
 export function BrainPageContent() {
   const { isHydrated, getDecision } = useGigi();
+  const { isAiConfigured, loading } = useAiAvailability();
 
   if (!isHydrated) return null;
 
@@ -15,7 +18,11 @@ export function BrainPageContent() {
 
   return (
     <div className="animate-fade-in">
-      <PageHeader title="Décision" meta="Pourquoi Gigi a choisi cette mission aujourd'hui." />
+      <PageHeader
+        title="Décision"
+        meta="Pourquoi Gigi a choisi cette mission aujourd'hui."
+        right={<AiAvailabilityBadge isConfigured={isAiConfigured} loading={loading} />}
+      />
 
       <div className="space-y-4">
         <DecisionReason
