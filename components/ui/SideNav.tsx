@@ -7,6 +7,7 @@ import { APP_NAME, NAV_ITEMS } from "@/lib/constants";
 import { GigiOrb } from "./GigiOrb";
 import { LocalResetButton } from "./LocalResetButton";
 import { AuthAccountStrip } from "./AuthAccountStrip";
+import { MemoryStatusStrip } from "@/components/memory/MemoryStatusStrip";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { cn } from "@/lib/utils";
 
@@ -80,6 +81,7 @@ export function SideNav() {
 
       <div className="mt-auto space-y-3 border-t border-border px-3 pt-4">
         <AuthAccountStrip />
+        <MemoryStatusStrip />
         <LocalResetButton onReset={resetLocalData} />
       </div>
     </aside>

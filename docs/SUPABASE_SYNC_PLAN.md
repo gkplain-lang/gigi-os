@@ -100,7 +100,16 @@ Restore guidé avec consentement : **V0.4.6** (voir `docs/PERSISTENCE_STRATEGY.m
 
 ---
 
-## 8. Plan V0.4.7 — Sync continue (optionnelle)
+## 8. Plan V0.4.7 — Intégration mémoire app ✅
+
+- Module `modules/memory/` — statut mémoire dans sidebar
+- Sauvegarde manuelle depuis l'app (`MemoryStatusStrip`, `/memory`)
+- Aucune sync / restore automatique
+- Voir `docs/MEMORY_APP_INTEGRATION.md`
+
+---
+
+## 9. Plan V0.5 — Sync continue (optionnelle)
 
 - Sync background après actions importantes (mission terminée)
 - File d'attente offline
@@ -110,7 +119,7 @@ Toujours **opt-in** ; localStorage reste fallback offline.
 
 ---
 
-## 9. Règles de sécurité
+## 10. Règles de sécurité
 
 - Clé `anon public` uniquement côté client
 - **RLS** sur toutes les tables — aucune donnée publique
@@ -121,7 +130,7 @@ Toujours **opt-in** ; localStorage reste fallback offline.
 
 ---
 
-## 10. Fichiers V0.4.4
+## 11. Fichiers V0.4.4
 
 ```
 modules/supabase/sync/
@@ -138,7 +147,7 @@ app/dev/sync/        — page diagnostic sync
 
 ---
 
-## 11. Tests manuels V0.4.4
+## 12. Tests manuels V0.4.4
 
 1. Sans connexion : app OK, `/dev/sync` invite à se connecter
 2. Connecté : sauvegarde local → Supabase, vérifier tables Supabase

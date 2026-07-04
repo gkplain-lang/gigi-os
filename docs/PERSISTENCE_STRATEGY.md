@@ -145,7 +145,17 @@ Module : `modules/persistence/`
 
 ---
 
-## 9. Plan V0.5 — Persistance intégrée
+## 9. Plan V0.4.7 — Intégration mémoire app ✅
+
+- Module `modules/memory/` — statut visible dans l'app
+- `MemoryStatusStrip` sidebar + mobile
+- Page `/memory` — sauvegarde manuelle
+- Clé `gigi-os-v04-memory-status` (métadonnées uniquement)
+- Voir `docs/MEMORY_APP_INTEGRATION.md`
+
+---
+
+## 10. Plan V0.5 — Persistance intégrée
 
 - Couche persistence branchée sur GigiProvider (opt-in)
 - Sync background après actions importantes
@@ -155,7 +165,7 @@ Module : `modules/persistence/`
 
 ---
 
-## 10. Fichiers V0.4.5
+## 11. Fichiers V0.4.5
 
 ```
 modules/persistence/
@@ -173,7 +183,7 @@ docs/PERSISTENCE_STRATEGY.md
 
 ---
 
-## 11. Tests manuels V0.4.5
+## 12. Tests manuels V0.4.5
 
 1. Sans connexion : `/dev/persistence` affiche mode anonyme, résumé local OK
 2. Connecté : charger snapshot → comparaison local / remote

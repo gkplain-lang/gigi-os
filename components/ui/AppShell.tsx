@@ -5,6 +5,7 @@ import { GigiOrb } from "./GigiOrb";
 import { SideNav } from "./SideNav";
 import { BottomNav } from "./BottomNav";
 import { AuthMobileLink } from "./AuthAccountStrip";
+import { MemoryStatusStrip } from "@/components/memory/MemoryStatusStrip";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -23,6 +24,7 @@ export function AppShell({ children }: AppShellProps) {
             <span className="font-display text-[16px] tracking-tight text-text-primary">
               {APP_NAME}
             </span>
+            <MemoryStatusStrip variant="mobile" />
             <AuthMobileLink />
           </header>
 
