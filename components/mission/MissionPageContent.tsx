@@ -8,7 +8,7 @@ import { TaskChecklist } from "@/components/mission/TaskChecklist";
 import { DailyUseStrip } from "@/components/daily/DailyUseStrip";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { askGigi } from "@/modules/conversation/conversationBrain";
-import { getMissionPageMeta } from "@/modules/dailyUse";
+import { getRefinedMissionPageMeta } from "@/modules/dailyUseRefinement";
 
 const STATUS_BADGE: Record<string, string> = {
   recommended: "Recommandée",
@@ -52,7 +52,7 @@ export function MissionPageContent() {
       <div className="animate-fade-in">
         <PageHeader
           title="Mission du jour"
-          meta={getMissionPageMeta("completed")}
+          meta={getRefinedMissionPageMeta("completed")}
           right={badge}
         />
         <DailyUseStrip />
@@ -69,7 +69,7 @@ export function MissionPageContent() {
   if (!active) {
     return (
       <div className="animate-fade-in">
-        <PageHeader title="Mission du jour" meta={getMissionPageMeta(mission.status)} right={badge} />
+        <PageHeader title="Mission du jour" meta={getRefinedMissionPageMeta(mission.status)} right={badge} />
         <DailyUseStrip />
         <div className="max-w-2xl">
           <MissionCard
@@ -85,7 +85,7 @@ export function MissionPageContent() {
   }
 
   const ignored = getDecision().alternatives.slice(0, 3);
-  const meta = getMissionPageMeta(mission.status);
+  const meta = getRefinedMissionPageMeta(mission.status);
 
   return (
     <div className="animate-fade-in">

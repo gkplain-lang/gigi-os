@@ -5,10 +5,10 @@ import { ArrowRight, MessageCircle, MessageSquare, Sun } from "lucide-react";
 import { useGigi } from "@/components/providers/GigiProvider";
 import {
   buildDailyUseStripSummary,
-  DAILY_USE_GUARDRAILS,
   getDailyReviewHref,
   V11_PROMISE,
 } from "@/modules/dailyUse";
+import { getRefinedNextActionHint, SIMULATION_NOTE } from "@/modules/dailyUseRefinement";
 import { cn } from "@/lib/utils";
 
 export function DailyUseStrip() {
@@ -17,7 +17,7 @@ export function DailyUseStrip() {
   if (!isHydrated) return null;
 
   const summary = buildDailyUseStripSummary(state.mission);
-  const { nextAction } = summary;
+  const nextAction = getRefinedNextActionHint(state.mission.status);
   const isPrimary = nextAction.emphasis === "primary";
 
   return (
@@ -28,9 +28,9 @@ export function DailyUseStrip() {
         </p>
         <span
           className="rounded-md border border-border bg-surface/80 px-2 py-0.5 text-[10.5px] text-text-muted"
-          title={DAILY_USE_GUARDRAILS.long}
+          title={SIMULATION_NOTE.long}
         >
-          {DAILY_USE_GUARDRAILS.short}
+          {SIMULATION_NOTE.short}
         </span>
       </div>
 

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { REFINED_PAGE_META } from "@/modules/dailyUseRefinement";
 import { formatMemoryBackupDate, useMemoryStatus } from "@/modules/memory";
 
 const IS_DEV = process.env.NODE_ENV !== "production";
@@ -31,7 +32,7 @@ export function MemoryPageContent() {
     <>
       <PageHeader
         title="Mémoire"
-        meta="Sauvegarde distante optionnelle — localStorage reste la source principale."
+        meta={REFINED_PAGE_META.memory}
       />
 
       <div className="space-y-4">

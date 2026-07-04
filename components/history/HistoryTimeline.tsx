@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { HistoryEvent } from "@/modules/history/historyTypes";
-import { EMPTY_STATES } from "@/modules/dailyUse";
+import { REFINED_EMPTY_STATES } from "@/modules/dailyUseRefinement";
 import { HistoryEventCard } from "./HistoryEventCard";
 
 interface HistoryTimelineProps {
@@ -17,7 +17,7 @@ export function HistoryTimeline({ events }: HistoryTimelineProps) {
   const groups = ["today", "yesterday", "earlier"] as const;
 
   if (events.length === 0) {
-    const empty = EMPTY_STATES.history;
+    const empty = REFINED_EMPTY_STATES.history;
     return (
       <div className="py-6 text-center">
         <p className="text-[15px] font-medium text-text-primary">{empty.title}</p>

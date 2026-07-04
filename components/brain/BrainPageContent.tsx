@@ -6,7 +6,7 @@ import { DecisionReason } from "@/components/brain/DecisionReason";
 import { ScoreBreakdown } from "@/components/brain/ScoreBreakdown";
 import { AlternativesList } from "@/components/brain/AlternativesList";
 import { useGigi } from "@/components/providers/GigiProvider";
-import { PAGE_META } from "@/modules/dailyUse";
+import { REFINED_PAGE_META } from "@/modules/dailyUseRefinement";
 import { useAiAvailability } from "@/modules/ai";
 
 export function BrainPageContent() {
@@ -21,7 +21,7 @@ export function BrainPageContent() {
     <div className="animate-fade-in">
       <PageHeader
         title="Décision"
-        meta={PAGE_META.brain}
+        meta={REFINED_PAGE_META.brain}
         right={<AiAvailabilityBadge isConfigured={isAiConfigured} loading={loading} />}
       />
 
