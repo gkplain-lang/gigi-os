@@ -8,6 +8,7 @@ import type {
 } from "@/modules/conversation/conversationTypes";
 import type { AiMemoryContext } from "./memoryContext/types";
 import type { DecisionQualityReport } from "./decisionQuality/types";
+import type { ActionProposal } from "@/modules/agents/types";
 
 export type AiAvailability = "not_configured" | "available" | "error";
 
@@ -84,6 +85,8 @@ export interface AiBrainResponse {
   primaryRisk?: string;
   nextStep?: string;
   decisionQuality?: DecisionQualityReport;
+  /** V0.6 — dry-run action proposals, never auto-executed */
+  actionProposals?: ActionProposal[];
 }
 
 export interface AiProviderJsonResponse {

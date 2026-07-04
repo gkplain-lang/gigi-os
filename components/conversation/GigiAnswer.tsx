@@ -16,6 +16,39 @@ function Label({ children }: { children: React.ReactNode }) {
   );
 }
 
+function ActionProposalsSection({ response }: { response: GigiConversationResponse }) {
+  if (!response.actionProposals?.length) return null;
+
+  return (
+    <div className="gigi-panel mt-3 rounded-xl p-4">
+      <Label>Action proposée (dry-run)</Label>
+      {response.actionProposals.map((proposal) => (
+        <div
+          key={proposal.id}
+          className="mt-2.5 rounded-lg border border-border bg-surface/50 p-3"
+        >
+          <p className="text-[13.5px] font-medium text-text-primary">{proposal.title}</p>
+          <p className="mt-1 text-[12.5px] leading-relaxed text-text-muted">{proposal.description}</p>
+          <p className="mt-2 text-[12px] text-text-muted/80">
+            Risque : {proposal.riskLevel} · Dry-run uniquement
+          </p>
+          {proposal.blockedReason && (
+            <p className="mt-2 text-[12.5px] leading-relaxed text-amber-200/90">
+              {proposal.blockedReason}
+            </p>
+          )}
+          {response.agentBlockedMessage && proposal.blockedReason && (
+            <p className="mt-1.5 text-[12px] font-medium text-text-secondary">
+              {response.agentBlockedMessage}
+            </p>
+          )}
+        </div>
+      ))}
+      <p className="mt-2.5 text-[11px] text-text-muted/70">V0.6 — aucune action externe exécutée.</p>
+    </div>
+  );
+}
+
 export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
   const [showNotNow, setShowNotNow] = useState(false);
 
@@ -51,20 +84,23 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
             </div>
           </div>
         ) : !response.mission ? (
-          <div className="gigi-panel mt-3 rounded-xl p-4">
-            {response.alternative && (
-              <p className="text-[14px] leading-relaxed text-text-secondary">
-                Si tu veux quand même avancer :{" "}
-                <span className="text-text-muted">{response.alternative.projectName}</span> —{" "}
-                {response.alternative.missionTitle}
-              </p>
-            )}
-            {response.finalMessage && (
-              <p className="mt-3 text-[15px] font-medium text-text-primary">
-                {response.finalMessage}
-              </p>
-            )}
-          </div>
+          <>
+            <div className="gigi-panel mt-3 rounded-xl p-4">
+              {response.alternative && (
+                <p className="text-[14px] leading-relaxed text-text-secondary">
+                  Si tu veux quand même avancer :{" "}
+                  <span className="text-text-muted">{response.alternative.projectName}</span> —{" "}
+                  {response.alternative.missionTitle}
+                </p>
+              )}
+              {response.finalMessage && (
+                <p className="mt-3 text-[15px] font-medium text-text-primary">
+                  {response.finalMessage}
+                </p>
+              )}
+            </div>
+            <ActionProposalsSection response={response} />
+          </>
         ) : (
           <div className="gigi-panel mt-3 divide-y divide-border overflow-hidden rounded-xl">
             <div className="p-4">
@@ -134,6 +170,39 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
                     ))}
                   </ul>
                 )}
+              </div>
+            )}
+
+            {response.actionProposals && response.actionProposals.length > 0 && (
+              <div className="p-4">
+                <Label>Action proposée (dry-run)</Label>
+                {response.actionProposals.map((proposal) => (
+                  <div
+                    key={proposal.id}
+                    className="mt-2.5 rounded-lg border border-border bg-surface/50 p-3"
+                  >
+                    <p className="text-[13.5px] font-medium text-text-primary">{proposal.title}</p>
+                    <p className="mt-1 text-[12.5px] leading-relaxed text-text-muted">
+                      {proposal.description}
+                    </p>
+                    <p className="mt-2 text-[12px] text-text-muted/80">
+                      Risque : {proposal.riskLevel} · Dry-run uniquement
+                    </p>
+                    {proposal.blockedReason && (
+                      <p className="mt-2 text-[12.5px] leading-relaxed text-amber-200/90">
+                        {proposal.blockedReason}
+                      </p>
+                    )}
+                    {response.agentBlockedMessage && proposal.blockedReason && (
+                      <p className="mt-1.5 text-[12px] font-medium text-text-secondary">
+                        {response.agentBlockedMessage}
+                      </p>
+                    )}
+                  </div>
+                ))}
+                <p className="mt-2.5 text-[11px] text-text-muted/70">
+                  V0.6 — aucune action externe exécutée.
+                </p>
               </div>
             )}
           </div>

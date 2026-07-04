@@ -1,4 +1,5 @@
 import type { Mission } from "../missions/missionTypes";
+import type { ActionProposal } from "../agents/types";
 
 export type ConversationIntent =
   | "project_specific"
@@ -47,6 +48,10 @@ export interface GigiConversationResponse {
   /** Prochaine étape après exécution */
   nextStep?: string;
   finalMessage?: string;
+  /** V0.6 — action proposals (dry-run only) */
+  actionProposals?: ActionProposal[];
+  /** V0.6 — message when real execution is blocked */
+  agentBlockedMessage?: string;
 }
 
 export interface ConversationContext {
