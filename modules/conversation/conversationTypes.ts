@@ -20,7 +20,8 @@ export type ConversationIntent =
   | "execution_review"
   | "follow_up_action"
   | "history_learning"
-  | "mission_feedback";
+  | "mission_feedback"
+  | "mission_decision";
 
 export interface NotNowItem {
   projectName: string;
@@ -117,6 +118,18 @@ export interface GigiConversationResponse {
   missionFeedbackScoreLabel?: string;
   /** V2.5 — disclaimer */
   missionFeedbackBlockedMessage?: string;
+  /** V2.6 — guidance for mission decision center */
+  missionDecisionGuidance?: string[];
+  /** V2.6 — decision summary */
+  missionDecisionSummaryText?: string;
+  /** V2.6 — recommended mission title */
+  missionDecisionTopTitle?: string;
+  /** V2.6 — status label */
+  missionDecisionStatusLabel?: string;
+  /** V2.6 — candidate comparison */
+  missionDecisionComparisonText?: string;
+  /** V2.6 — disclaimer */
+  missionDecisionBlockedMessage?: string;
 }
 
 export interface ConversationContext {

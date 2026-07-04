@@ -2,6 +2,8 @@
 
 import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
+import { MissionDecisionHistoryPanel } from "@/components/missionDecision/MissionDecisionHistoryPanel";
+import { generateGlobalDecisionSummary, listMissionDecisions } from "@/modules/missionDecision";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { HistoryTimeline } from "@/components/history/HistoryTimeline";
 import { HistoryLearningPanel } from "@/components/historyLearning/HistoryLearningPanel";
@@ -36,6 +38,9 @@ export function HistoryPageContent() {
     }
   }, []);
 
+  const decisionSummary = generateGlobalDecisionSummary();
+  const recentDecisions = listMissionDecisions(4);
+
   if (!isHydrated) return null;
 
   return (
@@ -63,6 +68,20 @@ export function HistoryPageContent() {
             ou sur chaque{" "}
             <Link href="/projects" className="text-accent-soft underline">
               fiche projet
+            </Link>
+            .
+          </p>
+        </div>
+        <div className="gigi-panel-raised mt-6 rounded-xl p-5 md:p-6">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+            Décisions mission · V2.6
+          </p>
+          <p className="mt-2 text-[13.5px] text-text-secondary">{decisionSummary.summaryText}</p>
+          <MissionDecisionHistoryPanel decisions={recentDecisions} className="mt-3" />
+          <p className="mt-3 text-[12px] text-text-muted">
+            Centre complet sur{" "}
+            <Link href="/#mission-decision-center" className="text-accent-soft underline">
+              la mission du jour
             </Link>
             .
           </p>

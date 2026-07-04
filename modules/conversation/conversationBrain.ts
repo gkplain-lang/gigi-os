@@ -60,6 +60,16 @@ import {
   getDefaultScoreableMissions,
   regenerateMissionFeedbackFromHistory,
 } from "@/modules/missionFeedback";
+import {
+  MISSION_DECISION_DISCLAIMER,
+  MISSION_DECISION_STATUS_LABELS,
+  buildMissionDecisionGuidanceHints,
+  detectMissionDecisionIntent,
+  generateDailyMissionDecision,
+  generateGlobalDecisionSummary,
+  getRecommendedCandidateTitle,
+} from "@/modules/missionDecision";
+import { formatCandidateComparison } from "@/modules/missionDecision/missionDecisionFormatter";
 import { listHistoryEntries } from "@/modules/historyLearning/historyLearningStore";
 import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions/types";
 import type {
@@ -369,6 +379,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   follow_up_action: "Action de suivi",
   history_learning: "Historique & apprentissage",
   mission_feedback: "Feedback mission",
+  mission_decision: "Décision mission",
 };
 
 function clarificationResponse(): GigiConversationResponse {
@@ -405,6 +416,38 @@ function allDoneResponse(
 }
 
 // ---------------------------------------------------------------- main
+
+function buildMissionDecisionResponse(
+  objective: string,
+  projectId: string | null,
+  context: ConversationContext
+): GigiConversationResponse {
+  const hints = buildMissionDecisionGuidanceHints(objective);
+  const decision = generateDailyMissionDecision({
+    completedMissionIds: context.completedMissionIds,
+    currentMissionId: context.currentMissionId,
+    currentProjectId: context.currentProjectId ?? projectId ?? undefined,
+    projectIdFilter: projectId ?? undefined,
+  });
+  const summary = generateGlobalDecisionSummary();
+  const topTitle = getRecommendedCandidateTitle(decision);
+
+  return {
+    intent: "mission_decision",
+    intentLabel: `${INTENT_LABELS.mission_decision}${topTitle ? ` · ${topTitle.slice(0, 36)}` : ""}`,
+    listen:
+      "Voici le centre de décision local — compare, valide ou refuse manuellement. Gigi ne modifie pas ta mission automatiquement.",
+    needsClarification: false,
+    priorityProjectName: projectId ? PROJECT_NAMES[projectId as keyof typeof PROJECT_NAMES] : undefined,
+    missionDecisionSummaryText: decision.recommendationSummary || summary.summaryText,
+    missionDecisionTopTitle: topTitle,
+    missionDecisionStatusLabel: MISSION_DECISION_STATUS_LABELS[decision.status],
+    missionDecisionComparisonText: formatCandidateComparison(decision.candidates.slice(0, 5)),
+    missionDecisionGuidance: hints,
+    missionDecisionBlockedMessage: MISSION_DECISION_DISCLAIMER,
+    finalMessage: "Ouvre / (Mission du jour) pour accepter, refuser ou transformer en plan — sans exécution auto.",
+  };
+}
 
 function buildMissionFeedbackResponse(
   objective: string,
@@ -738,6 +781,15 @@ export function askGigi(
   _projects: unknown,
   context: ConversationContext = {}
 ): GigiConversationResponse {
+  const missionDecisionIntent = detectMissionDecisionIntent(objective);
+  if (missionDecisionIntent.isMissionDecision) {
+    const projectId =
+      missionDecisionIntent.projectId ??
+      context.currentProjectId ??
+      detectProject(normalize(objective));
+    return buildMissionDecisionResponse(objective, projectId, context);
+  }
+
   const missionFeedbackIntent = detectMissionFeedbackIntent(objective);
   if (missionFeedbackIntent.isMissionFeedback) {
     const projectId =
@@ -965,6 +1017,7 @@ export function askGigi(
     follow_up_action: "Propositions locales — ajoute manuellement à la file si tu retiens.",
     history_learning: "Historique local uniquement — archive manuellement depuis /actions ou /history.",
     mission_feedback: "Recommandations basées sur l'historique V2.4 — ouvre / ou /projects pour le détail.",
+    mission_decision: "Décision locale — ouvre / pour comparer et valider manuellement.",
   };
 
   return {

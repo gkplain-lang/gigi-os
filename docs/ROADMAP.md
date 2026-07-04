@@ -110,7 +110,8 @@ V2.2 — Execution Report Review
 V2.3 — Follow-up Action Generator
 V2.4 — History & Learning Loop
 V2.5 — Mission Recommendation Feedback Loop
-V2.6 — Mission Decision Center (planned)
+V2.6 — Mission Decision Center
+V2.7 — Mission-to-Plan Decision Bridge (planned)
 ```
 
 ---
@@ -1426,11 +1427,11 @@ See [MISSION_RECOMMENDATION_FEEDBACK_LOOP.md](./MISSION_RECOMMENDATION_FEEDBACK_
 
 ---
 
-# 28. V2.6 — Mission Decision Center (planned)
+# 28. V2.6 — Mission Decision Center
 
 ## Goal
 
-Centralize daily mission decision: compare candidates, accept/refuse, transform to plan/action, decision history.
+Centralize daily mission decision: compare candidates, explain recommendation, record user choice locally.
 
 ## Core Question
 
@@ -1438,20 +1439,65 @@ Centralize daily mission decision: compare candidates, accept/refuse, transform 
 Can the user consciously choose today's mission with full local context?
 ```
 
+## Features
+
+```text
+Mission decision module (modules/missionDecision/)
+Storage key gigi-os-v26-mission-decision-center
+Candidates from catalog, current mission, follow-ups
+V2.5 score enrichment
+MissionDecisionCenter on / (home mission page)
+Decision history on /history
+Conversation intent mission_decision
+Documentation (MISSION_DECISION_CENTER.md)
+```
+
+## Not in V2.6
+
+```text
+Auto-accept mission or auto-approve actions
+External API calls or cloud sync
+Replacing catalog mission engine
+Modification of v03–v25 localStorage keys
+```
+
+## Acceptance Criteria
+
+V2.6 is complete when:
+
+- user can compare candidates and accept/refuse/postpone on /;
+- decisions persist in gigi-os-v26-mission-decision-center;
+- plan deep-links work without auto-execution;
+- npm run build passes.
+
+See [MISSION_DECISION_CENTER.md](./MISSION_DECISION_CENTER.md). Links forward to V2.7 Mission-to-Plan Decision Bridge.
+
+---
+
+# 29. V2.7 — Mission-to-Plan Decision Bridge (planned)
+
+## Goal
+
+Fluent flow from V2.6 accepted mission to V1.7 action plan and V1.8 prepared action with manual queue add only.
+
+## Core Question
+
+```text
+Can an accepted mission become a concrete plan without automatic execution?
+```
+
 ## Features (planned)
 
 ```text
-Compare multiple mission candidates side by side
-Explain recommended mission with V2.5 feedback
-Explicit accept/refuse flow
-Transform chosen mission into action plan
-Local decision history
+Accepted mission → action plan proposal
+Prepared action shortcut
+Manual pending_review queue add only
 Still no real execution
 ```
 
 ---
 
-# 29. Later — SaaS Version (planned)
+# 30. Later — SaaS Version (planned)
 
 ## Goal
 

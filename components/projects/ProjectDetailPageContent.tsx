@@ -256,6 +256,13 @@ export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContent
               Demander à Gigi
             </Link>
 
+            <Link
+              href="/#mission-decision-center"
+              className="gigi-btn gigi-focus flex w-full items-center justify-center rounded-xl px-4 py-2.5 text-[13px]"
+            >
+              Comparer dans le centre de décision
+            </Link>
+
             <section className="gigi-command-card p-4">
               <p className="gigi-mission-control-label">Historique projet</p>
               {history.length === 0 ? (
