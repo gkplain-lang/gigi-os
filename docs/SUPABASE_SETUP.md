@@ -228,7 +228,54 @@ npm run dev
 - ❌ Pas d'obligation de se connecter
 - ❌ Pas de OAuth, mot de passe, paywall
 
-La migration des données est prévue en **V0.4.4 / V0.4.5** (voir `docs/SUPABASE_PLAN.md`).
+La synchronisation manuelle arrive en **V0.4.4** ; la migration automatique en **V0.4.5+** (voir `docs/SUPABASE_SYNC_PLAN.md`).
+
+---
+
+## V0.4.4 — Sync Foundation (manuelle)
+
+Cette étape **prépare la synchronisation** sans remplacer localStorage.
+
+### Prérequis
+
+- Supabase configuré (`.env.local` local, jamais commité)
+- Schéma SQL exécuté (`supabase/schema.sql`)
+- Utilisateur **connecté** via magic link (`/auth`)
+
+### Page dev `/dev/sync`
+
+Ouvre **[http://localhost:3000/dev/sync](http://localhost:3000/dev/sync)** (dev only, absent de la navigation).
+
+La page affiche :
+
+- État auth (AuthProvider)
+- Données locales (projets, missions, historique)
+- Bouton **Sauvegarder local → Supabase** — backup manuel
+- Bouton **Lire snapshot Supabase** — diagnostic distant uniquement
+
+Lien discret depuis `/dev/supabase` → `/dev/sync`.
+
+### Ce que fait / ne fait pas la V0.4.4
+
+- ✅ Mappe l'état local vers le schéma Supabase (`modules/supabase/sync/`)
+- ✅ Upsert projets / missions / historique (RLS respectée)
+- ✅ Lecture snapshot distant pour diagnostic
+- ✅ **localStorage reste la source principale**
+- ❌ Pas de sync automatique au démarrage
+- ❌ Pas d'injection remote → local dans l'app
+- ❌ Pas de suppression de données locales ou distantes
+
+Voir aussi [`docs/SUPABASE_SYNC_PLAN.md`](./SUPABASE_SYNC_PLAN.md).
+
+### Erreur RLS / permission sur la sync
+
+Si `/dev/sync` affiche une erreur RLS ou « permission denied » :
+
+1. Ouvre **SQL Editor** dans Supabase.
+2. Exécute [`supabase/patches/2026-07-04-fix-sync-rls.sql`](../supabase/patches/2026-07-04-fix-sync-rls.sql).
+3. Réessaie **Sauvegarder local → Supabase**.
+
+Ce patch ajoute les **GRANT** manquants et des policies `to authenticated` sur `projects`, `missions`, `history_events`.
 
 ---
 

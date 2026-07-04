@@ -278,6 +278,19 @@ export function DevSupabaseStatus() {
         >
           Ouvrir /auth →
         </Link>
+        <Link
+          href="/dev/sync"
+          style={{
+            display: "inline-block",
+            marginTop: 10,
+            marginLeft: 0,
+            fontSize: 13,
+            color: "#71767f",
+            textDecoration: "none",
+          }}
+        >
+          Dev · Sync →
+        </Link>
       </div>
     </>
   );
