@@ -1,13 +1,22 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import { Check, ChevronDown, Copy, RotateCcw, X } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
+import { Check, ChevronDown, Copy, Play, RotateCcw, X } from "lucide-react";
 import type { QueuedAction } from "@/modules/actionQueue";
 import { QUEUED_STATUS_LABELS, VALIDATION_CENTER_NOTE } from "@/modules/actionQueue";
 import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions";
 import { formatPreparedActionForCopy } from "@/modules/preparedActions";
 import { PreparedActionPanel } from "@/components/preparedActions/PreparedActionPanel";
+import { ExecutionPlanPanel } from "@/components/executionPlans/ExecutionPlanPanel";
 import { useActionQueue } from "@/components/providers/ActionQueueProvider";
+import type { ExecutionPlan } from "@/modules/executionPlans";
+import {
+  buildExecutionPlanFromQueuedAction,
+  EXECUTION_NOT_APPROVED_MESSAGE,
+  getCachedExecutionPlan,
+  markPlanCompletedManually,
+  saveExecutionPlan,
+} from "@/modules/executionPlans";
 import { cn } from "@/lib/utils";
 
 const STATUS_STYLE: Record<QueuedAction["status"], string> = {
@@ -39,6 +48,33 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
   const { setStatus } = useActionQueue();
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [executionPlan, setExecutionPlan] = useState<ExecutionPlan | null>(() =>
+    getCachedExecutionPlan(action.id) ?? null
+  );
+  const [showExecutionPlan, setShowExecutionPlan] = useState(false);
+
+  const canPrepareExecution = action.status === "approved";
+  const executionBlockedMessage = useMemo(() => {
+    if (canPrepareExecution) return null;
+    return EXECUTION_NOT_APPROVED_MESSAGE;
+  }, [canPrepareExecution]);
+
+  const handlePrepareExecution = useCallback(() => {
+    const plan = buildExecutionPlanFromQueuedAction(action);
+    saveExecutionPlan(plan);
+    setExecutionPlan(plan);
+    setShowExecutionPlan(true);
+    setExpanded(true);
+  }, [action]);
+
+  const handleMarkCompleted = useCallback((planId: string) => {
+    markPlanCompletedManually(planId);
+    setExecutionPlan((prev) =>
+      prev && prev.id === planId
+        ? { ...prev, status: "completed_manually", updatedAt: new Date().toISOString() }
+        : prev
+    );
+  }, []);
 
   const handleCopy = useCallback(async () => {
     try {
@@ -123,6 +159,16 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
             </button>
           </>
         )}
+        {canPrepareExecution && (
+          <button
+            type="button"
+            onClick={handlePrepareExecution}
+            className="gigi-btn-primary gigi-focus inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-[12.5px] font-medium"
+          >
+            <Play className="h-3.5 w-3.5" />
+            {executionPlan ? "Voir le plan d'exécution" : "Préparer l'exécution"}
+          </button>
+        )}
         {(action.status === "approved" ||
           action.status === "rejected" ||
           action.status === "needs_revision") && (
@@ -137,6 +183,21 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
       </div>
 
       <p className="mt-2 text-[11px] text-text-muted">{VALIDATION_CENTER_NOTE}</p>
+
+      {executionBlockedMessage && (
+        <p className="mt-2 rounded-lg border border-border bg-surface-2/40 px-3 py-2 text-[12px] text-text-muted">
+          {executionBlockedMessage}
+        </p>
+      )}
+
+      {showExecutionPlan && executionPlan && (
+        <div className="mt-4">
+          <ExecutionPlanPanel
+            plan={executionPlan}
+            onMarkCompleted={handleMarkCompleted}
+          />
+        </div>
+      )}
 
       {expanded && (
         <div className="mt-4">

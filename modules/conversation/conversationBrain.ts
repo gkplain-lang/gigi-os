@@ -16,6 +16,14 @@ import {
   buildPreparedActionForProject,
   detectPreparedActionIntent,
 } from "@/modules/preparedActions";
+import {
+  EXECUTION_DRY_RUN_MESSAGE,
+  EXECUTION_NOT_APPROVED_MESSAGE,
+  buildExecutionPlanFromQueuedAction,
+  detectExecutionPlanIntent,
+  findApprovedQueuedActions,
+  saveExecutionPlan,
+} from "@/modules/executionPlans";
 import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions/types";
 import type {
   ConversationContext,
@@ -318,6 +326,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   general: "J'ai regardé tes projets",
   action_plan: "Plan d'action",
   prepared_action: "Action préparée",
+  execution_plan: "Plan d'exécution",
 };
 
 function clarificationResponse(): GigiConversationResponse {
@@ -354,6 +363,56 @@ function allDoneResponse(
 }
 
 // ---------------------------------------------------------------- main
+
+function buildExecutionPlanResponse(
+  projectId: string | null
+): GigiConversationResponse {
+  const approved = findApprovedQueuedActions(projectId ?? undefined);
+
+  if (approved.length === 0) {
+    const projectHint = projectId ? PROJECT_NAMES[projectId] ?? projectId : "ton projet";
+    return {
+      intent: "execution_plan",
+      intentLabel: INTENT_LABELS.execution_plan,
+      listen: "Je ne lance rien automatiquement — et je n'ai pas trouvé d'action validée à exécuter.",
+      needsClarification: true,
+      clarificationQuestion: EXECUTION_NOT_APPROVED_MESSAGE,
+      choices: [
+        { label: "Ouvrir /actions", prompt: "Gigi, montre-moi la file de validation" },
+        {
+          label: "Préparer une action · Buildy Clear",
+          prompt: "Gigi, prépare le prompt Cursor pour Buildy Clear",
+        },
+        {
+          label: "Plan d'action · Gigi",
+          prompt: "Gigi, plan d'action pour améliorer Gigi OS",
+        },
+      ],
+      executionPlanBlockedMessage: `Aucune action validée pour ${projectHint}. Valide d'abord dans /actions.`,
+      finalMessage: "Valide l'action, puis redemande le plan d'exécution.",
+    };
+  }
+
+  const action = approved[0];
+  const plan = buildExecutionPlanFromQueuedAction(action);
+  saveExecutionPlan(plan);
+  const projectName = action.projectName;
+
+  return {
+    intent: "execution_plan",
+    intentLabel: `${INTENT_LABELS.execution_plan} · ${projectName}`,
+    listen: `Voici comment exécuter « ${action.preparedAction.title} » — étape par étape, sans que Gigi lance quoi que ce soit.`,
+    needsClarification: false,
+    priorityProjectName: projectName,
+    missionTitle: action.preparedAction.title,
+    why: action.preparedAction.summary,
+    tasks: plan.steps.slice(0, 3).map((s) => s.title),
+    executionPlan: plan,
+    executionPlanBlockedMessage: EXECUTION_DRY_RUN_MESSAGE,
+    finalMessage:
+      "Exécute manuellement — commandes à copier-coller, jamais lancées par Gigi. Rapporte le résultat quand c'est fait.",
+  };
+}
 
 function buildPreparedActionResponse(
   projectId: string,
@@ -427,6 +486,15 @@ export function askGigi(
   _projects: unknown,
   context: ConversationContext = {}
 ): GigiConversationResponse {
+  const executionIntent = detectExecutionPlanIntent(objective);
+  if (executionIntent.isExecutionPlan) {
+    const projectId =
+      executionIntent.projectId ??
+      context.currentProjectId ??
+      detectProject(normalize(objective));
+    return buildExecutionPlanResponse(projectId);
+  }
+
   const preparedIntent = detectPreparedActionIntent(objective);
   if (preparedIntent.isPreparedAction) {
     const projectId =
@@ -594,6 +662,7 @@ export function askGigi(
     unclear: "",
     action_plan: "Valide chaque étape avant d'exécuter.",
     prepared_action: "Valide, copie, puis exécute toi-même.",
+    execution_plan: "Exécute manuellement — Gigi ne lance rien.",
   };
 
   return {

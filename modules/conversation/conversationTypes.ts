@@ -14,7 +14,8 @@ export type ConversationIntent =
   | "unclear"
   | "general"
   | "action_plan"
-  | "prepared_action";
+  | "prepared_action"
+  | "execution_plan";
 
 export interface NotNowItem {
   projectName: string;
@@ -75,6 +76,10 @@ export interface GigiConversationResponse {
   preparedAction?: import("../preparedActions/types").PreparedAction;
   /** V1.8 — reminder when prepared action is copy-only */
   preparedActionBlockedMessage?: string;
+  /** V2.0 — secure execution plan from approved action (dry-run only) */
+  executionPlan?: import("../executionPlans/types").ExecutionPlan;
+  /** V2.0 — reminder when execution is manual-only */
+  executionPlanBlockedMessage?: string;
 }
 
 export interface ConversationContext {
