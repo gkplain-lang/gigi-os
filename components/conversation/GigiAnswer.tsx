@@ -7,6 +7,7 @@ import { GigiOrb } from "@/components/ui/GigiOrb";
 import { ActionProposalCard } from "./ActionProposalCard";
 import { AutomationProposalCard } from "./AutomationProposalCard";
 import { IntegrationProposalCard } from "./IntegrationProposalCard";
+import { ActionPlanPanel } from "@/components/actionPlans/ActionPlanPanel";
 import { V062_NO_EXTERNAL_MESSAGE } from "@/modules/agents/confirmation";
 import { V07_NO_EXECUTION_MESSAGE } from "@/modules/automation";
 import { V08_NO_API_MESSAGE } from "@/modules/integrations";
@@ -138,6 +139,18 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
                 </button>
               ))}
             </div>
+          </div>
+        ) : response.actionPlan ? (
+          <div className="mt-3 space-y-3">
+            {response.actionPlanBlockedMessage && (
+              <p className="text-[12.5px] leading-relaxed text-amber-200/90">
+                {response.actionPlanBlockedMessage}
+              </p>
+            )}
+            <ActionPlanPanel plan={response.actionPlan} compact />
+            {response.finalMessage && (
+              <p className="text-[14px] font-medium text-text-primary">{response.finalMessage}</p>
+            )}
           </div>
         ) : !response.mission ? (
           <>

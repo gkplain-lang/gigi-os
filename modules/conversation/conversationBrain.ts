@@ -5,6 +5,12 @@ import {
   catalogToMission,
   type CatalogMission,
 } from "./missionCatalog";
+import {
+  ACTION_PLAN_DRY_RUN_MESSAGE,
+  buildActionPlanForProject,
+  detectActionPlanIntent,
+  getActionPlanStepsAsTasks,
+} from "@/modules/actionPlans";
 import type {
   ConversationContext,
   ConversationIntent,
@@ -304,6 +310,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   maintenance: "J'ai compris : rangement / audit",
   unclear: "Je veux être sûr de bien comprendre",
   general: "J'ai regardé tes projets",
+  action_plan: "Plan d'action",
 };
 
 function clarificationResponse(): GigiConversationResponse {
@@ -341,11 +348,72 @@ function allDoneResponse(
 
 // ---------------------------------------------------------------- main
 
+function buildActionPlanResponse(
+  objective: string,
+  projectId: string,
+  missionId: string | null
+): GigiConversationResponse {
+  const projectName = PROJECT_NAMES[projectId] ?? projectId;
+  const plan = buildActionPlanForProject(projectId, projectName, missionId ?? undefined);
+
+  if (!plan) {
+    return {
+      intent: "action_plan",
+      intentLabel: INTENT_LABELS.action_plan,
+      listen: `Je n'ai pas trouvé de plan pour ${projectName}.`,
+      needsClarification: true,
+      clarificationQuestion: "Quelle mission veux-tu transformer en plan d'action ?",
+      choices: [
+        { label: "Buildy Clear", prompt: "Gigi, avance Buildy Clear" },
+        { label: "Buildy Crafts", prompt: "Gigi, prépare un plan pour Buildy Crafts" },
+        { label: "Gigi", prompt: "Gigi, plan d'action pour Gigi OS" },
+      ],
+    };
+  }
+
+  return {
+    intent: "action_plan",
+    intentLabel: `${INTENT_LABELS.action_plan} · ${projectName}`,
+    listen: `Voici comment exécuter « ${plan.title} » — étape par étape, sans rien lancer automatiquement.`,
+    needsClarification: false,
+    priorityProjectName: projectName,
+    missionTitle: plan.title,
+    why: plan.whyNow,
+    tasks: getActionPlanStepsAsTasks(plan),
+    actionPlan: plan,
+    actionPlanBlockedMessage: ACTION_PLAN_DRY_RUN_MESSAGE,
+    finalMessage: "Une action. Aucun bruit. Valide chaque étape avant d'exécuter.",
+  };
+}
+
 export function askGigi(
   objective: string,
   _projects: unknown,
   context: ConversationContext = {}
 ): GigiConversationResponse {
+  const planIntent = detectActionPlanIntent(objective);
+  if (planIntent.isActionPlan) {
+    const projectId =
+      planIntent.projectId ??
+      context.currentProjectId ??
+      detectProject(normalize(objective));
+    if (projectId) {
+      return buildActionPlanResponse(objective, projectId, planIntent.missionId);
+    }
+    return {
+      intent: "action_plan",
+      intentLabel: INTENT_LABELS.action_plan,
+      listen: "Tu veux un plan d'action — dis-moi sur quel projet.",
+      needsClarification: true,
+      clarificationQuestion: "Sur quel projet veux-tu un plan d'action concret ?",
+      choices: [
+        { label: "Buildy Clear", prompt: "Gigi, avance Buildy Clear" },
+        { label: "Buildy Crafts", prompt: "Gigi, prépare un plan pour Buildy Crafts" },
+        { label: "Gigi OS", prompt: "Gigi, plan d'action pour améliorer Gigi" },
+      ],
+    };
+  }
+
   const detected = detectIntent(objective);
   const { intent } = detected;
 
@@ -465,6 +533,7 @@ export function askGigi(
     maintenance: "Un peu d'ordre, puis on repart.",
     general: "Le reste peut attendre.",
     unclear: "",
+    action_plan: "Valide chaque étape avant d'exécuter.",
   };
 
   return {
