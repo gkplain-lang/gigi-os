@@ -38,16 +38,22 @@ export function SideNav() {
         href={item.href}
         aria-current={isActive ? "page" : undefined}
         className={cn(
-          "gigi-focus group flex items-center gap-3 rounded-lg px-3 py-2 text-[14px] transition-colors",
+          "gigi-focus group relative flex items-center gap-3 rounded-lg px-3 py-2 text-[14px] transition-colors",
           isActive
-            ? "bg-white/[0.06] text-text-primary"
+            ? "bg-accent-dim text-text-primary"
             : "text-text-secondary hover:bg-white/[0.03] hover:text-text-primary"
         )}
       >
+        {isActive && (
+          <span
+            className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-accent"
+            aria-hidden
+          />
+        )}
         <Icon
           className={cn(
             "h-[17px] w-[17px] shrink-0",
-            isActive ? "text-accent" : "text-text-muted group-hover:text-text-secondary"
+            isActive ? "text-accent-soft" : "text-text-muted group-hover:text-text-secondary"
           )}
           strokeWidth={1.9}
         />
@@ -66,14 +72,17 @@ export function SideNav() {
       </div>
 
       <div
-        className="mb-4 rounded-lg border border-border bg-surface px-3 py-2"
+        className="gigi-panel mb-4 rounded-lg px-3 py-2.5"
         title={DAILY_USE_GUARDRAILS.long}
       >
         <div className="flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-ok" aria-hidden />
-          <span className="text-[12.5px] text-text-secondary">{SIDEBAR_READY_LABEL}</span>
+          <span className="relative flex h-2 w-2 items-center justify-center" aria-hidden>
+            <span className="absolute h-2 w-2 animate-ping rounded-full bg-ok/40" />
+            <span className="h-1.5 w-1.5 rounded-full bg-ok" />
+          </span>
+          <span className="text-[12.5px] font-medium text-text-secondary">{SIDEBAR_READY_LABEL}</span>
         </div>
-        <p className="mt-1 pl-3.5 text-[10.5px] leading-snug text-text-muted">
+        <p className="mt-1 pl-4 text-[10.5px] leading-snug text-text-muted">
           {DAILY_USE_GUARDRAILS.short}
         </p>
       </div>

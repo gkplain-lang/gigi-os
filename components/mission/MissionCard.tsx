@@ -60,11 +60,11 @@ export function MissionCard({
   const isActive = mission.status === "in_progress";
 
   return (
-    <div className="gigi-panel rounded-xl p-6">
+    <div className="gigi-panel-feature rounded-2xl p-6 md:p-7">
       <div className="flex flex-wrap items-center gap-2.5">
         {isActive ? (
-          <span className="inline-flex items-center gap-1.5 rounded-md border border-[rgba(142,167,194,0.35)] bg-accent-dim px-2 py-0.5 text-[12px] font-medium text-accent-soft">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+          <span className="inline-flex items-center gap-1.5 rounded-md border border-[rgba(124,140,255,0.4)] bg-accent-dim px-2 py-0.5 text-[12px] font-medium text-accent-soft">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" aria-hidden />
             En cours
           </span>
         ) : (
@@ -73,13 +73,13 @@ export function MissionCard({
         <span className="text-[13px] text-text-muted">{mission.projectName}</span>
       </div>
 
-      <h2 className="mt-3.5 text-[1.5rem] font-semibold leading-[1.15] tracking-tight text-text-primary md:text-[1.7rem]">
+      <h2 className="mt-3.5 text-[1.5rem] font-semibold leading-[1.15] tracking-tight text-text-primary md:text-[1.75rem]">
         {mission.title}
       </h2>
 
       <p className="mt-2.5 text-[14.5px] leading-relaxed text-text-secondary">{mission.reason}</p>
 
-      <div className="mt-5 border-t border-border pt-5">
+      <div className="mt-5 border-t border-border/70 pt-5">
         <MissionActions
           status={mission.status}
           onStart={onStart}

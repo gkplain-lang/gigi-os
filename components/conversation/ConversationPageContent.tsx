@@ -133,8 +133,8 @@ export function ConversationPageContent() {
   };
 
   const proposalPanel = (
-    <div className="gigi-panel rounded-xl p-5">
-      <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">
+    <div className={latest?.response.mission ? "gigi-panel-feature rounded-2xl p-5" : "gigi-panel rounded-xl p-5"}>
+      <p className="text-[11px] font-medium uppercase tracking-wider text-accent-soft/90">
         Mission proposée
       </p>
       {latest?.response.mission ? (
@@ -223,7 +223,7 @@ export function ConversationPageContent() {
             {exchanges.map((exchange) => (
               <div key={exchange.id} className="space-y-4">
                 <div className="flex justify-end">
-                  <p className="max-w-lg rounded-xl rounded-tr-sm border border-border bg-surface px-4 py-2.5 text-[14px] leading-relaxed text-text-primary">
+                  <p className="max-w-lg rounded-xl rounded-tr-sm border border-[rgba(124,140,255,0.28)] bg-accent-dim px-4 py-2.5 text-[14px] leading-relaxed text-text-primary">
                     {exchange.objective}
                   </p>
                 </div>

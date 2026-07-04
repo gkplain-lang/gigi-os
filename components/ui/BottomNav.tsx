@@ -29,12 +29,12 @@ export function BottomNav() {
               href={item.href}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "gigi-focus flex flex-1 flex-col items-center gap-1 rounded-lg py-2 text-[10px]",
+                "gigi-focus flex flex-1 flex-col items-center gap-1 rounded-lg py-2 text-[10px] transition-colors",
                 isActive ? "text-text-primary" : "text-text-muted"
               )}
             >
               <Icon
-                className={cn("h-[19px] w-[19px]", isActive && "text-accent")}
+                className={cn("h-[19px] w-[19px]", isActive && "text-accent-soft")}
                 strokeWidth={1.9}
               />
               <span className={isActive ? "font-medium" : ""}>{item.label}</span>
