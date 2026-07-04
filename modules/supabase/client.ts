@@ -41,6 +41,8 @@ export function getSupabaseClient(): SupabaseClient<Database> | null {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
+        detectSessionInUrl: true,
+        flowType: "pkce",
       },
     });
   }

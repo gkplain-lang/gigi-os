@@ -37,16 +37,31 @@ export async function getCurrentSession(): Promise<Session | null> {
 
   try {
     const { data, error } = await client.auth.getSession();
-    if (error) return null;
-    return data.session;
+    if (!error && data.session) return data.session;
+
+    const { data: userData, error: userError } = await client.auth.getUser();
+    if (!userError && userData.user) {
+      const { data: retry } = await client.auth.getSession();
+      return retry.session ?? null;
+    }
+
+    return null;
   } catch {
     return null;
   }
 }
 
 export async function getCurrentUser(): Promise<User | null> {
-  const session = await getCurrentSession();
-  return session?.user ?? null;
+  const client = getSupabaseClient();
+  if (!client) return null;
+
+  try {
+    const { data, error } = await client.auth.getUser();
+    if (error || !data.user) return null;
+    return data.user;
+  } catch {
+    return null;
+  }
 }
 
 export async function signInWithMagicLink(email: string): Promise<AuthResult> {
@@ -117,49 +132,200 @@ export function onAuthChange(callback: AuthChangeCallback): () => void {
   return () => subscription.unsubscribe();
 }
 
-export async function ensureUserProfile(): Promise<AuthResult> {
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isRlsError(code?: string, message?: string): boolean {
+  const msg = (message ?? "").toLowerCase();
+  return (
+    code === "42501" ||
+    msg.includes("permission") ||
+    msg.includes("row-level") ||
+    msg.includes("rls")
+  );
+}
+
+function isRetryableAuthError(code?: string, message?: string): boolean {
+  const msg = (message ?? "").toLowerCase();
+  return (
+    code === "PGRST301" ||
+    msg.includes("jwt") ||
+    msg.includes("token") ||
+    msg.includes("not authenticated")
+  );
+}
+
+function profileErrorMessage(
+  error: { code?: string; message?: string },
+  phase: "select" | "insert"
+): string {
+  const code = error.code;
+  const msg = (error.message ?? "").toLowerCase();
+
+  if (isRlsError(code, error.message)) {
+    return "Accès au profil refusé par la RLS. Vérifie les policies sur public.profiles (auth.uid() = id).";
+  }
+  if (code === "42P01" || msg.includes("does not exist")) {
+    return "La table public.profiles est absente. Exécute supabase/schema.sql dans Supabase.";
+  }
+  if (code === "42703" || msg.includes("column")) {
+    return "Structure de profil incompatible avec le schéma Gigi OS. Vérifie supabase/schema.sql.";
+  }
+  if (code === "23505") {
+    return "Le profil existe déjà — réessaie dans un instant.";
+  }
+
+  return phase === "select"
+    ? "Impossible de récupérer le profil."
+    : "Impossible de créer le profil.";
+}
+
+/** Waits until Supabase Auth exposes a validated user (avoids PostgREST race after magic link). */
+export async function waitForAuthenticatedUser(
+  maxAttempts = 10
+): Promise<User | null> {
+  const client = getSupabaseClient();
+  if (!client) return null;
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const { data, error } = await client.auth.getUser();
+    if (data.user && !error) return data.user;
+
+    if (error && !isRetryableAuthError(error.code, error.message) && attempt > 2) {
+      return null;
+    }
+
+    await delay(100 + attempt * 75);
+  }
+
+  return null;
+}
+
+async function fetchProfileByOwner(
+  userId: string
+): Promise<{ profile: AuthUserProfile | null; error: { code?: string; message?: string } | null }> {
+  const client = getSupabaseClient();
+  if (!client) {
+    return { profile: null, error: { message: "client missing" } };
+  }
+
+  // profiles.id = auth.users.id (see supabase/schema.sql)
+  const { data, error } = await client
+    .from("profiles")
+    .select("id, email, display_name, created_at, updated_at")
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (error) {
+    return { profile: null, error: { code: error.code, message: error.message } };
+  }
+
+  return { profile: (data as AuthUserProfile | null) ?? null, error: null };
+}
+
+async function createProfileForUser(user: User): Promise<AuthResult> {
   const client = getSupabaseClient();
   if (!client) {
     return { ok: false, error: "Supabase n'est pas configuré localement." };
   }
 
-  const user = await getCurrentUser();
+  const insertRow: ProfileInsert = {
+    id: user.id,
+    email: user.email ?? null,
+  };
+
+  const { data: created, error: insertError } = await client
+    .from("profiles")
+    // Cast required until full generated Database types (postgrest v2.109 Insert inference)
+    .insert(insertRow as never)
+    .select("id, email, display_name, created_at, updated_at")
+    .maybeSingle();
+
+  if (!insertError && created) {
+    return { ok: true, profile: created as AuthUserProfile };
+  }
+
+  if (insertError?.code === "23505") {
+    const refetch = await fetchProfileByOwner(user.id);
+    if (refetch.profile) {
+      return { ok: true, profile: refetch.profile };
+    }
+  }
+
+  if (insertError) {
+    return {
+      ok: false,
+      error: profileErrorMessage(insertError, "insert"),
+    };
+  }
+
+  return { ok: false, error: "Impossible de créer le profil." };
+}
+
+export async function ensureUserProfile(options?: {
+  user?: User;
+  retries?: number;
+}): Promise<AuthResult> {
+  const client = getSupabaseClient();
+  if (!client) {
+    return { ok: false, error: "Supabase n'est pas configuré localement." };
+  }
+
+  const user = options?.user ?? (await waitForAuthenticatedUser());
   if (!user) {
     return { ok: false, error: "Aucun utilisateur connecté." };
   }
 
+  const maxAttempts = options?.retries ?? 3;
+
   try {
-    const { data: existing, error: selectError } = await client
-      .from("profiles")
-      .select("id, email, display_name, created_at, updated_at")
-      .eq("id", user.id)
-      .maybeSingle();
+    for (let attempt = 0; attempt <= maxAttempts; attempt++) {
+      const { profile, error: selectError } = await fetchProfileByOwner(user.id);
 
-    if (selectError) {
-      return { ok: false, error: "Impossible de récupérer le profil." };
+      if (profile) {
+        return { ok: true, profile };
+      }
+
+      if (selectError) {
+        const retrySelect =
+          isRetryableAuthError(selectError.code, selectError.message) &&
+          attempt < maxAttempts;
+
+        if (retrySelect) {
+          await delay(120 + attempt * 80);
+          continue;
+        }
+
+        if (!isRlsError(selectError.code, selectError.message)) {
+          return {
+            ok: false,
+            error: profileErrorMessage(selectError, "select"),
+          };
+        }
+      }
+
+      const created = await createProfileForUser(user);
+      if (created.ok) {
+        return created;
+      }
+
+      const retryCreate =
+        attempt < maxAttempts &&
+        (created.error?.includes("réessaie") ||
+          created.error?.includes("RLS") ||
+          created.error?.includes("JWT") ||
+          created.error?.includes("jwt"));
+
+      if (retryCreate) {
+        await delay(120 + attempt * 80);
+        continue;
+      }
+
+      return created;
     }
 
-    if (existing) {
-      return { ok: true, profile: existing as AuthUserProfile };
-    }
-
-    const insertRow: ProfileInsert = {
-      id: user.id,
-      email: user.email ?? null,
-    };
-
-    const { data: created, error: insertError } = await client
-      .from("profiles")
-      // Cast required until full generated Database types (postgrest v2.109 Insert inference)
-      .insert(insertRow as never)
-      .select("id, email, display_name, created_at, updated_at")
-      .single();
-
-    if (insertError || !created) {
-      return { ok: false, error: "Impossible de créer le profil." };
-    }
-
-    return { ok: true, profile: created as AuthUserProfile };
+    return { ok: false, error: "Impossible de récupérer le profil." };
   } catch {
     return { ok: false, error: "Erreur lors de la gestion du profil." };
   }
@@ -191,15 +357,15 @@ export async function completeAuthCallback(): Promise<AuthResult> {
       }
     }
 
-    const session = await getCurrentSession();
-    if (!session?.user) {
+    const user = await waitForAuthenticatedUser();
+    if (!user) {
       return {
         ok: false,
         error: "Session introuvable. Le lien a peut-être expiré — réessaie.",
       };
     }
 
-    return ensureUserProfile();
+    return ensureUserProfile({ user, retries: 5 });
   } catch {
     return { ok: false, error: "Impossible de finaliser la connexion." };
   }

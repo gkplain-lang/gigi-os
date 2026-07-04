@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { completeAuthCallback } from "@/modules/supabase/auth";
+import { completeAuthCallback, ensureUserProfile } from "@/modules/supabase/auth";
 
 type CallbackState = "loading" | "success" | "error";
 
@@ -11,30 +11,46 @@ export default function AuthCallbackPage() {
   const router = useRouter();
   const [state, setState] = useState<CallbackState>("loading");
   const [error, setError] = useState<string | null>(null);
+  const [retrying, setRetrying] = useState(false);
+
+  const runCallback = useCallback(async () => {
+    setState("loading");
+    setError(null);
+
+    const result = await completeAuthCallback();
+
+    if (result.ok) {
+      setState("success");
+      router.replace("/");
+      return;
+    }
+
+    setState("error");
+    setError(result.error ?? "Impossible de finaliser la connexion.");
+  }, [router]);
+
+  const retryProfile = useCallback(async () => {
+    setRetrying(true);
+    setState("loading");
+    setError(null);
+
+    const result = await ensureUserProfile({ retries: 5 });
+
+    setRetrying(false);
+
+    if (result.ok) {
+      setState("success");
+      router.replace("/");
+      return;
+    }
+
+    setState("error");
+    setError(result.error ?? "Impossible de récupérer le profil.");
+  }, [router]);
 
   useEffect(() => {
-    let cancelled = false;
-
-    const run = async () => {
-      const result = await completeAuthCallback();
-      if (cancelled) return;
-
-      if (result.ok) {
-        setState("success");
-        router.replace("/");
-        return;
-      }
-
-      setState("error");
-      setError(result.error ?? "Impossible de finaliser la connexion.");
-    };
-
-    void run();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [router]);
+    void runCallback();
+  }, [runCallback]);
 
   return (
     <div className="animate-fade-in mx-auto max-w-md pt-8 text-center">
@@ -58,11 +74,19 @@ export default function AuthCallbackPage() {
             {error}
           </p>
           <div className="mt-4 flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={() => void retryProfile()}
+              disabled={retrying}
+              className="gigi-btn-primary gigi-focus inline-flex justify-center rounded-lg px-4 py-2.5 text-[14px] font-medium disabled:opacity-40"
+            >
+              {retrying ? "Nouvelle tentative…" : "Réessayer"}
+            </button>
             <Link
               href="/auth"
-              className="gigi-btn-primary gigi-focus inline-flex justify-center rounded-lg px-4 py-2.5 text-[14px] font-medium"
+              className="text-center text-[13px] text-text-muted transition-colors hover:text-text-secondary"
             >
-              Réessayer
+              Retour à la connexion
             </Link>
             <Link
               href="/"
