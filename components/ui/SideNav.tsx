@@ -80,6 +80,12 @@ export function SideNav() {
       <nav className="flex flex-col gap-0.5">{secondary.map(renderLink)}</nav>
 
       <div className="mt-auto space-y-3 border-t border-border px-3 pt-4">
+        <Link
+          href="/feedback"
+          className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
+        >
+          Feedback bêta
+        </Link>
         <AuthAccountStrip />
         <MemoryStatusStrip />
         <LocalResetButton onReset={resetLocalData} />

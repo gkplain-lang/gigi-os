@@ -5,6 +5,7 @@ import { MissionCard } from "@/components/mission/MissionCard";
 import { MissionSidebar } from "@/components/mission/MissionSidebar";
 import { MissionDone } from "@/components/mission/MissionDone";
 import { TaskChecklist } from "@/components/mission/TaskChecklist";
+import { DailyUseStrip } from "@/components/daily/DailyUseStrip";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { askGigi } from "@/modules/conversation/conversationBrain";
 
@@ -49,6 +50,7 @@ export function MissionPageContent() {
     return (
       <div className="animate-fade-in">
         <PageHeader title="Mission du jour" meta="C'est fait. Gigi peut préparer la suite." right={badge} />
+        <DailyUseStrip />
         <MissionDone
           completedTitle={mission.title}
           nextTitle={next.mission?.title}
@@ -63,6 +65,7 @@ export function MissionPageContent() {
     return (
       <div className="animate-fade-in">
         <PageHeader title="Mission du jour" right={badge} />
+        <DailyUseStrip />
         <div className="max-w-2xl">
           <MissionCard
             mission={mission}
@@ -85,6 +88,7 @@ export function MissionPageContent() {
   return (
     <div className="animate-fade-in">
       <PageHeader title="Mission du jour" meta={meta} right={badge} />
+      <DailyUseStrip />
 
       <div className="grid gap-4 lg:grid-cols-3 lg:items-start">
         <div className="space-y-4 lg:col-span-2">

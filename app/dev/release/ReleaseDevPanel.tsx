@@ -1,19 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { BetaFeedbackPanel } from "@/components/beta/BetaFeedbackPanel";
 import {
-  betaChecklistScore,
-  buildBetaChecklist,
-  FORBIDDEN_V09_REAL_ACTIONS,
-  formatModuleStatusLabel,
-  getBetaGuardrails,
-  KNOWN_BETA_RISKS,
-  NEXT_BETA_VALIDATIONS,
-  summarizeBetaReadiness,
-  V09_NO_AUTO_EXTERNAL_MESSAGE,
-  V09_PHASE_LABEL,
-} from "@/modules/beta";
+  buildReleaseChecklist,
+  FORBIDDEN_V10_REAL_ACTIONS,
+  formatReleaseModuleRole,
+  getReleaseGuardrails,
+  KNOWN_V10_RISKS,
+  MANUAL_V10_VALIDATIONS,
+  releaseChecklistScore,
+  summarizeReleaseReadiness,
+  V10_NOT_INCLUDED,
+  V10_NO_AUTO_EXTERNAL_MESSAGE,
+  V10_PHASE_LABEL,
+  V10_PROMISE,
+} from "@/modules/release";
 
 const panelStyle = {
   marginTop: 16,
@@ -23,17 +24,17 @@ const panelStyle = {
   padding: 20,
 } as const;
 
-function checklistStatusColor(status: string): string {
+function statusColor(status: string): string {
   if (status === "pass") return "#9bb59f";
   if (status === "manual") return "#d4a574";
   return "#71767f";
 }
 
-export function BetaDevPanel() {
-  const summary = summarizeBetaReadiness();
-  const score = betaChecklistScore();
-  const guardrails = getBetaGuardrails();
-  const checklist = buildBetaChecklist();
+export function ReleaseDevPanel() {
+  const summary = summarizeReleaseReadiness();
+  const score = releaseChecklistScore();
+  const guardrails = getReleaseGuardrails();
+  const checklist = buildReleaseChecklist();
 
   return (
     <>
@@ -47,7 +48,7 @@ export function BetaDevPanel() {
             marginBottom: 12,
           }}
         >
-          Statut bêta privée V0.9
+          Statut V1.0 Daily Use
         </p>
         <dl style={{ fontSize: 13, lineHeight: 1.8, color: "#a1a1aa" }}>
           <div style={{ display: "flex", gap: 8 }}>
@@ -56,21 +57,21 @@ export function BetaDevPanel() {
           </div>
           <div style={{ display: "flex", gap: 8 }}>
             <dt style={{ color: "#71767f", minWidth: 180 }}>Phase</dt>
-            <dd>{V09_PHASE_LABEL}</dd>
+            <dd>{V10_PHASE_LABEL}</dd>
           </div>
           <div style={{ display: "flex", gap: 8 }}>
-            <dt style={{ color: "#71767f", minWidth: 180 }}>Checklist auto</dt>
+            <dt style={{ color: "#71767f", minWidth: 180 }}>Promesse</dt>
+            <dd>{V10_PROMISE}</dd>
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <dt style={{ color: "#71767f", minWidth: 180 }}>Checklist</dt>
             <dd>
               {score.passed} pass · {score.manual} manuel · {score.total} total
             </dd>
           </div>
-          <div style={{ display: "flex", gap: 8 }}>
-            <dt style={{ color: "#71767f", minWidth: 180 }}>Feedbacks locaux</dt>
-            <dd>{summary.feedbackCount}</dd>
-          </div>
         </dl>
         <p style={{ marginTop: 12, fontSize: 12, color: "#71767f", fontStyle: "italic" }}>
-          {V09_NO_AUTO_EXTERNAL_MESSAGE}
+          {V10_NO_AUTO_EXTERNAL_MESSAGE}
         </p>
       </div>
 
@@ -87,14 +88,11 @@ export function BetaDevPanel() {
           Garde-fous actifs
         </p>
         <ul style={{ fontSize: 13, color: "#a1a1aa", lineHeight: 1.7, paddingLeft: 18 }}>
-          <li>Actions externes désactivées : {guardrails.externalActionsDisabled ? "Oui" : "Non"}</li>
-          <li>Dry-run only : {guardrails.dryRunOnly ? "Oui" : "Non"}</li>
-          <li>n8n branché : {guardrails.n8nConnected ? "Oui" : "Non"}</li>
-          <li>Intégrations réelles : {guardrails.realIntegrationsDisabled ? "Désactivées" : "Actives"}</li>
-          <li>Sync auto Supabase : {guardrails.autoSyncDisabled ? "Non" : "Oui"}</li>
-          <li>Restore auto Supabase : {guardrails.autoRestoreDisabled ? "Non" : "Oui"}</li>
-          <li>Confirmation obligatoire : {guardrails.confirmationRequired ? "Oui" : "Non"}</li>
-          <li>localStorage principal : {guardrails.localStoragePrimary ? "Oui" : "Non"}</li>
+          <li>Actions externes : {guardrails.externalActionsDisabled ? "désactivées" : "actives"}</li>
+          <li>Dry-run only : {guardrails.dryRunOnly ? "oui" : "non"}</li>
+          <li>n8n : {guardrails.n8nConnected ? "branché" : "non branché"}</li>
+          <li>Sync auto Supabase : {guardrails.autoSyncDisabled ? "non" : "oui"}</li>
+          <li>Confirmation obligatoire : {guardrails.confirmationRequired ? "oui" : "non"}</li>
         </ul>
       </div>
 
@@ -108,14 +106,12 @@ export function BetaDevPanel() {
             marginBottom: 12,
           }}
         >
-          Checklist bêta
+          Checklist daily use
         </p>
         <ul style={{ fontSize: 13, lineHeight: 1.8, paddingLeft: 0, listStyle: "none" }}>
           {checklist.map((item) => (
             <li key={item.id} style={{ marginBottom: 8, color: "#a1a1aa" }}>
-              <span style={{ color: checklistStatusColor(item.status), marginRight: 8 }}>
-                [{item.status}]
-              </span>
+              <span style={{ color: statusColor(item.status), marginRight: 8 }}>[{item.status}]</span>
               {item.label}
               {item.note && (
                 <span style={{ display: "block", fontSize: 11, color: "#71767f", marginTop: 2 }}>
@@ -137,12 +133,12 @@ export function BetaDevPanel() {
             marginBottom: 12,
           }}
         >
-          Modules clés
+          Modules critiques
         </p>
         <ul style={{ fontSize: 13, color: "#a1a1aa", lineHeight: 1.7, paddingLeft: 18 }}>
-          {summary.moduleHealth.map((m) => (
+          {summary.modules.map((m) => (
             <li key={m.module}>
-              {m.module} (v{m.version}) — {formatModuleStatusLabel(m.status)} — {m.note}
+              {m.module} — {formatReleaseModuleRole(m.role)} — {m.note}
             </li>
           ))}
         </ul>
@@ -161,12 +157,12 @@ export function BetaDevPanel() {
           Routes critiques
         </p>
         <ul style={{ fontSize: 13, color: "#a1a1aa", lineHeight: 1.7, paddingLeft: 18 }}>
-          {summary.criticalRoutes.map((r) => (
+          {summary.routes.map((r) => (
             <li key={r.path}>
               <Link href={r.path} style={{ color: "#9b9ba1", textDecoration: "none" }}>
                 {r.path}
               </Link>{" "}
-              — {r.label} ({r.role})
+              — {r.label}
             </li>
           ))}
         </ul>
@@ -182,10 +178,29 @@ export function BetaDevPanel() {
             marginBottom: 12,
           }}
         >
-          Interdit en V0.9
+          V1.0 ne signifie pas
         </p>
         <ul style={{ fontSize: 13, color: "#a1a1aa", lineHeight: 1.7, paddingLeft: 18 }}>
-          {FORBIDDEN_V09_REAL_ACTIONS.map((item) => (
+          {V10_NOT_INCLUDED.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div style={panelStyle}>
+        <p
+          style={{
+            fontSize: 11,
+            letterSpacing: 1,
+            textTransform: "uppercase",
+            color: "#71767f",
+            marginBottom: 12,
+          }}
+        >
+          Interdit
+        </p>
+        <ul style={{ fontSize: 13, color: "#a1a1aa", lineHeight: 1.7, paddingLeft: 18 }}>
+          {FORBIDDEN_V10_REAL_ACTIONS.map((item) => (
             <li key={item}>{item}</li>
           ))}
         </ul>
@@ -204,7 +219,7 @@ export function BetaDevPanel() {
           Risques connus
         </p>
         <ul style={{ fontSize: 13, color: "#a1a1aa", lineHeight: 1.7, paddingLeft: 18 }}>
-          {KNOWN_BETA_RISKS.map((risk) => (
+          {KNOWN_V10_RISKS.map((risk) => (
             <li key={risk}>{risk}</li>
           ))}
         </ul>
@@ -220,26 +235,24 @@ export function BetaDevPanel() {
             marginBottom: 12,
           }}
         >
-          Prochaines validations
+          Validations manuelles
         </p>
         <ul style={{ fontSize: 13, color: "#a1a1aa", lineHeight: 1.7, paddingLeft: 18 }}>
-          {NEXT_BETA_VALIDATIONS.map((v) => (
+          {MANUAL_V10_VALIDATIONS.map((v) => (
             <li key={v}>{v}</li>
           ))}
         </ul>
       </div>
 
-      <BetaFeedbackPanel compact />
-
       <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 8 }}>
+        <Link href="/" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
+          Mission du jour →
+        </Link>
         <Link href="/feedback" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           /feedback →
         </Link>
-        <Link href="/dev/release" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
-          Dev · Release →
-        </Link>
-        <Link href="/dev/ai" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
-          Dev · AI →
+        <Link href="/dev/beta" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
+          Dev · Beta →
         </Link>
         <Link href="/conversation" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           /conversation →
