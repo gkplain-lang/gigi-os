@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 import type { Project, ProjectStatus } from "@/modules/projects/projectTypes";
 import { PROJECT_CONTEXT_LABELS } from "@/data/projectLabels";
 import { StatusPill } from "@/components/ui/StatusPill";
@@ -64,13 +66,15 @@ export function ProjectCard({
         : PROJECT_CONTEXT_LABELS[project.id] ?? project.description;
 
   return (
-    <article
+    <Link
+      href={`/projects/${project.id}`}
       className={cn(
-        "gigi-project-card",
+        "gigi-project-card gigi-focus block transition-transform hover:translate-y-[-1px]",
         isPrimary && "gigi-project-card-primary",
         isMuted && !isPrimary && "gigi-project-card-muted"
       )}
     >
+      <article>
       <div className="flex gap-4">
         <PriorityRing score={score} />
 
@@ -130,8 +134,14 @@ export function ProjectCard({
               {project.progress}%
             </span>
           </div>
+
+          <p className="mt-3 flex items-center gap-1 text-[12px] font-medium text-accent-soft/90">
+            Voir les missions possibles
+            <ChevronRight className="h-3.5 w-3.5" aria-hidden />
+          </p>
         </div>
       </div>
-    </article>
+      </article>
+    </Link>
   );
 }
