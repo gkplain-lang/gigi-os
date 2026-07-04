@@ -446,6 +446,8 @@ No team accounts
 
 > **V0.6.1 (daily review)** — voir `docs/DAILY_REVIEW_SYSTEM.md` : revue quotidienne read-only depuis localStorage, signaux, projets stale, blocages.
 
+> **V0.6.2 (action confirmation UX)** — voir `docs/ACTION_CONFIRMATION_UX.md` : confirmation dry-run des Action Proposals, aucune exécution réelle.
+
 ## Goal
 
 Add AI carefully to improve clarity and usefulness.
@@ -523,6 +525,8 @@ No GitHub automation
 > **V0.6.0 (agents foundation)** — voir `docs/AGENTS_FOUNDATION.md` : propositions d'action dry-run, garde-fous, pas de n8n ni d'exécution externe.
 
 > **V0.6.1 (daily review)** — voir `docs/DAILY_REVIEW_SYSTEM.md` : bilan matinal read-only, projets stale, blocages, mission du jour.
+
+> **V0.6.2 (action confirmation UX)** — voir `docs/ACTION_CONFIRMATION_UX.md` : UX de confirmation pour proposals dry-run, exécution réelle désactivée.
 
 ## Goal (V0.6.1 — Daily Review)
 

@@ -50,3 +50,16 @@ export {
   listForbiddenActionLabels,
   summarizeAgentFoundation,
 } from "./actionSummary";
+
+export type { ConfirmationStatus } from "./types";
+
+export {
+  applyConfirmationDefaults,
+  buildConfirmationViewModel,
+  cancelConfirmation,
+  confirmDryRunLocally,
+  confirmationStatusLabel,
+  summarizeConfirmationUx,
+  V062_NO_EXTERNAL_MESSAGE,
+  V062_REAL_BLOCKED_MESSAGE,
+} from "./confirmation";
