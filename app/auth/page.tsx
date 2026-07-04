@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { useAuth } from "@/components/providers/AuthProvider";
-import { ASSISTANT_NAME, PRODUCT_NAME } from "@/lib/branding";
+import { PRODUCT_NAME } from "@/lib/branding";
 
 export default function AuthPage() {
   const { status, user, signIn } = useAuth();
@@ -35,7 +35,7 @@ export default function AuthPage() {
       <div className="gigi-page-content">
       <PageHeader
         title={`Connexion à ${PRODUCT_NAME}`}
-        meta={`La connexion servira bientôt à synchroniser ta mémoire ${ASSISTANT_NAME}. Pour l'instant, ${PRODUCT_NAME} reste utilisable en local.`}
+        meta="La connexion servira bientôt à synchroniser ta mémoire. Pour l'instant, tout fonctionne en local."
       />
 
       {status === "not_configured" && (

@@ -23,7 +23,7 @@ export const PROJECT_NAMES: Record<string, string> = {
   linko: "Linko",
   "1millimetre": "1Millimètre",
   "le-dernier-souvenir": "Le Dernier Souvenir",
-  "gigi-os": "Aegis",
+  "gigi-os": "Gigi",
 };
 
 export const PROJECT_STATUS: Record<string, CatalogProjectStatus> = {
@@ -394,7 +394,7 @@ const RAW: RawMission[] = [
     projectId: "gigi-os",
     title: "Tester le prototype conversationnel",
     reason:
-      "Aegis est ton outil interne et un futur produit. Le tester révèle vite ce qui sonne juste ou faux.",
+      "Gigi est ton OS personnel en construction. Le tester révèle vite ce qui sonne juste ou faux.",
     estimatedTime: "~30 min",
     impact: 7,
     clarity: 7,

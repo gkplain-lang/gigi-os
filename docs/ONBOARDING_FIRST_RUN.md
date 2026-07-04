@@ -20,7 +20,7 @@ L'utilisateur doit comprendre :
 - comment obtenir sa première mission ;
 - que tout reste en **simulation / dry-run** côté actions externes.
 
-**Promesse :** « Ouvre Aegis. Parle à Gigi. Exécute. »
+**Promesse :** « Ouvre Gigi. Sache quoi faire. Exécute. »
 
 ---
 

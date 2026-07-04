@@ -12,7 +12,7 @@ Branch: `v1.0-daily-use-release`
 
 Rendre Gigi OS **fiable, claire et utilisable chaque jour**.
 
-**Promesse :** « Ouvre Aegis. Parle à Gigi. Exécute. »
+**Promesse :** « Ouvre Gigi. Sache quoi faire. Exécute. »
 
 V1.0 ne branche **pas** d'intégrations réelles, n8n, ni agents autonomes.
 

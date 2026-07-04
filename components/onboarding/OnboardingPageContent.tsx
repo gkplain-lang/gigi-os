@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
-import { GigiOrb } from "@/components/ui/GigiOrb";
+import { GigiMark } from "@/components/brand/GigiMark";
 import { useGigi } from "@/components/providers/GigiProvider";
 import {
   canAdvanceFromStep,
@@ -87,12 +87,12 @@ export function OnboardingPageContent() {
     <div className="gigi-page-shell gigi-wizard-shell gigi-shell-glow animate-fade-in mx-auto">
       <div className="gigi-page-spotlight" aria-hidden />
       <div className="gigi-page-content relative z-[1]">
-        <div className="mb-6 flex items-center gap-3">
-          <GigiOrb size="sm" tone="warm" />
+        <div className="mb-6 flex items-start gap-2.5">
+          <GigiMark size="sm" title="Gigi" className="mt-1.5 shrink-0" />
           <div>
             <p className="gigi-mission-control-label">Premiers pas</p>
-            <h1 className="text-[21px] font-bold tracking-tight text-text-primary">
-              Bienvenue dans Aegis
+            <h1 className="font-display text-[1.45rem] font-semibold tracking-[-0.03em] text-text-primary">
+              Bienvenue dans Gigi
             </h1>
             <p className="mt-1 text-[13px] text-text-secondary">
               Étape {step.order} sur {ONBOARDING_STEPS.length} · {step.subtitle}

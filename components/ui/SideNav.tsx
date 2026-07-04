@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Target, MessageCircle, Layers, Compass, Clock } from "lucide-react";
-import { APP_NAME, NAV_ITEMS } from "@/lib/constants";
-import { AegisMark } from "@/components/brand/AegisMark";
+import { NAV_ITEMS } from "@/lib/constants";
+import { GigiBrand } from "@/components/brand/GigiBrand";
 import { LocalResetButton } from "./LocalResetButton";
 import { AuthAccountStrip } from "./AuthAccountStrip";
 import { MemoryStatusStrip } from "@/components/memory/MemoryStatusStrip";
@@ -66,18 +66,9 @@ export function SideNav() {
 
   return (
     <aside className="gigi-sidebar-shell sticky top-0 hidden h-screen w-[260px] shrink-0 flex-col px-4 py-5 lg:flex">
-      <div className="flex items-center gap-3 px-2 pb-5">
-        <span className="relative flex shrink-0 items-center justify-center">
-          <span
-            className="absolute inset-0 scale-[1.8] rounded-full bg-accent/30 blur-lg"
-            aria-hidden
-          />
-          <AegisMark size="md" className="relative drop-shadow-[0_0_12px_rgba(124,140,255,0.65)]" />
-        </span>
-        <span className="font-display text-[17px] font-medium tracking-tight text-text-primary">
-          {APP_NAME}
-        </span>
-      </div>
+      <Link href="/" className="gigi-focus flex items-center px-2 pb-5">
+        <GigiBrand size="md" />
+      </Link>
 
       <div
         className="gigi-status-ready mb-4 rounded-lg px-3 py-2.5"

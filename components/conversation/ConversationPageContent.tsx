@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { ArrowUp, Check, RefreshCw, Sparkles } from "lucide-react";
+import { ArrowUp, Check, RefreshCw } from "lucide-react";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { GigiOrb } from "@/components/ui/GigiOrb";
+import { GigiMark } from "@/components/brand/GigiMark";
 import { AiEngineBadge } from "@/components/ai/AiEngineBadge";
 import { askAiBrain, aiBrainToGigiResponse, tryBuildAiMemoryContext, useAiAvailability } from "@/modules/ai";
 import type { AiBrainMode } from "@/modules/ai";
@@ -210,14 +210,15 @@ export function ConversationPageContent() {
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
           <div className="gigi-assistant-panel">
             <div className="gigi-assistant-header">
-              <GigiOrb size="md" tone="warm" />
+              <GigiMark size="sm" title="Gigi" className="mt-0.5 shrink-0" />
               <div className="min-w-0 flex-1">
-                <p className="text-[15px] font-semibold text-text-primary">Copilote de décision</p>
-                <p className="text-[12.5px] text-text-secondary" title={SIMULATION_NOTE.long}>
+                <p className="text-[15px] font-semibold tracking-[-0.01em] text-text-primary">
+                  Copilote de décision
+                </p>
+                <p className="mt-0.5 text-[12.5px] text-text-secondary" title={SIMULATION_NOTE.long}>
                   {SIMULATION_NOTE.short}
                 </p>
               </div>
-              <Sparkles className="hidden h-4 w-4 text-accent-soft/60 sm:block" aria-hidden />
             </div>
 
             {exchanges.length === 0 && (

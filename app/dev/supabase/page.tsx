@@ -19,7 +19,7 @@ export default function DevSupabasePage() {
     >
       <DevSupabaseStatus />
       <p className="mt-4 text-[13px] leading-relaxed text-text-secondary">
-        V0.4.3 ajoute l&apos;auth, mais Aegis utilise encore localStorage comme source principale (
+        V0.4.3 ajoute l&apos;auth, mais Gigi utilise encore localStorage comme source principale (
         <code className="text-accent-soft">gigi-os-v03-state</code>).
       </p>
     </DevPageLayout>
