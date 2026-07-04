@@ -2,6 +2,7 @@ import type { HistoryEvent } from "../history/historyTypes";
 import type { Mission } from "../missions/missionTypes";
 import type { Project } from "../projects/projectTypes";
 import type { MissionExecutionHints } from "../missionExecution/types";
+import type { OnboardingState } from "../onboarding/types";
 
 export interface GigiLocalState {
   mission: Mission;
@@ -12,6 +13,8 @@ export interface GigiLocalState {
   rejectedMissionIds: string[];
   /** V0.5.4 — tasks / nextStep from last Gigi recommendation */
   executionHints?: MissionExecutionHints | null;
+  /** V1.4 — first-run onboarding preferences (local only) */
+  onboarding?: OnboardingState;
 }
 
 export const STORAGE_KEY = "gigi-os-v03-state";

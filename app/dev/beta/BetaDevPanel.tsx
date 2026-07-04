@@ -238,6 +238,9 @@ export function BetaDevPanel() {
         <Link href="/dev/release" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           Dev · Release →
         </Link>
+        <Link href="/dev/onboarding" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
+          Dev · Onboarding →
+        </Link>
         <Link href="/dev/ai" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           Dev · AI →
         </Link>
