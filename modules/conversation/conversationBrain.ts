@@ -44,6 +44,12 @@ import {
   detectFollowUpActionIntent,
   getFollowUpProposalsForReview,
 } from "@/modules/followUpActions";
+import {
+  HISTORY_LEARNING_DISCLAIMER,
+  buildHistoryLearningGuidanceHints,
+  detectHistoryLearningIntent,
+  generateGlobalSummary,
+} from "@/modules/historyLearning";
 import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions/types";
 import type {
   ConversationContext,
@@ -350,6 +356,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   execution_log: "Journal d'exécution",
   execution_review: "Review d'exécution",
   follow_up_action: "Action de suivi",
+  history_learning: "Historique & apprentissage",
 };
 
 function clarificationResponse(): GigiConversationResponse {
@@ -386,6 +393,58 @@ function allDoneResponse(
 }
 
 // ---------------------------------------------------------------- main
+
+function buildHistoryLearningResponse(
+  objective: string,
+  projectId: string | null
+): GigiConversationResponse {
+  const hints = buildHistoryLearningGuidanceHints(objective);
+  const summary = generateGlobalSummary(projectId ?? undefined);
+  const log = findBestLogForReview(projectId);
+  const review = log ? getLatestReviewForLog(log.id) : undefined;
+
+  if (summary.totalEntries > 0) {
+    return {
+      intent: "history_learning",
+      intentLabel: `${INTENT_LABELS.history_learning}${projectId ? ` · ${PROJECT_NAMES[projectId as keyof typeof PROJECT_NAMES] ?? projectId}` : ""}`,
+      listen: `Tu as ${summary.totalEntries} entrée(s) locale(s) dans la boucle d'apprentissage — je n'ai pas vérifié le repo ni GitHub.`,
+      needsClarification: false,
+      priorityProjectName: log?.projectName,
+      historyLearningSummaryText: summary.summaryText,
+      historyLearningGuidance: hints,
+      historyLearningBlockedMessage: HISTORY_LEARNING_DISCLAIMER,
+      finalMessage:
+        summary.topLearnings[0]
+          ? `Leçon récente : ${summary.topLearnings[0]} — ouvre /history pour le détail.`
+          : "Ouvre /history pour voir signaux, apprentissages et recommandations futures.",
+    };
+  }
+
+  if (review) {
+    return {
+      intent: "history_learning",
+      intentLabel: INTENT_LABELS.history_learning,
+      listen:
+        "Tu peux archiver cette review dans l'historique depuis /actions — trace additive, sans supprimer la source.",
+      needsClarification: false,
+      priorityProjectName: log?.projectName,
+      historyLearningGuidance: hints,
+      historyLearningBlockedMessage: HISTORY_LEARNING_DISCLAIMER,
+      finalMessage: "Review disponible → « Archiver dans l'historique » sous la review dans /actions.",
+    };
+  }
+
+  return {
+    intent: "history_learning",
+    intentLabel: INTENT_LABELS.history_learning,
+    listen:
+      "L'historique d'apprentissage est local et déclaratif — je ne lis pas GitHub, Supabase ni le repo.",
+    needsClarification: false,
+    historyLearningGuidance: hints,
+    historyLearningBlockedMessage: HISTORY_LEARNING_DISCLAIMER,
+    finalMessage: "Valide → exécute → journal → review, puis archive dans /history quand tu veux garder une trace.",
+  };
+}
 
 function buildFollowUpActionResponse(
   objective: string,
@@ -621,6 +680,15 @@ export function askGigi(
   _projects: unknown,
   context: ConversationContext = {}
 ): GigiConversationResponse {
+  const historyIntent = detectHistoryLearningIntent(objective);
+  if (historyIntent.isHistoryLearning) {
+    const projectId =
+      historyIntent.projectId ??
+      context.currentProjectId ??
+      detectProject(normalize(objective));
+    return buildHistoryLearningResponse(objective, projectId);
+  }
+
   const followUpIntent = detectFollowUpActionIntent(objective);
   if (followUpIntent.isFollowUpAction) {
     const projectId =
@@ -824,6 +892,7 @@ export function askGigi(
     execution_log: "Enregistre ton retour dans /actions — Gigi ne vérifie pas automatiquement.",
     execution_review: "Review basée sur les logs manuels — ouvre /actions pour le détail.",
     follow_up_action: "Propositions locales — ajoute manuellement à la file si tu retiens.",
+    history_learning: "Historique local uniquement — archive manuellement depuis /actions ou /history.",
   };
 
   return {
