@@ -55,4 +55,12 @@ export {
   resetOnboardingState,
 } from "./onboardingState";
 
+export {
+  mergeMissingStarterProjects,
+  restoreStarterProjectsState,
+  STARTER_PROJECTS_RESTORE_HINT,
+  ONBOARDING_RESET_HINT,
+  type RestoreStarterProjectsResult,
+} from "./starterProjectsRestore";
+
 export { ONBOARDING_GUARDRAILS, summarizeOnboarding } from "./onboardingSummary";

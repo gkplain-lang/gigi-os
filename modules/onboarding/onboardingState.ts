@@ -252,10 +252,11 @@ const ONBOARDING_ALL_STEPS: OnboardingStepId[] = [
 ];
 
 export function resetOnboardingState(state: GigiLocalState): GigiLocalState {
+  const hasRealMission = state.mission.id !== PLACEHOLDER_MISSION.id;
+
   return {
     ...state,
-    mission: PLACEHOLDER_MISSION,
-    projects: [],
+    mission: hasRealMission ? state.mission : PLACEHOLDER_MISSION,
     onboarding: createOnboardingState(),
   };
 }
