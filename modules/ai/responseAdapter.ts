@@ -12,6 +12,7 @@ import type {
 } from "./types";
 import { mergeSafety } from "./safety";
 import { enrichAiBrainDecision } from "./decisionQuality/decisionFormatter";
+import { V06_BLOCKED_MESSAGE } from "@/modules/agents";
 
 function mapIntent(raw: string): ConversationIntent {
   const norm = raw.toLowerCase();
@@ -67,6 +68,10 @@ export function aiBrainToGigiResponse(ai: AiBrainResponse): GigiConversationResp
       alternative: ai.alternative,
       notNow: ai.notNow,
       finalMessage: ai.message,
+      actionProposals: ai.actionProposals,
+      agentBlockedMessage: ai.actionProposals?.some((p) => p.blockedReason)
+        ? V06_BLOCKED_MESSAGE
+        : undefined,
     };
   }
 
@@ -90,6 +95,10 @@ export function aiBrainToGigiResponse(ai: AiBrainResponse): GigiConversationResp
     alternative: ai.alternative,
     notNow: ai.notNow,
     finalMessage: ai.nextStep ?? "Le reste peut attendre.",
+    actionProposals: ai.actionProposals,
+    agentBlockedMessage: ai.actionProposals?.some((p) => p.blockedReason)
+      ? V06_BLOCKED_MESSAGE
+      : undefined,
   };
 }
 

@@ -90,7 +90,7 @@ V0.2 — Static UI Prototype
 V0.3 — Local Functional MVP
 V0.4 — Supabase MVP
 V0.5 — AI-Assisted MVP
-V0.6 — Daily Review System
+V0.6 — Agents Foundation + Daily Review System
 V0.7 — Automation Preparation
 V0.8 — Integrations Alpha
 V0.9 — Private Beta
@@ -442,6 +442,8 @@ No team accounts
 
 > **V0.5.4 (execution loop)** — voir `docs/MISSION_EXECUTION_LOOP.md` : boucle d'exécution mission (démarrer, terminer, reporter, historique enrichi).
 
+> **V0.6.0 (agents foundation)** — voir `docs/AGENTS_FOUNDATION.md` : agents contrôlés en dry-run, niveau max `level_1_prepare_only`, aucune exécution externe.
+
 ## Goal
 
 Add AI carefully to improve clarity and usefulness.
@@ -514,9 +516,11 @@ No GitHub automation
 
 ---
 
-# 10. V0.6 — Daily Review System
+# 10. V0.6 — Agents Foundation + Daily Review System
 
-## Goal
+> **V0.6.0 (agents foundation)** — voir `docs/AGENTS_FOUNDATION.md` : propositions d'action dry-run, garde-fous, pas de n8n ni d'exécution externe.
+
+## Goal (V0.6.1 — Daily Review)
 
 Make Gigi OS useful every morning.
 

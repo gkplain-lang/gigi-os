@@ -82,6 +82,9 @@ export function ExecutionDevPanel() {
         <Link href="/dev/ai" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           Dev · AI →
         </Link>
+        <Link href="/dev/agents" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
+          Dev · Agents →
+        </Link>
         <Link href="/" style={{ fontSize: 13, color: "#71767f", textDecoration: "none" }}>
           Mission du jour →
         </Link>

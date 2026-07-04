@@ -71,3 +71,13 @@ export type {
 } from "./decisionQuality";
 
 export { useAiAvailability } from "./useAiAvailability";
+
+export {
+  applyAgentProposals,
+  detectActionProposals,
+  V06_BLOCKED_MESSAGE,
+  summarizeAgentFoundation,
+  ACTIVE_MAX_AUTONOMY_LEVEL,
+} from "@/modules/agents";
+
+export type { ActionProposal } from "@/modules/agents";
