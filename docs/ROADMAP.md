@@ -688,65 +688,53 @@ See [INTEGRATIONS_ALPHA.md](./INTEGRATIONS_ALPHA.md) for full details.
 
 ---
 
-# 13. V0.9 — Private Beta
+# 13. V0.9 — Private Beta Readiness
 
 ## Goal
 
-Test Gigi OS with real users beyond Germain.
+Prepare Gigi OS for a private, invite-only beta — stable, secure, dry-run guardrails intact.
 
 ## Core Question
 
 ```text
-Does Gigi OS help other builders know what to do next?
+Is Gigi OS ready for a small group of testers without real external execution?
 ```
 
-## Beta Users
-
-Possible users:
+## Features
 
 ```text
-indie hackers
-freelancers
-small business creators
-AI builders
-solo founders
+Beta module (modules/beta/)
+Private beta checklist (16 items)
+Module health dashboard
+Local feedback system (localStorage)
+/dev/beta readiness page
+/feedback for testers
+Documentation (PRIVATE_BETA_READINESS.md)
 ```
 
-## Beta Requirements
+## Not Activated in V0.9
 
 ```text
-simple onboarding
-project creation
-mission recommendation
-mission history
-feedback collection
-bug reporting
-basic analytics
-```
-
-## Metrics
-
-Track:
-
-```text
-daily active use
-missions completed
-missions rejected
-time to first mission
-project creation rate
-return rate
-user feedback
+Real GitHub API
+Real n8n / agents
+Gmail / Calendar
+Auto Supabase sync/restore
+Public landing / payment
+External feedback API
 ```
 
 ## Acceptance Criteria
 
 V0.9 is complete when:
 
-- at least a small group uses the product;
-- users understand the value;
-- users complete missions;
-- feedback confirms the core problem;
-- product confusion is reduced.
+- all critical routes work;
+- /dev/beta shows checklist and guardrails;
+- local feedback works without external send;
+- dry-run guardrails from V0.6–V0.8 remain enforced;
+- npm run build passes;
+- no real external actions by default.
+
+See [PRIVATE_BETA_READINESS.md](./PRIVATE_BETA_READINESS.md) for full details.
 
 ---
 
