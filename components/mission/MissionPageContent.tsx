@@ -1,11 +1,21 @@
 "use client";
 
-import Link from "next/link";
-import { MessageCircle } from "lucide-react";
-import { GigiMessage } from "@/components/ui/GigiMessage";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { MissionCard } from "@/components/mission/MissionCard";
-import { MissionSupportingPanel } from "@/components/mission/MissionSupportingPanel";
+import { MissionSidebar } from "@/components/mission/MissionSidebar";
+import { MissionDone } from "@/components/mission/MissionDone";
+import { TaskChecklist } from "@/components/mission/TaskChecklist";
 import { useGigi } from "@/components/providers/GigiProvider";
+import { getCatalogMission } from "@/modules/conversation/missionCatalog";
+import { askGigi } from "@/modules/conversation/conversationBrain";
+
+const STATUS_BADGE: Record<string, string> = {
+  recommended: "Recommandée",
+  in_progress: "En cours",
+  completed: "Terminée",
+  postponed: "Reportée",
+  rejected_for_now: "Pas maintenant",
+};
 
 export function MissionPageContent() {
   const {
@@ -15,78 +25,82 @@ export function MissionPageContent() {
     completeMission,
     postponeMission,
     rejectMission,
+    applyNextMission,
+    getDecision,
   } = useGigi();
 
-  if (!isHydrated) {
-    return null;
-  }
+  if (!isHydrated) return null;
 
   const { mission } = state;
+  const tasks = getCatalogMission(mission.id)?.subtasks?.slice(0, 3) ?? [];
+  const active = mission.status === "recommended" || mission.status === "in_progress";
 
-  const intro: Record<
-    typeof mission.status,
-    { primary: string; secondary?: string; tone?: "warm" | "done" }
-  > = {
-    recommended: {
-      primary: "J'ai choisi une seule mission pour toi aujourd'hui.",
-      secondary: "Une action. Aucun bruit.",
-    },
-    in_progress: {
-      primary: "Tu es sur ta mission.",
-      secondary: "Reste ici. Je garde le reste au calme.",
-    },
-    completed: {
-      primary: "Voilà. C'est fait.",
-      tone: "done",
-    },
-    postponed: {
-      primary: "C'est noté. On la garde pour plus tard.",
-    },
-    rejected_for_now: {
-      primary: "Pas maintenant, d'accord.",
-    },
-  };
+  const badge = (
+    <span className="rounded-md border border-border bg-surface px-2.5 py-1 text-[12px] text-text-secondary">
+      {STATUS_BADGE[mission.status]}
+    </span>
+  );
 
-  const current = intro[mission.status];
-  const showSupporting =
-    mission.status === "recommended" || mission.status === "in_progress";
+  // Completed — active guiding screen
+  if (mission.status === "completed") {
+    const next = askGigi("Quelle est la prochaine mission ?", state.projects, {
+      completedMissionIds: state.completedMissionIds,
+    });
+    return (
+      <div className="animate-fade-in">
+        <PageHeader title="Mission du jour" meta="C'est fait. Gigi peut préparer la suite." right={badge} />
+        <MissionDone
+          completedTitle={mission.title}
+          nextTitle={next.mission?.title}
+          onNext={applyNextMission}
+        />
+      </div>
+    );
+  }
+
+  // Postponed / rejected
+  if (!active) {
+    return (
+      <div className="animate-fade-in">
+        <PageHeader title="Mission du jour" right={badge} />
+        <div className="max-w-2xl">
+          <MissionCard
+            mission={mission}
+            onStart={startMission}
+            onComplete={completeMission}
+            onPostpone={postponeMission}
+            onReject={rejectMission}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  const ignored = getDecision().alternatives.slice(0, 3);
+  const meta =
+    mission.status === "in_progress"
+      ? "Mission en cours — Gigi garde le reste au calme."
+      : "Gigi a choisi. Une action, aucun bruit.";
 
   return (
     <div className="animate-fade-in">
-      <section className="mb-14 md:mb-20">
-        <GigiMessage
-          primary={current.primary}
-          secondary={current.secondary}
-          tone={current.tone}
-        />
-      </section>
+      <PageHeader title="Mission du jour" meta={meta} right={badge} />
 
-      <MissionCard
-        mission={mission}
-        onStart={startMission}
-        onComplete={completeMission}
-        onPostpone={postponeMission}
-        onReject={rejectMission}
-      />
+      <div className="grid gap-4 lg:grid-cols-3 lg:items-start">
+        <div className="space-y-4 lg:col-span-2">
+          <MissionCard
+            mission={mission}
+            onStart={startMission}
+            onComplete={completeMission}
+            onPostpone={postponeMission}
+            onReject={rejectMission}
+          />
+          <TaskChecklist tasks={tasks} title={mission.status === "in_progress" ? "Tes étapes" : "Tes 3 tâches"} />
+        </div>
 
-      {showSupporting && (
-        <>
-          <div className="my-14 h-px max-w-2xl bg-white/[0.06] md:my-16" />
-          <MissionSupportingPanel mission={mission} />
-        </>
-      )}
-
-      <div className="mt-14 max-w-2xl md:mt-16">
-        <Link
-          href="/conversation"
-          className="group inline-flex items-center gap-3 rounded-2xl px-4 py-3 text-[15px] text-text-muted transition-colors hover:bg-white/[0.03] hover:text-text-secondary"
-        >
-          <MessageCircle className="h-[18px] w-[18px] text-copper-soft" />
-          Parler à Gigi
-          <span className="text-text-muted/50 transition-transform group-hover:translate-x-0.5">
-            →
-          </span>
-        </Link>
+        <div className="lg:col-span-1">
+          <MissionSidebar mission={mission} ignored={ignored} />
+        </div>
       </div>
     </div>
   );

@@ -15,6 +15,7 @@ import { createInitialState } from "@/modules/storage/initialState";
 import { loadState, saveState } from "@/modules/storage/localStorage";
 import { createHistoryEntry } from "@/modules/history/historyUtils";
 import { explainDecisionFromProjects } from "@/modules/decision-engine/runDecisionEngine";
+import { askGigi } from "@/modules/conversation/conversationBrain";
 
 interface GigiContextValue {
   state: GigiLocalState;
@@ -25,6 +26,8 @@ interface GigiContextValue {
   rejectMission: () => void;
   resetLocalData: () => void;
   applyRecommendedMission: (mission: Mission) => void;
+  applyNextMission: () => boolean;
+  hasNextMission: () => boolean;
   getDecision: () => ReturnType<typeof explainDecisionFromProjects>;
   getMissionProjectLabel: (projectId: string) => string | undefined;
 }
@@ -151,6 +154,38 @@ export function GigiProvider({ children }: { children: ReactNode }) {
     [updateState]
   );
 
+  // Reuses the existing deterministic brain to pick the next available mission
+  // (completed ones are already excluded by askGigi). Pure composition — no logic change.
+  const applyNextMission = useCallback(() => {
+    let applied = false;
+    updateState((prev) => {
+      const res = askGigi("Quelle est la prochaine mission ?", prev.projects, {
+        completedMissionIds: prev.completedMissionIds,
+      });
+      if (!res.mission) return prev;
+      applied = true;
+      return {
+        ...prev,
+        mission: { ...res.mission, status: "recommended" },
+        history: [
+          createHistoryEntry(
+            "decision_created",
+            `Gigi a recommandé : ${res.mission.title.replace(/\.$/, "")}.`
+          ),
+          ...prev.history,
+        ],
+      };
+    });
+    return applied;
+  }, [updateState]);
+
+  const hasNextMission = useCallback(() => {
+    const res = askGigi("Quelle est la prochaine mission ?", state.projects, {
+      completedMissionIds: state.completedMissionIds,
+    });
+    return !!res.mission;
+  }, [state.projects, state.completedMissionIds]);
+
   const getDecision = useCallback(() => explainDecisionFromProjects(state.projects), [state.projects]);
 
   const getMissionProjectLabel = useCallback(
@@ -172,6 +207,8 @@ export function GigiProvider({ children }: { children: ReactNode }) {
       rejectMission,
       resetLocalData,
       applyRecommendedMission,
+      applyNextMission,
+      hasNextMission,
       getDecision,
       getMissionProjectLabel,
     }),
@@ -184,6 +221,8 @@ export function GigiProvider({ children }: { children: ReactNode }) {
       rejectMission,
       resetLocalData,
       applyRecommendedMission,
+      applyNextMission,
+      hasNextMission,
       getDecision,
       getMissionProjectLabel,
     ]

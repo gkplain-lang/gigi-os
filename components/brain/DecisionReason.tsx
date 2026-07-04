@@ -1,33 +1,41 @@
+import { StatusPill } from "@/components/ui/StatusPill";
+
 interface DecisionReasonProps {
   reasoning: string;
   missionTitle: string;
   projectName: string;
+  finalScore: number;
 }
 
-export function DecisionReason({ reasoning, missionTitle, projectName }: DecisionReasonProps) {
+export function DecisionReason({
+  reasoning,
+  missionTitle,
+  projectName,
+  finalScore,
+}: DecisionReasonProps) {
   return (
-    <section className="relative">
-      <div className="gigi-halo" aria-hidden />
-      <div className="relative z-10 max-w-2xl">
-        <p className="animate-rise text-[13px] font-medium uppercase tracking-wide text-copper-soft">
-          Pourquoi cette mission ?
-        </p>
-        <h2 className="animate-rise animate-rise-1 mt-4 font-display text-[1.8rem] font-medium leading-[1.12] tracking-tight text-text-primary md:text-[2.4rem]">
-          {missionTitle}
-        </h2>
-        <p className="animate-rise animate-rise-1 mt-2 text-sm text-text-muted">{projectName}</p>
+    <div className="gigi-panel rounded-xl p-6">
+      <div className="flex items-start justify-between gap-5">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <StatusPill label="Mission choisie" variant="warm" />
+            <span className="text-[13px] text-text-muted">{projectName}</span>
+          </div>
+          <h2 className="mt-3 text-[1.35rem] font-semibold leading-tight tracking-tight text-text-primary">
+            {missionTitle}
+          </h2>
+          <p className="mt-2.5 text-[14px] leading-relaxed text-text-secondary">{reasoning}</p>
+        </div>
 
-        <p className="animate-rise animate-rise-2 mt-8 text-lg leading-relaxed text-text-secondary">
-          Gigi a choisi Buildy Clear parce que c&apos;est le chemin le plus court vers le revenu.
-        </p>
-        <p className="animate-rise animate-rise-3 mt-4 text-lg leading-relaxed text-text-muted">
-          {reasoning}
-        </p>
-
-        <p className="animate-rise animate-rise-4 mt-8 text-base text-text-muted">
-          C&apos;est une décision de focus, pas une todo list.
-        </p>
+        <div className="shrink-0 rounded-lg border border-border bg-surface-2 px-4 py-3 text-center">
+          <p className="text-[10.5px] font-medium uppercase tracking-wider text-text-muted">
+            Confiance
+          </p>
+          <p className="mt-0.5 text-[1.7rem] font-semibold leading-none text-accent-soft">
+            {finalScore}%
+          </p>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }

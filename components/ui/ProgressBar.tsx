@@ -12,7 +12,7 @@ export function ProgressBar({ value, className, muted }: ProgressBarProps) {
       <div
         className={cn(
           "h-full rounded-full transition-all duration-700",
-          muted ? "bg-white/15" : "bg-gradient-to-r from-copper to-copper-soft"
+          muted ? "bg-white/12" : "bg-accent-soft/55"
         )}
         style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
       />

@@ -1,39 +1,75 @@
-import type { HistoryEvent } from "@/modules/history/historyTypes";
+import {
+  Check,
+  Play,
+  Clock,
+  X,
+  Compass,
+  Layers,
+  FileText,
+  RotateCcw,
+  type LucideIcon,
+} from "lucide-react";
+import type { HistoryEvent, HistoryEventType } from "@/modules/history/historyTypes";
 import { cn } from "@/lib/utils";
 
 interface HistoryEventCardProps {
   event: HistoryEvent;
 }
 
-const HIGHLIGHTED_TYPES = new Set<HistoryEvent["type"]>([
+const ICONS: Record<HistoryEventType, LucideIcon> = {
+  mission_completed: Check,
+  mission_started: Play,
+  mission_postponed: Clock,
+  mission_rejected: X,
+  decision_created: Compass,
+  project_updated: Layers,
+  document_created: FileText,
+  data_reset: RotateCcw,
+};
+
+const WARM_TYPES = new Set<HistoryEventType>([
+  "mission_completed",
   "decision_created",
   "mission_started",
-  "mission_completed",
-  "mission_postponed",
-  "mission_rejected",
-  "data_reset",
 ]);
 
+function formatDate(iso: string): string {
+  const parts = iso.split("-");
+  if (parts.length !== 3) return "";
+  const [, m, d] = parts;
+  const months = [
+    "janv.", "févr.", "mars", "avr.", "mai", "juin",
+    "juil.", "août", "sept.", "oct.", "nov.", "déc.",
+  ];
+  const mi = Number(m) - 1;
+  return `${Number(d)} ${months[mi] ?? ""}`.trim();
+}
+
 export function HistoryEventCard({ event }: HistoryEventCardProps) {
-  const isHighlighted = HIGHLIGHTED_TYPES.has(event.type);
+  const Icon = ICONS[event.type] ?? Compass;
+  const warm = WARM_TYPES.has(event.type);
 
   return (
-    <div className="relative">
+    <div className="relative flex gap-4">
       <span
         className={cn(
-          "absolute -left-[33px] top-1.5 h-2.5 w-2.5 rounded-full",
-          isHighlighted
-            ? "bg-copper-soft shadow-[0_0_12px_rgba(196,138,74,0.55)]"
-            : "bg-white/20"
+          "relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
+          warm ? "bg-white/[0.06] text-accent-soft" : "bg-white/[0.03] text-text-muted"
         )}
-        aria-hidden
-      />
-      <p className="text-[15px] font-medium leading-snug text-text-primary md:text-base">
-        {event.title}
-      </p>
-      {event.description && (
-        <p className="mt-1.5 text-sm leading-relaxed text-text-muted">{event.description}</p>
-      )}
+      >
+        <Icon className="h-4 w-4" strokeWidth={2} />
+      </span>
+      <div className="min-w-0 flex-1 pb-1">
+        <div className="flex items-baseline justify-between gap-3">
+          <p className="text-[15px] font-medium leading-snug text-text-primary">{event.title}</p>
+          <span className="shrink-0 text-[12px] tabular-nums text-text-muted">
+            {formatDate(event.date)}
+          </span>
+        </div>
+        {event.description && (
+          <p className="mt-1 text-[14px] leading-relaxed text-text-muted">{event.description}</p>
+        )}
+      </div>
     </div>
   );
 }

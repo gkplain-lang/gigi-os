@@ -1,6 +1,6 @@
 "use client";
 
-import { GigiMessage } from "@/components/ui/GigiMessage";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { DecisionReason } from "@/components/brain/DecisionReason";
 import { ScoreBreakdown } from "@/components/brain/ScoreBreakdown";
 import { AlternativesList } from "@/components/brain/AlternativesList";
@@ -14,27 +14,21 @@ export function BrainPageContent() {
   const decision = getDecision();
 
   return (
-    <div className="animate-fade-in max-w-3xl">
-      <section className="mb-12 md:mb-16">
-        <GigiMessage
-          primary="Voici pourquoi j'ai choisi cette mission."
-          secondary="Pas d'analyse froide — juste une décision claire."
+    <div className="animate-fade-in">
+      <PageHeader title="Décision" meta="Pourquoi Gigi a choisi cette mission aujourd'hui." />
+
+      <div className="space-y-4">
+        <DecisionReason
+          missionTitle={decision.missionTitle}
+          projectName={decision.projectName}
+          reasoning={decision.reasoning}
+          finalScore={decision.finalScore}
         />
-      </section>
-
-      <DecisionReason
-        missionTitle={decision.missionTitle}
-        projectName={decision.projectName}
-        reasoning={decision.reasoning}
-      />
-
-      <div className="my-12 h-px bg-white/[0.06] md:my-14" />
-
-      <ScoreBreakdown criteria={decision.criteria} finalScore={decision.finalScore} />
-
-      <div className="my-12 h-px bg-white/[0.06] md:my-14" />
-
-      <AlternativesList alternatives={decision.alternatives} />
+        <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+          <ScoreBreakdown criteria={decision.criteria} finalScore={decision.finalScore} />
+          <AlternativesList alternatives={decision.alternatives} />
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { SectionHeader } from "@/components/ui/SectionHeader";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { HistoryTimeline } from "@/components/history/HistoryTimeline";
 import { useGigi } from "@/components/providers/GigiProvider";
 
@@ -10,12 +10,14 @@ export function HistoryPageContent() {
   if (!isHydrated) return null;
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <SectionHeader
+    <div className="animate-fade-in mx-auto max-w-[760px]">
+      <PageHeader
         title="Historique"
-        subtitle="Gigi garde en mémoire ce qui a compté — les décisions, et ce qui a été mis en pause."
+        meta="La mémoire de Gigi — décisions, missions et mises en pause."
       />
-      <HistoryTimeline events={state.history} />
+      <div className="gigi-panel rounded-xl p-5 md:p-6">
+        <HistoryTimeline events={state.history} />
+      </div>
     </div>
   );
 }

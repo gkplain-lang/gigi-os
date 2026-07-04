@@ -1,6 +1,5 @@
+import { ArrowRight, Check } from "lucide-react";
 import type { MissionStatus } from "@/modules/missions/missionTypes";
-import { PrimaryButton } from "@/components/ui/PrimaryButton";
-import { GhostButton } from "@/components/ui/GhostButton";
 
 interface MissionActionsProps {
   status: MissionStatus;
@@ -19,24 +18,44 @@ export function MissionActions({
 }: MissionActionsProps) {
   if (status === "in_progress") {
     return (
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        <PrimaryButton className="sm:w-auto" onClick={onComplete}>
+      <div className="flex flex-wrap items-center gap-2.5">
+        <button
+          type="button"
+          onClick={onComplete}
+          className="gigi-btn-primary gigi-focus inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-[14px] font-medium"
+        >
+          <Check className="h-4 w-4" strokeWidth={2.2} />
           Terminer la mission
-        </PrimaryButton>
-        <p className="text-sm text-text-muted">Prends ton temps. Une seule chose à la fois.</p>
+        </button>
+        <span className="text-[13px] text-text-muted">Une seule chose à la fois.</span>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-      <PrimaryButton className="sm:w-auto" onClick={onStart}>
+    <div className="flex flex-wrap items-center gap-2.5">
+      <button
+        type="button"
+        onClick={onStart}
+        className="gigi-btn-primary gigi-focus inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-[14px] font-medium"
+      >
         Démarrer la mission
-      </PrimaryButton>
-      <div className="flex items-center gap-1">
-        <GhostButton onClick={onPostpone}>Reporter</GhostButton>
-        <GhostButton onClick={onReject}>Pas maintenant</GhostButton>
-      </div>
+        <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
+      </button>
+      <button
+        type="button"
+        onClick={onPostpone}
+        className="gigi-btn gigi-focus rounded-lg px-3.5 py-2.5 text-[14px]"
+      >
+        Reporter
+      </button>
+      <button
+        type="button"
+        onClick={onReject}
+        className="gigi-btn gigi-focus rounded-lg px-3.5 py-2.5 text-[14px]"
+      >
+        Pas maintenant
+      </button>
     </div>
   );
 }

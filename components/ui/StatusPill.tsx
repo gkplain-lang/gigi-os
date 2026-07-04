@@ -9,7 +9,7 @@ interface StatusPillProps {
 }
 
 const variants: Record<PillVariant, string> = {
-  warm: "bg-[rgba(184,115,51,0.14)] text-copper-soft",
+  warm: "bg-white/[0.05] text-accent-soft",
   muted: "bg-[rgba(20,28,26,0.7)] text-text-muted",
 };
 

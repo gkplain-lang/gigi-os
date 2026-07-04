@@ -1,16 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUp } from "lucide-react";
+import Link from "next/link";
+import { ArrowUp, Check, RefreshCw } from "lucide-react";
 import { useGigi } from "@/components/providers/GigiProvider";
-import { GigiMessage } from "@/components/ui/GigiMessage";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { askGigi } from "@/modules/conversation/conversationBrain";
 import type {
   ConversationContext,
   ConversationExchange,
 } from "@/modules/conversation/conversationTypes";
 import { GigiAnswer } from "./GigiAnswer";
-import { cn } from "@/lib/utils";
 
 const PROMPT_CHIPS = [
   "Que faire dans Buildy Crafts aujourd'hui ?",
@@ -29,14 +29,12 @@ export function ConversationPageContent() {
   const ask = (objective: string, contextOverride?: ConversationContext) => {
     const trimmed = objective.trim();
     if (!trimmed) return;
-
     const context: ConversationContext = {
       currentMissionId: state.mission.id,
       currentProjectId: state.mission.projectId,
       completedMissionIds: state.completedMissionIds,
       ...contextOverride,
     };
-
     const response = askGigi(trimmed, state.projects, context);
     setExchanges((prev) => [
       ...prev,
@@ -50,113 +48,178 @@ export function ConversationPageContent() {
     setInput("");
   };
 
-  const handleApply = (exchange: ConversationExchange) => {
-    if (!exchange.response.mission) return;
-    applyRecommendedMission(exchange.response.mission);
+  const latest = exchanges[exchanges.length - 1];
+
+  const applyLatest = () => {
+    if (!latest?.response.mission) return;
+    applyRecommendedMission(latest.response.mission);
     setExchanges((prev) =>
-      prev.map((x) => (x.id === exchange.id ? { ...x, applied: true } : x))
+      prev.map((x) => (x.id === latest.id ? { ...x, applied: true } : x))
     );
   };
 
-  const handleAlternative = (exchange: ConversationExchange) => {
+  const alternativeLatest = () => {
+    if (!latest) return;
     ask("Propose autre chose", {
-      excludeMissionId: exchange.response.mission?.id,
-      excludeProjectId: exchange.response.mission?.projectId,
-      completedMissionIds: state.completedMissionIds,
+      excludeMissionId: latest.response.mission?.id,
+      excludeProjectId: latest.response.mission?.projectId,
     });
   };
 
+  const proposalPanel = (
+    <div className="gigi-panel rounded-xl p-5">
+      <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">
+        Mission proposée
+      </p>
+      {latest?.response.mission ? (
+        <>
+          <p className="mt-2 text-[13px] text-text-muted">
+            {latest.response.priorityProjectName}
+          </p>
+          <p className="mt-1 text-[15px] font-medium text-text-primary">
+            {latest.response.mission.title}
+          </p>
+
+          {latest.applied ? (
+            <div className="mt-4 flex items-center gap-2 rounded-lg border border-[rgba(155,181,159,0.4)] bg-[rgba(155,181,159,0.12)] px-3 py-2.5 text-[13.5px] text-text-secondary">
+              <Check className="h-4 w-4 text-ok" strokeWidth={2.4} />
+              Mission appliquée
+              <Link href="/" className="ml-auto text-accent-soft hover:underline">
+                Voir
+              </Link>
+            </div>
+          ) : (
+            <div className="mt-4 space-y-2">
+              <button
+                type="button"
+                onClick={applyLatest}
+                className="gigi-btn-primary gigi-focus w-full rounded-lg px-4 py-2.5 text-[14px] font-medium"
+              >
+                Appliquer cette mission
+              </button>
+              <button
+                type="button"
+                onClick={alternativeLatest}
+                className="gigi-btn gigi-focus inline-flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-[14px]"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                Propose autre chose
+              </button>
+            </div>
+          )}
+        </>
+      ) : (
+        <p className="mt-2 text-[13.5px] leading-relaxed text-text-muted">
+          Pose un objectif à Gigi. Il lit tes projets et te propose une seule mission claire, avec
+          ses raisons.
+        </p>
+      )}
+    </div>
+  );
+
   return (
     <div className="animate-fade-in">
-      <section className="mb-10 md:mb-12">
-        <GigiMessage
-          primary="Dis-moi ce que tu veux atteindre."
-          secondary="Je regarde tes projets et je choisis une mission claire pour toi."
-        />
-      </section>
+      <PageHeader title="Gigi" meta="Ton assistant de décision. Dis-lui où tu veux aller." />
 
-      {exchanges.length === 0 && (
-        <div className="mb-10 flex flex-wrap gap-2.5">
-          {PROMPT_CHIPS.map((chip) => (
-            <button
-              key={chip}
-              type="button"
-              onClick={() => ask(chip)}
-              className="rounded-full bg-[rgba(20,28,26,0.55)] px-4 py-2.5 text-sm text-text-secondary transition-colors hover:bg-[rgba(28,38,35,0.7)] hover:text-text-primary"
-            >
-              {chip}
-            </button>
-          ))}
-        </div>
-      )}
-
-      <div className="space-y-12">
-        {exchanges.map((exchange) => (
-          <div key={exchange.id} className="space-y-8">
-            <div className="flex justify-end">
-              <p className="max-w-lg rounded-[22px] rounded-tr-md bg-[rgba(184,115,51,0.12)] px-5 py-3.5 text-[15px] leading-relaxed text-text-primary">
-                {exchange.objective}
-              </p>
+      <div className="grid gap-5 lg:grid-cols-3 lg:items-start">
+        {/* Conversation column */}
+        <div className="lg:col-span-2">
+          {exchanges.length === 0 && (
+            <div className="mb-5 flex flex-wrap gap-2">
+              {PROMPT_CHIPS.map((chip) => (
+                <button
+                  key={chip}
+                  type="button"
+                  onClick={() => ask(chip)}
+                  className="gigi-chip gigi-focus rounded-lg px-3.5 py-2 text-[13.5px]"
+                >
+                  {chip}
+                </button>
+              ))}
             </div>
-            <GigiAnswer
-              response={exchange.response}
-              applied={exchange.applied}
-              onApply={() => handleApply(exchange)}
-              onAlternative={() => handleAlternative(exchange)}
-              onChoice={(prompt) => ask(prompt)}
-            />
-          </div>
-        ))}
-      </div>
-
-      {exchanges.length > 0 && (
-        <div className="mt-10 flex flex-wrap gap-2.5">
-          {PROMPT_CHIPS.map((chip) => (
-            <button
-              key={chip}
-              type="button"
-              onClick={() => ask(chip)}
-              className="rounded-full bg-[rgba(20,28,26,0.45)] px-4 py-2 text-[13px] text-text-muted transition-colors hover:bg-[rgba(28,38,35,0.7)] hover:text-text-secondary"
-            >
-              {chip}
-            </button>
-          ))}
-        </div>
-      )}
-
-      <div className="mt-10">
-        <div
-          className={cn(
-            "flex items-end gap-2 rounded-[24px] bg-[rgba(16,22,20,0.6)] p-2 pl-5",
-            "shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] backdrop-blur-md"
           )}
-        >
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                ask(input);
-              }
-            }}
-            rows={1}
-            placeholder="Que faire dans Buildy Crafts aujourd'hui ?"
-            className="max-h-40 min-h-[44px] flex-1 resize-none bg-transparent py-2.5 text-[15px] text-text-primary placeholder:text-text-muted focus:outline-none"
-          />
-          <button
-            type="button"
-            onClick={() => ask(input)}
-            disabled={!input.trim()}
-            aria-label="Envoyer à Gigi"
-            className="gigi-cta flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px] text-text-primary disabled:opacity-40"
-          >
-            <ArrowUp className="h-5 w-5" strokeWidth={2.5} />
-          </button>
+
+          <div className="space-y-8">
+            {exchanges.map((exchange) => (
+              <div key={exchange.id} className="space-y-4">
+                <div className="flex justify-end">
+                  <p className="max-w-lg rounded-xl rounded-tr-sm border border-border bg-surface px-4 py-2.5 text-[14px] leading-relaxed text-text-primary">
+                    {exchange.objective}
+                  </p>
+                </div>
+                <GigiAnswer response={exchange.response} onChoice={(p) => ask(p)} />
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile actions for latest proposal */}
+          {latest?.response.mission && !latest.applied && (
+            <div className="mt-6 flex flex-wrap gap-2 lg:hidden">
+              <button
+                type="button"
+                onClick={applyLatest}
+                className="gigi-btn-primary gigi-focus rounded-lg px-4 py-2.5 text-[14px] font-medium"
+              >
+                Appliquer cette mission
+              </button>
+              <button
+                type="button"
+                onClick={alternativeLatest}
+                className="gigi-btn gigi-focus inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-[14px]"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                Propose autre chose
+              </button>
+            </div>
+          )}
+
+          {/* Input */}
+          <div className="mt-6">
+            <div className="gigi-input flex items-end gap-2 rounded-xl p-2 pl-4">
+              <textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    ask(input);
+                  }
+                }}
+                rows={1}
+                placeholder="Que faire dans Buildy Crafts aujourd'hui ?"
+                className="max-h-40 min-h-[40px] flex-1 resize-none bg-transparent py-2 text-[14.5px] text-text-primary placeholder:text-text-muted focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => ask(input)}
+                disabled={!input.trim()}
+                aria-label="Envoyer à Gigi"
+                className="gigi-btn-primary gigi-focus flex h-9 w-9 shrink-0 items-center justify-center rounded-lg disabled:opacity-40"
+              >
+                <ArrowUp className="h-[18px] w-[18px]" strokeWidth={2.4} />
+              </button>
+            </div>
+            {exchanges.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {PROMPT_CHIPS.map((chip) => (
+                  <button
+                    key={chip}
+                    type="button"
+                    onClick={() => ask(chip)}
+                    className="gigi-chip gigi-focus rounded-lg px-3 py-1.5 text-[12.5px]"
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-        <p className="mt-3 px-1 text-[13px] text-text-muted">
-          Gigi réfléchit en local, à partir de tes projets. Aucune donnée ne quitte ton appareil.
-        </p>
+
+        {/* Right proposal panel (desktop) */}
+        <div className="hidden lg:col-span-1 lg:block">
+          <div className="sticky top-8">{proposalPanel}</div>
+        </div>
       </div>
     </div>
   );

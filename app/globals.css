@@ -1,29 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  --bg-base: #050807;
-  --bg-mid: #07100f;
-  --bg-surface: #0b1110;
-  --surface-1: rgba(12, 18, 17, 0.78);
-  --surface-2: rgba(18, 26, 24, 0.6);
-  --text-primary: #f7f3ea;
-  --text-secondary: #b8c0ba;
-  --text-muted: #7e8a84;
-  --copper: #b87333;
-  --copper-soft: #c48a4a;
-  --gold: #d1a85b;
-  --cyan: #38bdf8;
+  --bg-base: #0f1115;
+  --bg-sidebar: #0b0d10;
+  --surface: #171a20;
+  --surface-2: #1b1f27;
+  --border: #2a2f38;
+  --border-strong: #363c47;
+  --text-primary: #f4f4f5;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71767f;
+  /* Discreet cool accent — steel blue. No orange, no copper, no glow. */
+  --accent: #8ea7c2;
+  --accent-soft: #a6bcd2;
+  --accent-dim: rgba(142, 167, 194, 0.14);
+  --ok: #9bb59f;
+  /* Legacy aliases point to the accent so nothing renders orange */
+  --copper: #8ea7c2;
+  --copper-soft: #a6bcd2;
+  --gold: #a6bcd2;
+  --cyan: #8ea7c2;
 }
 
 @theme inline {
   --color-bg-base: var(--bg-base);
-  --color-bg-mid: var(--bg-mid);
-  --color-bg-surface: var(--bg-surface);
-  --color-surface-1: var(--surface-1);
+  --color-bg-sidebar: var(--bg-sidebar);
+  --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-ok: var(--ok);
   --color-copper: var(--copper);
   --color-copper-soft: var(--copper-soft);
   --color-gold: var(--gold);
@@ -32,12 +43,16 @@
   --font-family-display: var(--font-fraunces), ui-serif, Georgia, serif;
 }
 
+* {
+  border-color: var(--border);
+}
+
 body {
   background: var(--bg-base);
   color: var(--text-primary);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
-  line-height: 1.6;
-  letter-spacing: -0.005em;
+  line-height: 1.55;
+  letter-spacing: -0.006em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -47,175 +62,131 @@ body {
   letter-spacing: -0.02em;
 }
 
-/* Warm atelier scene — layered depth, low warm light from above, cool grounding below */
-.gigi-app-bg {
-  position: relative;
-  background:
-    radial-gradient(120% 80% at 50% -20%, rgba(184, 115, 51, 0.13), transparent 52%),
-    radial-gradient(60% 40% at 88% 8%, rgba(196, 138, 74, 0.06), transparent 55%),
-    radial-gradient(90% 60% at 5% 108%, rgba(24, 46, 42, 0.45), transparent 55%),
-    linear-gradient(180deg, #08110f 0%, #050807 55%, #030605 100%);
-  background-color: #050807;
+/* Panels — the core software surface: solid fill + crisp 1px border */
+.gigi-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
 }
 
-/* Fine grain + vignette to kill the flat "screen" feeling */
-.gigi-app-bg::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(130% 130% at 50% 30%, transparent 55%, rgba(0, 0, 0, 0.4) 100%);
+.gigi-panel-2 {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
 }
 
-/* Very light surface — used sparingly, almost no frame */
-.gigi-surface {
-  background: rgba(20, 28, 26, 0.4);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
-  backdrop-filter: blur(10px);
+.gigi-panel-hover {
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
-.gigi-surface-soft {
-  background: rgba(18, 26, 24, 0.28);
+.gigi-panel-hover:hover {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
 }
 
-/* Big diffuse copper light behind the mission — this is the "stage light" */
-.gigi-halo {
-  position: absolute;
-  inset: -10% -8% -20% -12%;
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    58% 70% at 16% 26%,
-    rgba(196, 138, 74, 0.2),
-    rgba(184, 115, 51, 0.07) 40%,
-    transparent 68%
-  );
-  filter: blur(8px);
+/* Buttons */
+.gigi-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
-.gigi-halo-soft {
-  position: absolute;
-  inset: -6% -6% -12% -8%;
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(60% 75% at 18% 28%, rgba(184, 115, 51, 0.11), transparent 62%);
-  filter: blur(6px);
+.gigi-btn:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
 }
 
-/* Premium dark-glass copper CTA — depth + soft reflection, tactile, never flashy */
+.gigi-btn-primary {
+  background: var(--accent-dim);
+  border: 1px solid rgba(142, 167, 194, 0.4);
+  color: var(--text-primary);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.gigi-btn-primary:hover {
+  background: rgba(142, 167, 194, 0.22);
+  border-color: rgba(142, 167, 194, 0.6);
+}
+
+/* Legacy CTA name → sober primary */
 .gigi-cta {
-  position: relative;
-  background: linear-gradient(180deg, rgba(200, 145, 80, 0.26), rgba(160, 98, 44, 0.12));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 236, 208, 0.3),
-    inset 0 0 0 1px rgba(184, 115, 51, 0.36),
-    0 16px 36px -16px rgba(184, 115, 51, 0.36),
-    0 2px 6px -2px rgba(0, 0, 0, 0.5);
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.22s ease,
-    background 0.22s ease;
+  background: var(--accent-dim);
+  border: 1px solid rgba(142, 167, 194, 0.4);
+  color: var(--text-primary);
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 .gigi-cta:hover {
-  background: linear-gradient(180deg, rgba(210, 155, 88, 0.36), rgba(176, 108, 50, 0.2));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 240, 214, 0.42),
-    inset 0 0 0 1px rgba(196, 138, 74, 0.55),
-    0 22px 48px -16px rgba(196, 138, 74, 0.5),
-    0 2px 6px -2px rgba(0, 0, 0, 0.5);
-  transform: translateY(-1px);
+  background: rgba(142, 167, 194, 0.22);
+  border-color: rgba(142, 167, 194, 0.6);
 }
 
-.gigi-cta:active {
-  transform: translateY(0);
+/* Chips / tiles / inputs */
+.gigi-chip {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
-/* Gigi presence orb — warm, calm, slow breathing */
+.gigi-chip:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.gigi-tile {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.gigi-input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: border-color 0.15s ease;
+}
+
+.gigi-input:focus-within {
+  border-color: rgba(142, 167, 194, 0.5);
+}
+
+/* No-op the old decorative glow classes so nothing renders a halo */
+.gigi-halo,
+.gigi-halo-soft {
+  display: none;
+}
+
+.gigi-focus:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-base), 0 0 0 4px rgba(142, 167, 194, 0.5);
+}
+
+/* Gigi identity orb — small, cool, sober */
 .gigi-orb {
   position: relative;
   background: radial-gradient(
-    circle at 34% 30%,
-    rgba(255, 228, 188, 0.98),
-    rgba(200, 142, 78, 0.6) 42%,
-    rgba(120, 70, 30, 0.28) 74%,
-    transparent 80%
+    circle at 36% 32%,
+    rgba(238, 244, 248, 0.95),
+    rgba(142, 167, 194, 0.6) 48%,
+    rgba(90, 108, 128, 0.25) 76%,
+    transparent 82%
   );
-  box-shadow:
-    0 0 26px -4px rgba(200, 142, 78, 0.55),
-    inset 0 0 8px -2px rgba(255, 222, 184, 0.5);
+  box-shadow: inset 0 0 5px -2px rgba(238, 244, 248, 0.5);
 }
 
-.gigi-orb::after {
-  content: "";
-  position: absolute;
-  inset: -8px;
-  border-radius: 9999px;
-  background: radial-gradient(circle, rgba(200, 142, 78, 0.24), transparent 68%);
-  animation: gigi-breathe 4.5s ease-in-out infinite;
-}
-
-/* Completion / victory orb — calm green-gold, gentle glow */
 .gigi-orb-done {
   background: radial-gradient(
     circle at 36% 32%,
-    rgba(210, 232, 200, 0.98),
-    rgba(120, 170, 120, 0.55) 46%,
-    transparent 80%
+    rgba(220, 236, 224, 0.95),
+    rgba(155, 181, 159, 0.55) 48%,
+    transparent 82%
   );
-  box-shadow:
-    0 0 30px -4px rgba(140, 190, 140, 0.5),
-    inset 0 0 8px -2px rgba(220, 240, 210, 0.5);
-}
-
-@keyframes gigi-breathe {
-  0%,
-  100% {
-    opacity: 0.35;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.75;
-    transform: scale(1.18);
-  }
-}
-
-/* In-progress pulse ring — subtle sense of "live / active" */
-.gigi-active-ring {
-  position: relative;
-}
-
-.gigi-active-ring::before {
-  content: "";
-  position: absolute;
-  left: -14px;
-  top: 50%;
-  height: 7px;
-  width: 7px;
-  border-radius: 9999px;
-  background: var(--copper-soft);
-  transform: translateY(-50%);
-  box-shadow: 0 0 0 0 rgba(196, 138, 74, 0.5);
-  animation: gigi-pulse 2s ease-out infinite;
-}
-
-@keyframes gigi-pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(196, 138, 74, 0.5);
-  }
-  70% {
-    box-shadow: 0 0 0 9px rgba(196, 138, 74, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(196, 138, 74, 0);
-  }
 }
 
 @keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -224,52 +195,24 @@ body {
 }
 
 .animate-fade-in {
-  animation: fade-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: fade-in 0.35s ease-out forwards;
 }
 
-/* Staggered entrance for hero elements */
 .animate-rise {
   opacity: 0;
-  animation: fade-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: fade-in 0.4s ease-out forwards;
 }
 
-.animate-rise-1 {
-  animation-delay: 0.05s;
-}
-.animate-rise-2 {
-  animation-delay: 0.14s;
-}
-.animate-rise-3 {
-  animation-delay: 0.24s;
-}
-.animate-rise-4 {
-  animation-delay: 0.34s;
-}
-
-@keyframes victory-in {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  60% {
-    transform: scale(1.06);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animate-victory {
-  animation: victory-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
+.animate-rise-1 { animation-delay: 0.04s; }
+.animate-rise-2 { animation-delay: 0.09s; }
+.animate-rise-3 { animation-delay: 0.14s; }
+.animate-rise-4 { animation-delay: 0.19s; }
+.animate-victory { animation: fade-in 0.4s ease-out forwards; }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in,
   .animate-rise,
-  .animate-victory,
-  .gigi-orb::after,
-  .gigi-active-ring::before {
+  .animate-victory {
     animation: none;
     opacity: 1;
     transform: none;
