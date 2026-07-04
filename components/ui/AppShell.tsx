@@ -19,9 +19,12 @@ export function AppShell({ children }: AppShellProps) {
 
         <div className="flex min-w-0 flex-1 flex-col">
           {/* Mobile identity bar */}
-          <header className="flex items-center gap-2.5 border-b border-border px-5 py-4 lg:hidden">
-            <AegisMark size="sm" />
-            <span className="font-display text-[16px] tracking-tight text-text-primary">
+          <header className="flex items-center gap-3 border-b border-[rgba(124,140,255,0.18)] px-5 py-4 lg:hidden">
+            <span className="relative flex shrink-0">
+              <span className="absolute inset-0 scale-150 rounded-full bg-accent/25 blur-md" aria-hidden />
+              <AegisMark size="sm" className="relative drop-shadow-[0_0_10px_rgba(124,140,255,0.6)]" />
+            </span>
+            <span className="font-display text-[16px] font-medium tracking-tight text-text-primary">
               {APP_NAME}
             </span>
             <MemoryStatusStrip variant="mobile" />

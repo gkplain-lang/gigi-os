@@ -52,43 +52,30 @@ export function BetaFeedbackPanel({ defaultRoute, compact }: BetaFeedbackPanelPr
     refresh();
   };
 
-  const panelStyle = compact
-    ? { marginTop: 12 }
-    : { marginTop: 16, border: "1px solid #2a2f38", background: "#171a20", borderRadius: 12, padding: 20 };
+  const panelClass = compact ? "mt-3" : "mt-4";
+
+  const fieldClass = compact
+    ? undefined
+    : "gigi-field";
 
   return (
-    <div style={panelStyle}>
+    <div className={panelClass}>
       {!compact && (
-        <p
-          style={{
-            fontSize: 11,
-            letterSpacing: 1,
-            textTransform: "uppercase",
-            color: "#71767f",
-            marginBottom: 12,
-          }}
-        >
-          Feedback bêta (local)
-        </p>
+        <p className="gigi-dev-label mb-3">Feedback bêta (local)</p>
       )}
 
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        <label style={{ fontSize: 12, color: "#71767f" }}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2.5">
+        <label className={compact ? undefined : "gigi-field-label"}>
           Type
           <select
             value={type}
             onChange={(e) => setType(e.target.value as BetaFeedbackType)}
-            style={{
-              display: "block",
-              marginTop: 4,
-              width: "100%",
-              padding: "8px 10px",
-              borderRadius: 8,
-              border: "1px solid #2a2f38",
-              background: "#0f1115",
-              color: "#f4f4f5",
-              fontSize: 13,
-            }}
+            className={fieldClass}
+            style={compact ? {
+              display: "block", marginTop: 4, width: "100%", padding: "8px 10px",
+              borderRadius: 8, border: "1px solid #2a2f38", background: "#0f1115",
+              color: "#f4f4f5", fontSize: 13,
+            } : undefined}
           >
             {(Object.keys(BETA_FEEDBACK_TYPE_LABELS) as BetaFeedbackType[]).map((key) => (
               <option key={key} value={key}>
@@ -98,7 +85,7 @@ export function BetaFeedbackPanel({ defaultRoute, compact }: BetaFeedbackPanelPr
           </select>
         </label>
 
-        <label style={{ fontSize: 12, color: "#71767f" }}>
+        <label className={compact ? undefined : "gigi-field-label"}>
           Description
           <textarea
             value={text}
@@ -106,77 +93,41 @@ export function BetaFeedbackPanel({ defaultRoute, compact }: BetaFeedbackPanelPr
             required
             rows={3}
             placeholder="Décris la friction, le bug ou l'idée…"
-            style={{
-              display: "block",
-              marginTop: 4,
-              width: "100%",
-              padding: "8px 10px",
-              borderRadius: 8,
-              border: "1px solid #2a2f38",
-              background: "#0f1115",
-              color: "#f4f4f5",
-              fontSize: 13,
-              resize: "vertical",
-            }}
+            className={fieldClass}
+            style={compact ? {
+              display: "block", marginTop: 4, width: "100%", padding: "8px 10px",
+              borderRadius: 8, border: "1px solid #2a2f38", background: "#0f1115",
+              color: "#f4f4f5", fontSize: 13, resize: "vertical",
+            } : { resize: "vertical" }}
           />
         </label>
 
         {!compact && (
           <>
-            <label style={{ fontSize: 12, color: "#71767f" }}>
+            <label className="gigi-field-label">
               Route (optionnel)
               <input
                 value={route}
                 onChange={(e) => setRoute(e.target.value)}
                 placeholder="/conversation"
-                style={{
-                  display: "block",
-                  marginTop: 4,
-                  width: "100%",
-                  padding: "8px 10px",
-                  borderRadius: 8,
-                  border: "1px solid #2a2f38",
-                  background: "#0f1115",
-                  color: "#f4f4f5",
-                  fontSize: 13,
-                }}
+                className="gigi-field"
               />
             </label>
-            <label style={{ fontSize: 12, color: "#71767f" }}>
+            <label className="gigi-field-label">
               Module (optionnel)
               <input
                 value={moduleName}
                 onChange={(e) => setModuleName(e.target.value)}
                 placeholder="agents, automation…"
-                style={{
-                  display: "block",
-                  marginTop: 4,
-                  width: "100%",
-                  padding: "8px 10px",
-                  borderRadius: 8,
-                  border: "1px solid #2a2f38",
-                  background: "#0f1115",
-                  color: "#f4f4f5",
-                  fontSize: 13,
-                }}
+                className="gigi-field"
               />
             </label>
-            <label style={{ fontSize: 12, color: "#71767f" }}>
+            <label className="gigi-field-label">
               Mission ID (optionnel)
               <input
                 value={missionId}
                 onChange={(e) => setMissionId(e.target.value)}
-                style={{
-                  display: "block",
-                  marginTop: 4,
-                  width: "100%",
-                  padding: "8px 10px",
-                  borderRadius: 8,
-                  border: "1px solid #2a2f38",
-                  background: "#0f1115",
-                  color: "#f4f4f5",
-                  fontSize: 13,
-                }}
+                className="gigi-field"
               />
             </label>
           </>
@@ -184,76 +135,63 @@ export function BetaFeedbackPanel({ defaultRoute, compact }: BetaFeedbackPanelPr
 
         <button
           type="submit"
-          style={{
-            alignSelf: "flex-start",
-            padding: "8px 14px",
-            borderRadius: 8,
-            border: "1px solid #3f3f46",
-            background: "#27272a",
-            color: "#f4f4f5",
-            fontSize: 13,
-            cursor: "pointer",
-          }}
+          className={compact ? undefined : "gigi-btn-primary gigi-focus self-start rounded-lg px-4 py-2 text-[13px] font-medium"}
+          style={compact ? {
+            alignSelf: "flex-start", padding: "8px 14px", borderRadius: 8,
+            border: "1px solid #3f3f46", background: "#27272a", color: "#f4f4f5",
+            fontSize: 13, cursor: "pointer",
+          } : undefined}
         >
           Enregistrer localement
         </button>
       </form>
 
       {message && (
-        <p style={{ marginTop: 10, fontSize: 12, color: "#9b9ba1" }}>{message}</p>
+        <p className={`mt-2.5 text-[12px] ${compact ? "" : "text-ok"}`} style={compact ? { color: "#9b9ba1" } : undefined}>
+          {message}
+        </p>
       )}
 
-      <p style={{ marginTop: 12, fontSize: 11, color: "#71767f", fontStyle: "italic" }}>
+      <p className="mt-3 text-[11px] italic text-text-secondary">
         Stockage localStorage uniquement — pas de Supabase, pas d&apos;API externe.
       </p>
 
       {entries.length === 0 && (
-        <p style={{ marginTop: 12, fontSize: 13, color: "#71767f", lineHeight: 1.5 }}>
+        <p className="mt-3 text-[13px] leading-relaxed text-text-secondary">
           {REFINED_EMPTY_STATES.feedbackEntries.body}
         </p>
       )}
 
       {entries.length > 0 && (
-        <div style={{ marginTop: 16 }}>
-          <p style={{ fontSize: 11, letterSpacing: 1, textTransform: "uppercase", color: "#71767f" }}>
-            Entrées ({entries.length})
-          </p>
-          <ul style={{ marginTop: 8, padding: 0, listStyle: "none" }}>
+        <div className="mt-4">
+          <p className="gigi-dev-label">Entrées ({entries.length})</p>
+          <ul className="mt-2 list-none space-y-2 p-0">
             {entries.slice(0, compact ? 5 : 20).map((entry) => (
               <li
                 key={entry.id}
-                style={{
-                  marginTop: 8,
-                  padding: 10,
-                  borderRadius: 8,
-                  border: "1px solid #2a2f38",
-                  background: "#0f1115",
-                  fontSize: 12,
-                  color: "#a1a1aa",
-                }}
+                className={compact ? undefined : "gigi-panel-subtle rounded-lg p-2.5 text-[12px] text-text-secondary"}
+                style={compact ? {
+                  marginTop: 8, padding: 10, borderRadius: 8, border: "1px solid #2a2f38",
+                  background: "#0f1115", fontSize: 12, color: "#a1a1aa",
+                } : undefined}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
-                  <span style={{ color: "#71767f" }}>
+                <div className="flex justify-between gap-2">
+                  <span className="text-text-muted">
                     {BETA_FEEDBACK_TYPE_LABELS[entry.type]} ·{" "}
                     {new Date(entry.createdAt).toLocaleString("fr-FR")}
                   </span>
                   <button
                     type="button"
                     onClick={() => handleDelete(entry.id)}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      color: "#71767f",
-                      cursor: "pointer",
-                      fontSize: 11,
-                    }}
+                    className="text-[11px] text-text-muted transition-colors hover:text-text-secondary"
+                    style={compact ? { background: "none", border: "none", cursor: "pointer" } : undefined}
                   >
                     Supprimer
                   </button>
                 </div>
-                <p style={{ marginTop: 6, color: "#e4e4e7" }}>{entry.text}</p>
+                <p className="mt-1.5 text-text-primary">{entry.text}</p>
                 {(entry.route || entry.module) && (
-                  <p style={{ marginTop: 4, fontSize: 11, color: "#71767f" }}>
+                  <p className="mt-1 text-[11px] text-text-muted">
                     {[entry.route, entry.module].filter(Boolean).join(" · ")}
                   </p>
                 )}

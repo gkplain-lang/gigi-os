@@ -50,7 +50,7 @@ export function AuthAccountStrip() {
         <button
           type="button"
           onClick={() => void signOut()}
-          className="text-left text-[11px] text-text-muted/60 transition-colors hover:text-text-muted"
+          className="text-left text-[11px] text-text-secondary transition-colors hover:text-accent-soft"
         >
           Déconnexion
         </button>
@@ -63,7 +63,7 @@ export function AuthAccountStrip() {
       <span className="text-text-muted/60">Local</span>
       <Link
         href="/auth"
-        className="text-text-muted transition-colors hover:text-text-secondary"
+        className="text-text-secondary transition-colors hover:text-accent-soft"
       >
         Connexion
       </Link>

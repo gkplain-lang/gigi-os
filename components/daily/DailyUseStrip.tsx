@@ -21,7 +21,7 @@ export function DailyUseStrip() {
   const isPrimary = nextAction.emphasis === "primary";
 
   return (
-    <div className="gigi-panel-feature mb-4 rounded-2xl p-4 md:p-5">
+    <div className="gigi-panel mb-4 rounded-2xl border border-[rgba(124,140,255,0.18)] p-4 md:p-5">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <p className="text-[11px] font-medium uppercase tracking-wider text-accent-soft/90">
           Aujourd&apos;hui · <span className="text-text-muted">{summary.projectName}</span>
@@ -42,7 +42,7 @@ export function DailyUseStrip() {
         className={cn(
           "mt-3 rounded-xl border px-3.5 py-3",
           isPrimary
-            ? "border-[rgba(124,140,255,0.32)] bg-accent-dim"
+            ? "border-[rgba(124,140,255,0.38)] bg-accent-dim shadow-[0_0_20px_-10px_rgba(124,140,255,0.45)]"
             : "border-border bg-surface/60"
         )}
       >
@@ -77,7 +77,7 @@ export function DailyUseStrip() {
         </Link>
       </div>
 
-      <p className="mt-3 text-[11px] italic text-text-muted/75">{V11_PROMISE}</p>
+      <p className="mt-3 text-[11px] italic text-text-secondary/80">{V11_PROMISE}</p>
     </div>
   );
 }

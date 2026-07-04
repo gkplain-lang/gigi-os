@@ -1,5 +1,6 @@
 "use client";
 
+import { DevPageLayout } from "@/components/dev/DevPageLayout";
 import { DevSupabaseStatus } from "./DevSupabaseStatus";
 
 const IS_PROD = process.env.NODE_ENV === "production";
@@ -7,37 +8,20 @@ const IS_PROD = process.env.NODE_ENV === "production";
 export default function DevSupabasePage() {
   if (IS_PROD) {
     return (
-      <div style={{ padding: "2rem", color: "#a1a1aa", fontFamily: "system-ui" }}>
-        Page de développement indisponible en production.
-      </div>
+      <div className="p-8 text-text-secondary">Page de développement indisponible en production.</div>
     );
   }
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: "#0f1115",
-        color: "#f4f4f5",
-        fontFamily: "system-ui, sans-serif",
-        padding: "3rem 1.5rem",
-      }}
+    <DevPageLayout
+      label="Dev · Supabase"
+      title="Vérification Supabase & Auth"
     >
-      <div style={{ maxWidth: 560, margin: "0 auto" }}>
-        <p style={{ fontSize: 12, letterSpacing: 1, textTransform: "uppercase", color: "#71767f" }}>
-          Dev · Supabase
-        </p>
-        <h1 style={{ fontSize: 22, fontWeight: 600, marginTop: 6 }}>
-          Vérification Supabase &amp; Auth
-        </h1>
-
-        <DevSupabaseStatus />
-
-        <p style={{ marginTop: 18, fontSize: 13, lineHeight: 1.6, color: "#71767f" }}>
-          V0.4.3 ajoute l&apos;auth, mais Aegis utilise encore localStorage comme source principale
-          (<code style={{ color: "#a1a1aa" }}>gigi-os-v03-state</code>).
-        </p>
-      </div>
-    </main>
+      <DevSupabaseStatus />
+      <p className="mt-4 text-[13px] leading-relaxed text-text-secondary">
+        V0.4.3 ajoute l&apos;auth, mais Aegis utilise encore localStorage comme source principale (
+        <code className="text-accent-soft">gigi-os-v03-state</code>).
+      </p>
+    </DevPageLayout>
   );
 }

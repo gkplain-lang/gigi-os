@@ -30,14 +30,16 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="animate-fade-in mx-auto max-w-md">
+    <div className="gigi-page-shell animate-fade-in mx-auto max-w-md">
+      <div className="gigi-page-spotlight" aria-hidden />
+      <div className="gigi-page-content">
       <PageHeader
         title={`Connexion à ${PRODUCT_NAME}`}
         meta={`La connexion servira bientôt à synchroniser ta mémoire ${ASSISTANT_NAME}. Pour l'instant, ${PRODUCT_NAME} reste utilisable en local.`}
       />
 
       {status === "not_configured" && (
-        <div className="gigi-panel mb-4 rounded-xl p-4">
+        <div className="gigi-form-card mb-4 rounded-xl p-4">
           <p className="text-[14px] text-text-secondary">
             Supabase n&apos;est pas configuré. L&apos;app fonctionne entièrement en local.
           </p>
@@ -45,7 +47,7 @@ export default function AuthPage() {
       )}
 
       {status === "authenticated" && user?.email && (
-        <div className="gigi-panel mb-4 rounded-xl p-4">
+        <div className="gigi-form-card mb-4 rounded-xl p-4">
           <p className="text-[14px] text-text-secondary">
             Tu es déjà connecté en tant que{" "}
             <span className="text-text-primary">{user.email}</span>.
@@ -60,7 +62,7 @@ export default function AuthPage() {
       )}
 
       {(status === "anonymous" || status === "error") && (
-        <form onSubmit={handleSubmit} className="gigi-panel space-y-4 rounded-xl p-5">
+        <form onSubmit={handleSubmit} className="gigi-form-card space-y-4 rounded-xl p-5">
           <div>
             <label htmlFor="auth-email" className="mb-1.5 block text-[13px] text-text-secondary">
               Email
@@ -73,7 +75,7 @@ export default function AuthPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="toi@exemple.com"
-              className="gigi-focus w-full rounded-lg border border-border bg-bg-base px-3 py-2.5 text-[14px] text-text-primary placeholder:text-text-muted/50"
+              className="gigi-focus w-full rounded-lg border border-[rgba(124,140,255,0.22)] bg-bg-base px-3 py-2.5 text-[14px] text-text-primary placeholder:text-text-muted/50"
             />
           </div>
 
@@ -107,6 +109,7 @@ export default function AuthPage() {
           ← Retour à Mission
         </Link>
       </p>
+      </div>
     </div>
   );
 }

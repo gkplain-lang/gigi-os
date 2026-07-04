@@ -23,7 +23,7 @@ export function MissionActions({
         <button
           type="button"
           onClick={onComplete}
-          className="gigi-btn-primary gigi-focus inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-[14px] font-medium"
+          className="gigi-btn-primary gigi-btn-primary-lg gigi-focus inline-flex items-center gap-2 rounded-lg font-medium"
         >
           <Check className="h-4 w-4" strokeWidth={2.2} />
           {MISSION_ACTION_LABELS.complete}
@@ -38,7 +38,7 @@ export function MissionActions({
       <button
         type="button"
         onClick={onStart}
-        className="gigi-btn-primary gigi-focus inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-[14px] font-medium"
+        className="gigi-btn-primary gigi-btn-primary-lg gigi-focus inline-flex items-center gap-2 rounded-lg font-medium"
       >
         {MISSION_ACTION_LABELS.start}
         <ArrowRight className="h-4 w-4" strokeWidth={2.2} />

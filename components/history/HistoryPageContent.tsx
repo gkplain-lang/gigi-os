@@ -11,10 +11,13 @@ export function HistoryPageContent() {
   if (!isHydrated) return null;
 
   return (
-    <div className="animate-fade-in mx-auto max-w-[760px]">
-      <PageHeader title="Historique" meta={REFINED_PAGE_META.history} />
-      <div className="gigi-panel rounded-xl p-5 md:p-6">
-        <HistoryTimeline events={state.history} />
+    <div className="gigi-page-shell animate-fade-in mx-auto max-w-[760px]">
+      <div className="gigi-page-spotlight" aria-hidden />
+      <div className="gigi-page-content">
+        <PageHeader title="Historique" meta={REFINED_PAGE_META.history} />
+        <div className="gigi-panel-raised rounded-xl p-5 md:p-6">
+          <HistoryTimeline events={state.history} />
+        </div>
       </div>
     </div>
   );

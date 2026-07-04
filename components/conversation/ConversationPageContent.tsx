@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { ArrowUp, Check, RefreshCw } from "lucide-react";
+import { ArrowUp, Check, RefreshCw, Sparkles } from "lucide-react";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { GigiOrb } from "@/components/ui/GigiOrb";
 import { AiEngineBadge } from "@/components/ai/AiEngineBadge";
 import { askAiBrain, aiBrainToGigiResponse, tryBuildAiMemoryContext, useAiAvailability } from "@/modules/ai";
 import type { AiBrainMode } from "@/modules/ai";
@@ -136,16 +137,20 @@ export function ConversationPageContent() {
   };
 
   const proposalPanel = (
-    <div className={latest?.response.mission ? "gigi-panel-feature rounded-2xl p-5" : "gigi-panel rounded-xl p-5"}>
-      <p className="text-[11px] font-medium uppercase tracking-wider text-accent-soft/90">
-        {CONVERSATION_LABELS.proposalTitle}
-      </p>
+    <div
+      className={
+        latest?.response.mission
+          ? "gigi-mission-proposal p-5"
+          : "gigi-command-card rounded-xl p-5"
+      }
+    >
+      <p className="gigi-mission-control-label">{CONVERSATION_LABELS.proposalTitle}</p>
       {latest?.response.mission ? (
         <>
-          <p className="mt-2 text-[13px] text-text-muted">
+          <p className="mt-2 text-[12px] font-medium text-accent-soft/85">
             {latest.response.priorityProjectName}
           </p>
-          <p className="mt-1 text-[15px] font-medium text-text-primary">
+          <p className="mt-1.5 text-[16px] font-semibold leading-snug text-text-primary">
             {latest.response.mission.title}
           </p>
 
@@ -193,125 +198,138 @@ export function ConversationPageContent() {
   );
 
   return (
-    <div className="animate-fade-in">
-      <PageHeader
-        title="Gigi"
-        meta={REFINED_PAGE_META.conversation}
-        right={<AiEngineBadge mode={brainMode} />}
-      />
+    <div className="gigi-page-shell gigi-shell-glow animate-fade-in">
+      <div className="gigi-page-spotlight" aria-hidden />
+      <div className="gigi-page-content relative z-[1]">
+        <PageHeader
+          title="Gigi"
+          meta={REFINED_PAGE_META.conversation}
+          right={<AiEngineBadge mode={brainMode} />}
+        />
 
-      <p className="mb-4 text-[12px] text-text-muted" title={SIMULATION_NOTE.long}>
-        {SIMULATION_NOTE.short}
-      </p>
-
-      <div className="grid gap-5 lg:grid-cols-3 lg:items-start">
-        {/* Conversation column */}
-        <div className="lg:col-span-2">
-          {exchanges.length === 0 && (
-            <div className="gigi-panel mb-5 rounded-xl px-4 py-3">
-              <p className="text-[13px] font-medium text-text-primary">
-                {REFINED_EMPTY_STATES.conversation.title}
-              </p>
-              <p className="mt-1 text-[12.5px] leading-relaxed text-text-muted">
-                {REFINED_EMPTY_STATES.conversation.body}
-              </p>
-            </div>
-          )}
-          {exchanges.length === 0 && (
-            <div className="mb-5 flex flex-wrap gap-2">
-              {PROMPT_CHIPS.map((chip) => (
-                <button
-                  key={chip}
-                  type="button"
-                  onClick={() => void ask(chip)}
-                  className="gigi-chip gigi-focus rounded-lg px-3.5 py-2 text-[13.5px]"
-                >
-                  {chip}
-                </button>
-              ))}
-            </div>
-          )}
-
-          <div className="space-y-8">
-            {exchanges.map((exchange) => (
-              <div key={exchange.id} className="space-y-4">
-                <div className="flex justify-end">
-                  <p className="max-w-lg rounded-xl rounded-tr-sm border border-[rgba(124,140,255,0.28)] bg-accent-dim px-4 py-2.5 text-[14px] leading-relaxed text-text-primary">
-                    {exchange.objective}
-                  </p>
-                </div>
-                <GigiAnswer response={exchange.response} onChoice={(p) => ask(p)} />
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
+          <div className="gigi-assistant-panel">
+            <div className="gigi-assistant-header">
+              <GigiOrb size="md" tone="warm" />
+              <div className="min-w-0 flex-1">
+                <p className="text-[15px] font-semibold text-text-primary">Copilote de décision</p>
+                <p className="text-[12.5px] text-text-secondary" title={SIMULATION_NOTE.long}>
+                  {SIMULATION_NOTE.short}
+                </p>
               </div>
-            ))}
-          </div>
-
-          {/* Mobile actions for latest proposal */}
-          {latest?.response.mission && !latest.applied && (
-            <div className="mt-6 flex flex-wrap gap-2 lg:hidden">
-              <button
-                type="button"
-                onClick={applyLatest}
-                className="gigi-btn-primary gigi-focus rounded-lg px-4 py-2.5 text-[14px] font-medium"
-              >
-                Appliquer cette mission
-              </button>
-              <button
-                type="button"
-                onClick={alternativeLatest}
-                className="gigi-btn gigi-focus inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-[14px]"
-              >
-                <RefreshCw className="h-3.5 w-3.5" />
-                Propose autre chose
-              </button>
+              <Sparkles className="hidden h-4 w-4 text-accent-soft/60 sm:block" aria-hidden />
             </div>
-          )}
 
-          {/* Input */}
-          <div className="mt-6">
-            <div className="gigi-input flex items-end gap-2 rounded-xl p-2 pl-4">
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    ask(input);
-                  }
-                }}
-                rows={1}
-                placeholder={CONVERSATION_PLACEHOLDER}
-                className="max-h-40 min-h-[40px] flex-1 resize-none bg-transparent py-2 text-[14.5px] text-text-primary placeholder:text-text-muted focus:outline-none"
-              />
-              <button
-                type="button"
-                onClick={() => void ask(input)}
-                disabled={!input.trim() || asking}
-                aria-label="Envoyer à Gigi"
-                className="gigi-btn-primary gigi-focus flex h-9 w-9 shrink-0 items-center justify-center rounded-lg disabled:opacity-40"
-              >
-                <ArrowUp className="h-[18px] w-[18px]" strokeWidth={2.4} />
-              </button>
-            </div>
+            {exchanges.length === 0 && (
+              <div className="gigi-assistant-prompt-zone">
+                <p className="text-[15px] font-medium text-text-primary">
+                  {REFINED_EMPTY_STATES.conversation.title}
+                </p>
+                <p className="mt-2 max-w-md text-[13px] leading-relaxed text-text-secondary">
+                  {REFINED_EMPTY_STATES.conversation.body}
+                </p>
+                <div className="mt-5 flex flex-wrap justify-center gap-2">
+                  {PROMPT_CHIPS.map((chip) => (
+                    <button
+                      key={chip}
+                      type="button"
+                      onClick={() => void ask(chip)}
+                      className="gigi-premium-chip gigi-focus"
+                    >
+                      {chip}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {exchanges.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-2">
-                {PROMPT_CHIPS.map((chip) => (
-                  <button
-                    key={chip}
-                    type="button"
-                    onClick={() => void ask(chip)}
-                    className="gigi-chip gigi-focus rounded-lg px-3 py-1.5 text-[12.5px]"
-                  >
-                    {chip}
-                  </button>
+              <div className="space-y-8 px-4 py-5 md:px-6">
+                {exchanges.map((exchange) => (
+                  <div key={exchange.id} className="space-y-4">
+                    <div className="flex justify-end">
+                      <p className="max-w-lg rounded-2xl rounded-tr-md border border-[rgba(124,140,255,0.42)] bg-[rgba(124,140,255,0.2)] px-4 py-2.5 text-[14px] leading-relaxed text-text-primary shadow-[0_0_24px_-12px_rgba(124,140,255,0.5)]">
+                        {exchange.objective}
+                      </p>
+                    </div>
+                    <GigiAnswer response={exchange.response} onChoice={(p) => ask(p)} />
+                  </div>
                 ))}
               </div>
             )}
-          </div>
-        </div>
 
-        {/* Right proposal panel (desktop) */}
-        <div className="hidden lg:col-span-1 lg:block">
-          <div className="sticky top-8">{proposalPanel}</div>
+            {latest?.response.mission && !latest.applied && (
+              <div className="border-t border-white/[0.06] px-4 py-4 lg:hidden">
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={applyLatest}
+                    className="gigi-btn-primary gigi-focus rounded-lg px-4 py-2.5 text-[14px] font-medium"
+                  >
+                    Appliquer cette mission
+                  </button>
+                  <button
+                    type="button"
+                    onClick={alternativeLatest}
+                    className="gigi-btn gigi-focus inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-[14px]"
+                  >
+                    <RefreshCw className="h-3.5 w-3.5" />
+                    Propose autre chose
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="border-t border-white/[0.06] p-4 md:p-5">
+              <div className="gigi-input-premium flex items-end gap-2 rounded-2xl p-2 pl-4">
+                <textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      ask(input);
+                    }
+                  }}
+                  rows={exchanges.length === 0 ? 2 : 1}
+                  placeholder={CONVERSATION_PLACEHOLDER}
+                  className="max-h-40 min-h-[44px] flex-1 resize-none bg-transparent py-2.5 text-[15px] text-text-primary placeholder:text-text-muted focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => void ask(input)}
+                  disabled={!input.trim() || asking}
+                  aria-label="Envoyer à Gigi"
+                  className="gigi-btn-primary gigi-focus flex h-11 w-11 shrink-0 items-center justify-center rounded-xl disabled:opacity-40"
+                >
+                  <ArrowUp className="h-[18px] w-[18px]" strokeWidth={2.4} />
+                </button>
+              </div>
+              {exchanges.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {PROMPT_CHIPS.map((chip) => (
+                    <button
+                      key={chip}
+                      type="button"
+                      onClick={() => void ask(chip)}
+                      className="gigi-premium-chip gigi-focus text-[12px] !py-1.5 !px-3"
+                    >
+                      {chip}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="hidden lg:block">
+            <div className="sticky top-8 space-y-3">
+              {proposalPanel}
+              <p className="px-1 text-[11px] leading-relaxed text-text-muted">
+                Gigi propose une mission à partir de ton contexte local — tu restes aux commandes.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

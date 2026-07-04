@@ -48,7 +48,7 @@ export function MemoryStatusStrip({ variant = "sidebar" }: MemoryStatusStripProp
   }
 
   return (
-    <div className="space-y-2 rounded-lg border border-border bg-surface/60 px-3 py-2.5">
+    <div className="gigi-panel-raised space-y-2 px-3 py-2.5">
       <div className="flex items-start gap-2">
         <span
           className={cn("mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full", dotClass(mode))}
