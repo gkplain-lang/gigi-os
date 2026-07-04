@@ -1,24 +1,25 @@
 import type { OnboardingGoalId, OnboardingState, WorkStyleId } from "./types";
 import { getConversationAskHref } from "@/modules/dailyUse/dailyUseHints";
+import { ASSISTANT_NAME, PRODUCT_NAME, PRODUCT_PROMISE } from "@/lib/branding";
 
 export const V14_PHASE_LABEL = "V1.4 — onboarding & first run";
 
-export const ONBOARDING_PROMISE = "Ouvre Gigi. Sache quoi faire. Exécute.";
+export const ONBOARDING_PROMISE = PRODUCT_PROMISE;
 
 export const ONBOARDING_TAGLINE =
-  "Gigi choisit chaque jour une mission prioritaire pour réduire la dispersion.";
+  `${ASSISTANT_NAME} choisit chaque jour une mission prioritaire pour réduire la dispersion.`;
 
 export const ONBOARDING_NOT_TODO =
-  "Gigi n'est pas une todo-list. Une seule mission compte — le reste attend.";
+  `${PRODUCT_NAME} n'est pas une todo-list. Une seule mission compte — le reste attend.`;
 
 export const ONBOARDING_MISSION_LOGIC =
-  "Gigi score tes projets actifs (urgence, clarté, impact) et te propose la meilleure action du moment.";
+  `${ASSISTANT_NAME} score tes projets actifs (urgence, clarté, impact) et te propose la meilleure action du moment.`;
 
 export const ONBOARDING_SIMULATION_NOTE =
   "Mode simulation · local uniquement. Aucune action externe réelle.";
 
 export const ONBOARDING_BANNER = {
-  title: "Configurer Gigi en 2 minutes",
+  title: `Configurer ${PRODUCT_NAME} en 2 minutes`,
   body: "Ajoute tes projets et obtiens ta première mission prioritaire.",
   cta: "Commencer",
 } as const;

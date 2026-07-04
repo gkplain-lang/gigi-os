@@ -34,7 +34,7 @@ export default function DevSupabasePage() {
         <DevSupabaseStatus />
 
         <p style={{ marginTop: 18, fontSize: 13, lineHeight: 1.6, color: "#71767f" }}>
-          V0.4.3 ajoute l&apos;auth, mais Gigi OS utilise encore localStorage comme source principale
+          V0.4.3 ajoute l&apos;auth, mais Aegis utilise encore localStorage comme source principale
           (<code style={{ color: "#a1a1aa" }}>gigi-os-v03-state</code>).
         </p>
       </div>

@@ -3,6 +3,7 @@ import { Fraunces, Geist } from "next/font/google";
 import { AppShell } from "@/components/ui/AppShell";
 import { GigiProvider } from "@/components/providers/GigiProvider";
 import { AuthProvider } from "@/components/providers/AuthProvider";
+import { PRODUCT_NAME, PRODUCT_TAGLINE, ASSISTANT_NAME } from "@/lib/branding";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -17,8 +18,8 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Gigi — Une action. Aucun bruit.",
-  description: "Ton système d'exploitation personnel pour builders. Sache quoi faire aujourd'hui.",
+  title: `${PRODUCT_NAME} — ${PRODUCT_TAGLINE}`,
+  description: `Ton système d'exploitation personnel. ${ASSISTANT_NAME} t'aide à savoir quoi faire aujourd'hui.`,
 };
 
 export default function RootLayout({

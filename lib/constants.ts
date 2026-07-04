@@ -1,3 +1,5 @@
+import { PRODUCT_NAME, PRODUCT_TAGLINE } from "./branding";
+
 export const NAV_ITEMS = [
   { href: "/", label: "Mission", icon: "target" as const },
   { href: "/conversation", label: "Gigi", icon: "message" as const },
@@ -6,8 +8,8 @@ export const NAV_ITEMS = [
   { href: "/history", label: "Historique", icon: "clock" as const },
 ] as const;
 
-export const APP_NAME = "Gigi OS";
-export const APP_TAGLINE = "Une action. Aucun bruit.";
+export const APP_NAME = PRODUCT_NAME;
+export const APP_TAGLINE = PRODUCT_TAGLINE;
 
 export const PAGE_META = {
   "/": {

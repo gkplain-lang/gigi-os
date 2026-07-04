@@ -170,7 +170,7 @@ function profileErrorMessage(
     return "La table public.profiles est absente. Exécute supabase/schema.sql dans Supabase.";
   }
   if (code === "42703" || msg.includes("column")) {
-    return "Structure de profil incompatible avec le schéma Gigi OS. Vérifie supabase/schema.sql.";
+    return "Structure de profil incompatible avec le schéma Aegis. Vérifie supabase/schema.sql.";
   }
   if (code === "23505") {
     return "Le profil existe déjà — réessaie dans un instant.";

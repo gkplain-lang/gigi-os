@@ -758,7 +758,7 @@ Can the user open Gigi every morning and know what to do next?
 ## Promise
 
 ```text
-Ouvre Gigi. Sache quoi faire. Exécute.
+Ouvre Aegis. Parle à Gigi. Exécute.
 ```
 
 ## Features

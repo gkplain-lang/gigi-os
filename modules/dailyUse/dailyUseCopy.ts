@@ -1,6 +1,7 @@
 import type { DailyUseEmptyState, DailyUseEmptyStateKey, DailyUseGuardrailsNote } from "./types";
+import { PRODUCT_PROMISE, PRODUCT_READY_LABEL } from "@/lib/branding";
 
-export const V11_PROMISE = "Ouvre Gigi. Sache quoi faire. Exécute.";
+export const V11_PROMISE = PRODUCT_PROMISE;
 
 export const V11_PHASE_LABEL = "V1.1 — usage quotidien amélioré";
 
@@ -74,5 +75,5 @@ export const FEEDBACK_PAGE = {
   },
 } as const;
 
-export const SIDEBAR_READY_LABEL = "Gigi est prêt";
+export const SIDEBAR_READY_LABEL = PRODUCT_READY_LABEL;
 export const SIDEBAR_FEEDBACK_LABEL = "Donner un avis";
