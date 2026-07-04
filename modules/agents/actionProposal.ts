@@ -9,6 +9,7 @@ import {
   V06_BLOCKED_MESSAGE,
 } from "./actionSafety";
 import { executeActionDryRun } from "./actionDryRun";
+import { applyConfirmationDefaults } from "./confirmation/confirmationState";
 import type {
   ActionProposal,
   AgentActionType,
@@ -49,7 +50,7 @@ function createDryRunProposal(
     riskLevel: opts.riskLevel ?? "low",
     autonomyLevelRequired: "level_1_prepare_only",
     dryRunOnly: true,
-    confirmationRequired: false,
+    confirmationRequired: true,
     expectedOutcome: opts.expectedOutcome,
     createdAt: new Date().toISOString(),
   };
@@ -264,6 +265,6 @@ export function applyAgentProposals(
   return {
     ...response,
     message,
-    actionProposals: detection.proposals,
+    actionProposals: detection.proposals.map(applyConfirmationDefaults),
   };
 }

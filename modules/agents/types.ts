@@ -28,6 +28,13 @@ export type ForbiddenRealActionType =
 
 export type AgentActionType = DryRunActionType | ForbiddenRealActionType;
 
+export type ConfirmationStatus =
+  | "pending_confirmation"
+  | "confirmed_dry_run"
+  | "blocked"
+  | "expired"
+  | "cancelled";
+
 export interface ActionProposal {
   id: string;
   title: string;
@@ -42,6 +49,8 @@ export interface ActionProposal {
   expectedOutcome: string;
   blockedReason?: string;
   createdAt: string;
+  /** V0.6.2 — confirmation UX status */
+  confirmationStatus?: ConfirmationStatus;
 }
 
 export interface DryRunResult {

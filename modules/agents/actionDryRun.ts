@@ -1,4 +1,4 @@
-import { DRY_RUN_ACTION_LABELS } from "./actionRegistry";
+import { DRY_RUN_ACTION_LABELS, FORBIDDEN_ACTION_LABELS, isForbiddenRealAction } from "./actionRegistry";
 import type { ActionProposal, DryRunResult } from "./types";
 import { assertNoExternalExecution } from "./actionSafety";
 
@@ -40,8 +40,34 @@ const DRY_RUN_STEPS: Partial<Record<string, string[]>> = {
   ],
 };
 
+/** Simulates a preparatory plan for forbidden real actions — never executes. */
+export function simulateBlockedActionPlan(proposal: ActionProposal): DryRunResult {
+  const label =
+    FORBIDDEN_ACTION_LABELS[proposal.actionType as keyof typeof FORBIDDEN_ACTION_LABELS] ??
+    proposal.title;
+  return {
+    proposalId: proposal.id,
+    actionType: proposal.actionType,
+    dryRun: true,
+    executed: false,
+    simulatedSteps: [
+      "Documenter la demande et le risque",
+      "Proposer un plan manuel étape par étape",
+      "Confirmer : aucune exécution réelle en V0.6.2",
+    ],
+    summary: `[Dry-run plan] ${label} — exécution réelle bloquée, plan préparatoire uniquement.`,
+  };
+}
+
+export function simulateActionDryRun(proposal: ActionProposal): DryRunResult {
+  if (isForbiddenRealAction(proposal.actionType)) {
+    return simulateBlockedActionPlan(proposal);
+  }
+  return executeActionDryRun(proposal);
+}
+
 /**
- * Simulates an action — never calls Gmail, Calendar, GitHub, n8n, Supabase, or APIs.
+ * Simulates an allowed dry-run action — never calls Gmail, Calendar, GitHub, n8n, Supabase, or APIs.
  */
 export function executeActionDryRun(proposal: ActionProposal): DryRunResult {
   assertNoExternalExecution(proposal.actionType);

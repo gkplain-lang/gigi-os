@@ -4,6 +4,8 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import type { GigiConversationResponse } from "@/modules/conversation/conversationTypes";
 import { GigiOrb } from "@/components/ui/GigiOrb";
+import { ActionProposalCard } from "./ActionProposalCard";
+import { V062_NO_EXTERNAL_MESSAGE } from "@/modules/agents/confirmation";
 
 interface GigiAnswerProps {
   response: GigiConversationResponse;
@@ -23,28 +25,13 @@ function ActionProposalsSection({ response }: { response: GigiConversationRespon
     <div className="gigi-panel mt-3 rounded-xl p-4">
       <Label>Action proposée (dry-run)</Label>
       {response.actionProposals.map((proposal) => (
-        <div
+        <ActionProposalCard
           key={proposal.id}
-          className="mt-2.5 rounded-lg border border-border bg-surface/50 p-3"
-        >
-          <p className="text-[13.5px] font-medium text-text-primary">{proposal.title}</p>
-          <p className="mt-1 text-[12.5px] leading-relaxed text-text-muted">{proposal.description}</p>
-          <p className="mt-2 text-[12px] text-text-muted/80">
-            Risque : {proposal.riskLevel} · Dry-run uniquement
-          </p>
-          {proposal.blockedReason && (
-            <p className="mt-2 text-[12.5px] leading-relaxed text-amber-200/90">
-              {proposal.blockedReason}
-            </p>
-          )}
-          {response.agentBlockedMessage && proposal.blockedReason && (
-            <p className="mt-1.5 text-[12px] font-medium text-text-secondary">
-              {response.agentBlockedMessage}
-            </p>
-          )}
-        </div>
+          proposal={proposal}
+          agentBlockedMessage={response.agentBlockedMessage}
+        />
       ))}
-      <p className="mt-2.5 text-[11px] text-text-muted/70">V0.6 — aucune action externe exécutée.</p>
+      <p className="mt-2.5 text-[11px] text-text-muted/70">V0.6.2 — {V062_NO_EXTERNAL_MESSAGE}</p>
     </div>
   );
 }
@@ -204,31 +191,14 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
               <div className="p-4">
                 <Label>Action proposée (dry-run)</Label>
                 {response.actionProposals.map((proposal) => (
-                  <div
+                  <ActionProposalCard
                     key={proposal.id}
-                    className="mt-2.5 rounded-lg border border-border bg-surface/50 p-3"
-                  >
-                    <p className="text-[13.5px] font-medium text-text-primary">{proposal.title}</p>
-                    <p className="mt-1 text-[12.5px] leading-relaxed text-text-muted">
-                      {proposal.description}
-                    </p>
-                    <p className="mt-2 text-[12px] text-text-muted/80">
-                      Risque : {proposal.riskLevel} · Dry-run uniquement
-                    </p>
-                    {proposal.blockedReason && (
-                      <p className="mt-2 text-[12.5px] leading-relaxed text-amber-200/90">
-                        {proposal.blockedReason}
-                      </p>
-                    )}
-                    {response.agentBlockedMessage && proposal.blockedReason && (
-                      <p className="mt-1.5 text-[12px] font-medium text-text-secondary">
-                        {response.agentBlockedMessage}
-                      </p>
-                    )}
-                  </div>
+                    proposal={proposal}
+                    agentBlockedMessage={response.agentBlockedMessage}
+                  />
                 ))}
                 <p className="mt-2.5 text-[11px] text-text-muted/70">
-                  V0.6 — aucune action externe exécutée.
+                  V0.6.2 — {V062_NO_EXTERNAL_MESSAGE}
                 </p>
               </div>
             )}
