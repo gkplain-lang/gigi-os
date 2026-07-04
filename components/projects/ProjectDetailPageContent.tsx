@@ -1,16 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { ArrowLeft, MessageCircle } from "lucide-react";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { ProjectMissionCard } from "@/components/projects/ProjectMissionCard";
+import { ActionPlanPanel } from "@/components/actionPlans/ActionPlanPanel";
 import {
   buildProjectDetailContext,
   getProjectAskGigiHref,
+  getRecommendedMission,
 } from "@/modules/projectMissions";
+import { buildActionPlanForProject } from "@/modules/actionPlans";
 import type { HistoryEvent } from "@/modules/history/historyTypes";
 import type { Project, ProjectStatus } from "@/modules/projects/projectTypes";
 
@@ -47,6 +51,8 @@ function filterProjectHistory(events: HistoryEvent[], project: Project): History
 
 export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContentProps) {
   const { state, isHydrated } = useGigi();
+  const searchParams = useSearchParams();
+  const planParam = searchParams.get("plan");
 
   if (!isHydrated) return null;
 
@@ -79,6 +85,19 @@ export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContent
   const { summary, missions } = ctx;
   const history = filterProjectHistory(state.history, project);
   const askHref = getProjectAskGigiHref(project);
+
+  const recommendedMission = getRecommendedMission(missions);
+  const planMissionId =
+    planParam && planParam !== "recommended"
+      ? missions.some((m) => m.id === planParam)
+        ? planParam
+        : recommendedMission?.id
+      : recommendedMission?.id;
+  const actionPlan = planMissionId
+    ? buildActionPlanForProject(project.id, project.name, planMissionId)
+    : null;
+  const showUnknownPlanMission =
+    planParam && planParam !== "recommended" && !missions.some((m) => m.id === planParam);
 
   return (
     <div className="gigi-page-shell animate-fade-in">
@@ -148,6 +167,25 @@ export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContent
                 {summary.recommendedAction.canIgnore}
               </p>
             </section>
+
+            {showUnknownPlanMission && (
+              <div className="gigi-empty-state rounded-xl px-4 py-6 text-center">
+                <p className="text-[14px] font-medium text-text-primary">Mission introuvable</p>
+                <p className="mt-1 text-[13px] text-text-muted">
+                  Le plan demandé n&apos;existe pas — affichage du plan recommandé.
+                </p>
+              </div>
+            )}
+
+            {actionPlan && (
+              <section id="action-plan">
+                <PageHeader
+                  title="Plan d'action"
+                  meta="Préparation locale — aucune exécution automatique."
+                />
+                <ActionPlanPanel plan={actionPlan} />
+              </section>
+            )}
 
             <section>
               <PageHeader

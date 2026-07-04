@@ -101,6 +101,7 @@ V1.2.1 — Accent Dim Fix
 V1.3 — Daily Use Refinement
 V1.4 — Onboarding & First Run
 V1.6 — Project Detail & Mission Suggestions
+V1.7 — Action Plan Builder
 V2.0 — Multi-user SaaS
 ```
 
@@ -990,7 +991,56 @@ See [PROJECT_DETAIL_MISSION_SUGGESTIONS.md](./PROJECT_DETAIL_MISSION_SUGGESTIONS
 
 ---
 
-# 19. V2.0 — SaaS Version
+# 19. V1.7 — Action Plan Builder
+
+## Goal
+
+Turn mission suggestions into structured, executable action plans — preparation only, no real execution.
+
+## Core Question
+
+```text
+When the user asks how to execute a mission, does Gigi show a clear step-by-step plan?
+```
+
+## Features
+
+```text
+Local action plan module (modules/actionPlans/)
+Plans per project/mission with steps, deliverables, risks
+Dry-run prepared actions (cursor prompt, checklist, branch plan, …)
+Project detail plan section + ?plan=missionId query param
+"Préparer le plan" button on mission cards
+Conversation intent detection for plan requests
+Documentation (ACTION_PLAN_BUILDER.md)
+```
+
+## Not in V1.7
+
+```text
+Real execution (files, Git, agents, n8n)
+Automatic mission application
+AI-generated plans (optional later)
+Supabase sync or restore
+New localStorage keys
+Payments, landing
+```
+
+## Acceptance Criteria
+
+V1.7 is complete when:
+
+- project detail shows action plan for recommended mission;
+- ?plan=missionId selects a specific plan;
+- conversation recognizes "avance [project]" and plan requests;
+- all prepared actions show dry-run + validation required;
+- npm run build passes.
+
+See [ACTION_PLAN_BUILDER.md](./ACTION_PLAN_BUILDER.md) for full details.
+
+---
+
+# 20. V2.0 — SaaS Version
 
 ## Goal
 

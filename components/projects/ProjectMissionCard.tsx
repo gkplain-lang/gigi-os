@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { MessageCircle } from "lucide-react";
+import { ClipboardList, MessageCircle } from "lucide-react";
 import type { ProjectMissionSuggestion } from "@/modules/projectMissions";
 import { getMissionAskGigiHref, getMissionPrepareHref } from "@/modules/projectMissions";
+import { getProjectPlanHref } from "@/modules/actionPlans";
 import type { Project } from "@/modules/projects/projectTypes";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +14,7 @@ interface ProjectMissionCardProps {
 export function ProjectMissionCard({ project, mission }: ProjectMissionCardProps) {
   const askHref = getMissionAskGigiHref(project, mission);
   const prepareHref = getMissionPrepareHref(project, mission);
+  const planHref = getProjectPlanHref(project.id, mission.id);
 
   return (
     <article
@@ -56,8 +58,15 @@ export function ProjectMissionCard({ project, mission }: ProjectMissionCardProps
 
       <div className="mt-4 flex flex-wrap gap-2">
         <Link
+          href={planHref}
+          className="gigi-btn-primary gigi-focus inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-[13px] font-medium"
+        >
+          <ClipboardList className="h-3.5 w-3.5" />
+          Préparer le plan
+        </Link>
+        <Link
           href={prepareHref}
-          className="gigi-btn-primary gigi-focus rounded-lg px-3.5 py-2 text-[13px] font-medium"
+          className="gigi-btn gigi-focus rounded-lg px-3.5 py-2 text-[13px] font-medium"
         >
           Préparer comme mission
         </Link>

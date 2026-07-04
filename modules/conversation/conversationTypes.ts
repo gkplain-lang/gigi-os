@@ -12,7 +12,8 @@ export type ConversationIntent =
   | "creative"
   | "maintenance"
   | "unclear"
-  | "general";
+  | "general"
+  | "action_plan";
 
 export interface NotNowItem {
   projectName: string;
@@ -65,6 +66,10 @@ export interface GigiConversationResponse {
   integrationBlockedMessage?: string;
   /** V0.6.1 — read-only daily review snapshot */
   dailyReview?: import("../dailyReview/types").DailyReviewSnapshot;
+  /** V1.7 — structured action plan (dry-run only) */
+  actionPlan?: import("../actionPlans/types").ActionPlan;
+  /** V1.7 — reminder when plan is preparation-only */
+  actionPlanBlockedMessage?: string;
 }
 
 export interface ConversationContext {
