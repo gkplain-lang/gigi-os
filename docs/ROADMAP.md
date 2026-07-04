@@ -100,6 +100,7 @@ V1.2 — Visual Polish
 V1.2.1 — Accent Dim Fix
 V1.3 — Daily Use Refinement
 V1.4 — Onboarding & First Run
+V1.6 — Project Detail & Mission Suggestions
 V2.0 — Multi-user SaaS
 ```
 
@@ -939,7 +940,57 @@ See [ONBOARDING_FIRST_RUN.md](./ONBOARDING_FIRST_RUN.md) for full details.
 
 ---
 
-# 18. V2.0 — SaaS Version
+# 18. V1.6 — Project Detail & Mission Suggestions
+
+## Goal
+
+Make `/projects` actionable: each project opens a detail view with local mission suggestions and a recommended next action.
+
+## Core Question
+
+```text
+When I open a project, do I immediately know what to do on it today?
+```
+
+## Features
+
+```text
+Clickable project cards on /projects
+Dynamic route /projects/[projectId]
+Local mission catalog (modules/projectMissions/)
+Recommended next action (action, why now, can ignore)
+Deep-link "Demander à Gigi" → /conversation?ask=
+Mission dry-run: "Préparer comme mission" / "Demander à Gigi de la choisir"
+Project not-found state
+Documentation (PROJECT_DETAIL_MISSION_SUGGESTIONS.md)
+```
+
+## Not in V1.6
+
+```text
+Automatic mission application
+AI-generated missions
+Supabase sync or restore
+External API calls
+New localStorage keys
+n8n, GitHub, payments, landing
+```
+
+## Acceptance Criteria
+
+V1.6 is complete when:
+
+- projects are clickable from `/projects`;
+- detail page shows context, score, missions, and next action;
+- Gigi deep-links work without modifying state;
+- unknown projectId shows clean not-found;
+- npm run build passes (28+ routes).
+
+See [PROJECT_DETAIL_MISSION_SUGGESTIONS.md](./PROJECT_DETAIL_MISSION_SUGGESTIONS.md) for full details.
+
+---
+
+# 19. V2.0 — SaaS Version
 
 ## Goal
 
