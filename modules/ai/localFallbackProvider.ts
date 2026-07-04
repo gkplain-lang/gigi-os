@@ -31,5 +31,10 @@ export function runLocalFallbackProvider(request: AiBrainRequest): AiBrainRespon
   };
 
   const local = askGigi(request.userMessage, request.projects, context);
-  return gigiResponseToAiBrain(local, "local_only");
+  return {
+    ...gigiResponseToAiBrain(local, "local_only"),
+    requestedProjectId: request.requestedProjectId ?? null,
+    projectMismatchDetected: false,
+    fallbackReason: null,
+  };
 }

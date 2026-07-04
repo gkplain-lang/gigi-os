@@ -26,6 +26,9 @@ export async function callOpenAiBrainProvider(
         postponedMissionIds: request.postponedMissionIds,
         rejectedMissionIds: request.rejectedMissionIds,
         conversationContext: request.conversationContext,
+        requestedProjectId: request.requestedProjectId,
+        requestedProjectName: request.requestedProjectName,
+        intentLock: request.intentLock,
       }),
     });
 

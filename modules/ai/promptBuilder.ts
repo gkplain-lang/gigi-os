@@ -9,7 +9,8 @@ Règles strictes :
 - Suggère seulement — l'utilisateur décide
 - Tu peux dire "pas maintenant" pour les autres projets
 - Réponds en JSON strict uniquement, en français
-- confidence entre 0 et 1`;
+- confidence entre 0 et 1
+- Si requestedProjectId est présent dans le contexte : la mission principale DOIT être dans CE projet exactement. Tu n'as pas le droit de substituer Buildy Clear ou un autre projet. L'alternative peut être ailleurs.`;
 
 export function buildAiPromptPayload(request: AiBrainRequest) {
   const recentHistory = request.history.slice(0, 5).map((h) => ({
@@ -34,9 +35,24 @@ export function buildAiPromptPayload(request: AiBrainRequest) {
       }
     : null;
 
+  const projectLockRules = request.requestedProjectId
+    ? [
+        `PROJET VERROUILLÉ : ${request.requestedProjectName ?? request.requestedProjectId} (${request.requestedProjectId})`,
+        "Tu DOIS recommander une mission dans CE projet uniquement.",
+        "Tu n'as PAS le droit de remplacer par Buildy Clear ou un autre projet en mission principale.",
+        `recommendedMission.projectId DOIT être exactement "${request.requestedProjectId}".`,
+        "Tu peux mentionner Buildy Clear seulement en note secondaire (alternative ou notNow) si pertinent.",
+        "L'alternative peut être un autre projet, mais la mission principale reste dans le projet demandé.",
+      ]
+    : [];
+
   return {
     promise: "Une action. Aucun bruit.",
     userMessage: request.userMessage.slice(0, 800),
+    requestedProjectId: request.requestedProjectId ?? null,
+    requestedProjectName: request.requestedProjectName ?? null,
+    intentLock: request.intentLock ?? null,
+    projectLockRules,
     currentMission: {
       id: request.currentMission.id,
       title: request.currentMission.title,

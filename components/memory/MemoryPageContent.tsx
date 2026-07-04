@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { formatMemoryBackupDate, useMemoryStatus } from "@/modules/memory";
 
@@ -19,7 +20,12 @@ export function MemoryPageContent() {
   } = useMemoryStatus();
 
   const { label, message, canBackup, canOpenAuth, localSummary, lastBackupAt } = memoryStatus;
+  const [formattedBackup, setFormattedBackup] = useState<string | null>(null);
   const isSaving = backupState === "saving";
+
+  useEffect(() => {
+    setFormattedBackup(formatMemoryBackupDate(lastBackupAt));
+  }, [lastBackupAt]);
 
   return (
     <>
@@ -66,13 +72,13 @@ export function MemoryPageContent() {
           <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">
             Sauvegarde distante
           </p>
-          {lastBackupAt ? (
+          {lastBackupAt && formattedBackup ? (
             <p className="mt-2 text-[14px] text-text-secondary">
-              Dernière sauvegarde : {formatMemoryBackupDate(lastBackupAt)}
+              Dernière sauvegarde : {formattedBackup}
             </p>
-          ) : (
+          ) : !lastBackupAt ? (
             <p className="mt-2 text-[14px] text-text-muted">Aucune sauvegarde distante enregistrée.</p>
-          )}
+          ) : null}
           {persisted.lastBackupCounts && (
             <p className="mt-1 text-[13px] text-text-muted">
               {persisted.lastBackupCounts.projects} proj · {persisted.lastBackupCounts.missions}{" "}

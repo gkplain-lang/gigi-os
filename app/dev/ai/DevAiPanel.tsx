@@ -3,20 +3,46 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useGigi } from "@/components/providers/GigiProvider";
-import { askAiBrain, fetchAiAvailability, type AiBrainResponse } from "@/modules/ai";
+import {
+  askAiBrain,
+  detectRequestedProject,
+  fetchAiAvailability,
+  type AiBrainResponse,
+} from "@/modules/ai";
 import { AI_SAFETY_RULES_SUMMARY } from "@/modules/ai/safety";
 
 const IS_PROD = process.env.NODE_ENV === "production";
+
+const TEST_PHRASES = [
+  "Que faire dans Buildy Crafts aujourd'hui ?",
+  "Je veux avancer la bibliothèque Buildy Crafts",
+  "Je veux gagner 500 €/mois rapidement",
+  "Que dois-je faire aujourd'hui ?",
+  "Que faire dans Linko aujourd'hui ?",
+];
+
+function modeLabel(mode: AiBrainResponse["mode"]): string {
+  switch (mode) {
+    case "ai_assisted":
+      return "IA assistée";
+    case "ai_unavailable":
+      return "Fallback local (IA indisponible ou corrigée)";
+    default:
+      return "Fallback local";
+  }
+}
 
 export function DevAiPanel() {
   const { state, isHydrated } = useGigi();
   const [status, setStatus] = useState<Awaited<ReturnType<typeof fetchAiAvailability>> | null>(
     null
   );
-  const [input, setInput] = useState("Je me disperse, par quoi commencer ?");
+  const [input, setInput] = useState("Que faire dans Buildy Crafts aujourd'hui ?");
   const [result, setResult] = useState<AiBrainResponse | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const detectedIntent = detectRequestedProject(input);
 
   useEffect(() => {
     void fetchAiAvailability().then(setStatus);
@@ -122,6 +148,34 @@ export function DevAiPanel() {
             fontSize: 14,
           }}
         />
+        <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 6 }}>
+          {TEST_PHRASES.map((phrase) => (
+            <button
+              key={phrase}
+              type="button"
+              onClick={() => setInput(phrase)}
+              style={{
+                border: "1px solid #2a2f38",
+                background: "#0f1115",
+                color: "#71767f",
+                borderRadius: 6,
+                padding: "4px 8px",
+                fontSize: 11,
+                cursor: "pointer",
+              }}
+            >
+              {phrase.slice(0, 36)}
+              {phrase.length > 36 ? "…" : ""}
+            </button>
+          ))}
+        </div>
+        <p style={{ marginTop: 10, fontSize: 12, color: "#71767f" }}>
+          Intention détectée :{" "}
+          <span style={{ color: "#a1a1aa" }}>
+            {detectedIntent.intentLock ?? "globale"} ·{" "}
+            {detectedIntent.requestedProjectId ?? "aucun projet verrouillé"}
+          </span>
+        </p>
         <button
           type="button"
           onClick={() => void runTest()}
@@ -157,8 +211,26 @@ export function DevAiPanel() {
           }}
         >
           <p>
-            Mode : <span style={{ color: "#f4f4f5" }}>{result.mode}</span> · Provider :{" "}
-            {result.provider}
+            Mode : <span style={{ color: "#f4f4f5" }}>{modeLabel(result.mode)}</span> ({result.mode})
+            · Provider : {result.provider}
+          </p>
+          <p>
+            requestedProjectId :{" "}
+            <span style={{ color: "#f4f4f5" }}>{result.requestedProjectId ?? "—"}</span>
+          </p>
+          <p>
+            Project mismatch :{" "}
+            <span style={{ color: "#f4f4f5" }}>
+              {result.projectMismatchDetected ? "oui" : "non"}
+            </span>
+          </p>
+          {result.fallbackReason && (
+            <p>
+              fallbackReason : <span style={{ color: "#f4f4f5" }}>{result.fallbackReason}</span>
+            </p>
+          )}
+          <p>
+            Intent : <span style={{ color: "#f4f4f5" }}>{result.intent}</span>
           </p>
           <p>
             Sécurité : {result.safety.level}

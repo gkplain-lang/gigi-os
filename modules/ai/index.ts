@@ -9,6 +9,7 @@ export type {
   AiSafetyLevel,
   AiSafetyResult,
   AiServerConfig,
+  ProjectIntentLock,
 } from "./types";
 
 export { SAFE_AI_SAFETY } from "./types";
@@ -38,5 +39,8 @@ export {
 
 export { askAiBrain, finalizeServerAiResponse } from "./aiBrain";
 export type { AskAiBrainOptions } from "./aiBrain";
+
+export { detectRequestedProject, enrichAiBrainRequest } from "./projectIntent";
+export { applyProjectIntentGuard, pickCatalogMissionForProject } from "./projectIntentGuard";
 
 export { useAiAvailability } from "./useAiAvailability";

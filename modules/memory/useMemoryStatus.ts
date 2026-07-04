@@ -15,14 +15,15 @@ import {
   syncResultToPersistedResult,
 } from "./memorySummary";
 import type { MemoryBackupState, MemoryMode, MemoryPersistedState, MemoryStatus } from "./types";
+import { DEFAULT_MEMORY_PERSISTED } from "./types";
 
 export function useMemoryStatus() {
   const { status: authStatus, errorMessage: authError } = useAuth();
   const { state, isHydrated } = useGigi();
 
-  const [persisted, setPersisted] = useState<MemoryPersistedState>(() =>
-    readMemoryPersistedState()
-  );
+  const [persisted, setPersisted] = useState<MemoryPersistedState>(() => ({
+    ...DEFAULT_MEMORY_PERSISTED,
+  }));
   const [backupState, setBackupState] = useState<MemoryBackupState>("idle");
   const [lastResult, setLastResult] = useState<SyncResult | null>(null);
   const [error, setError] = useState<string | null>(null);

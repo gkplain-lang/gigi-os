@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { formatMemoryBackupDate, useMemoryStatus } from "@/modules/memory";
 import { cn } from "@/lib/utils";
 
@@ -25,8 +26,12 @@ interface MemoryStatusStripProps {
 export function MemoryStatusStrip({ variant = "sidebar" }: MemoryStatusStripProps) {
   const { memoryStatus, backupState, backupNow, error, lastResult } = useMemoryStatus();
   const { mode, label, message, canBackup, canOpenAuth, lastBackupAt } = memoryStatus;
+  const [formattedBackup, setFormattedBackup] = useState<string | null>(null);
 
-  const formattedBackup = formatMemoryBackupDate(lastBackupAt);
+  useEffect(() => {
+    setFormattedBackup(formatMemoryBackupDate(lastBackupAt));
+  }, [lastBackupAt]);
+
   const isSaving = backupState === "saving";
 
   if (variant === "mobile") {

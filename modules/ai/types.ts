@@ -13,6 +13,8 @@ export type AiProviderName = "none" | "openai" | "local_fallback";
 
 export type AiBrainMode = "local_only" | "ai_assisted" | "ai_unavailable";
 
+export type ProjectIntentLock = "project_specific" | null;
+
 export type AiSafetyLevel = "safe" | "needs_confirmation" | "blocked";
 
 export type AiActionType =
@@ -53,6 +55,10 @@ export interface AiBrainRequest {
   postponedMissionIds: string[];
   rejectedMissionIds: string[];
   conversationContext?: ConversationContext;
+  /** Explicit project detected from user message */
+  requestedProjectId?: string | null;
+  requestedProjectName?: string | null;
+  intentLock?: ProjectIntentLock;
 }
 
 export interface AiBrainResponse {
@@ -68,6 +74,9 @@ export interface AiBrainResponse {
   safety: AiSafetyResult;
   provider: AiProviderName;
   rawProvider?: unknown;
+  requestedProjectId?: string | null;
+  projectMismatchDetected?: boolean;
+  fallbackReason?: string | null;
 }
 
 export interface AiProviderJsonResponse {

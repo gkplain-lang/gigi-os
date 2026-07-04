@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { finalizeServerAiResponse } from "@/modules/ai/aiBrain";
 import { getServerAiConfig } from "@/modules/ai/aiConfig";
+import { enrichAiBrainRequest } from "@/modules/ai/projectIntent";
 import { buildOpenAiMessages } from "@/modules/ai/promptBuilder";
 import { runLocalFallbackProvider } from "@/modules/ai/localFallbackProvider";
 import type { AiBrainRequest, AiProviderJsonResponse } from "@/modules/ai/types";
@@ -29,6 +30,8 @@ export async function POST(req: Request) {
   if (!body.userMessage?.trim()) {
     return NextResponse.json({ ok: false, error: "missing_message" }, { status: 400 });
   }
+
+  body = enrichAiBrainRequest(body);
 
   const apiKey = process.env.OPENAI_API_KEY?.trim();
   if (!apiKey) {
