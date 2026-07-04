@@ -30,6 +30,12 @@ export function runLocalFallbackProvider(request: AiBrainRequest): AiBrainRespon
     currentMissionId: request.currentMission.id,
     currentProjectId: request.currentMission.projectId,
     completedMissionIds: request.completedMissionIds,
+    postponedMissionIds: request.postponedMissionIds,
+    rejectedMissionIds: request.rejectedMissionIds,
+    executionHints: request.executionHints ?? null,
+    historyEvents: request.historyEvents,
+    projects: request.projects,
+    currentMission: request.currentMission,
     ...request.conversationContext,
   };
 

@@ -4,6 +4,7 @@ import { enrichAiBrainRequest } from "./projectIntent";
 import { applyProjectIntentGuard } from "./projectIntentGuard";
 import { applyDecisionQuality } from "./decisionQuality/decisionFallback";
 import { applyAgentProposals } from "@/modules/agents";
+import { applyDailyReviewEnrichment } from "@/modules/dailyReview";
 import { parseProviderJsonToAiBrain } from "./responseAdapter";
 import type { AiBrainRequest, AiBrainResponse } from "./types";
 
@@ -33,9 +34,12 @@ export async function askAiBrain(
 
   const fallback = (): AiBrainResponse =>
     attachIntentMeta(
-      applyAgentProposals(
+      applyDailyReviewEnrichment(
         enriched,
-        applyDecisionQuality(enriched, assertResponseSafe(runLocalFallbackProvider(enriched)))
+        applyAgentProposals(
+          enriched,
+          applyDecisionQuality(enriched, assertResponseSafe(runLocalFallbackProvider(enriched)))
+        )
       ),
       enriched
     );
@@ -74,6 +78,7 @@ export async function askAiBrain(
   response = applyProjectIntentGuard(enriched, response);
   response = applyDecisionQuality(enriched, response);
   response = applyAgentProposals(enriched, response);
+  response = applyDailyReviewEnrichment(enriched, response);
   response = assertResponseSafe(response);
   return attachIntentMeta(response, enriched);
 }
@@ -93,5 +98,6 @@ export function finalizeServerAiResponse(
   response = applyProjectIntentGuard(enriched, response);
   response = applyDecisionQuality(enriched, response);
   response = applyAgentProposals(enriched, response);
+  response = applyDailyReviewEnrichment(enriched, response);
   return attachIntentMeta(assertResponseSafe(response), enriched);
 }

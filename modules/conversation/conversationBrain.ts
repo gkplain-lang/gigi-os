@@ -62,6 +62,23 @@ const FOCUS_KEYWORDS = [
   "et ensuite",
 ];
 
+const DAILY_REVIEW_KEYWORDS = [
+  "revue du jour",
+  "daily review",
+  "fais ma revue",
+  "fait ma revue",
+  "mon bilan",
+  "bilan",
+  "review",
+  "ou j en suis",
+  "où j'en suis",
+  "point sur",
+  "recap",
+  "récap",
+  "qu est ce que je dois faire aujourd hui",
+  "que faire aujourd hui",
+];
+
 const ALTERNATIVE_KEYWORDS = [
   "autre chose",
   "autre option",
@@ -259,6 +276,10 @@ export function detectIntent(objective: string): DetectedIntent {
     return { intent: "maintenance", projectId: null, negatedProjectId: null };
   }
 
+  if (matchesAny(norm, DAILY_REVIEW_KEYWORDS)) {
+    return { intent: "daily_review", projectId: null, negatedProjectId: null };
+  }
+
   if (matchesAny(norm, FOCUS_KEYWORDS)) {
     return { intent: "focus", projectId: null, negatedProjectId: null };
   }
@@ -277,6 +298,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   project_specific: "J'ai compris",
   revenue: "J'ai compris : revenu rapide",
   focus: "J'ai compris : remettre de l'ordre",
+  daily_review: "Revue du jour",
   alternative: "J'ai compris : une autre option",
   creative: "J'ai compris : créatif / contenu",
   maintenance: "J'ai compris : rangement / audit",
@@ -410,6 +432,10 @@ export function askGigi(
     listen = hasCompleted
       ? "Ta dernière mission est terminée. Voici la suite la plus claire."
       : "Tu n'as pas besoin de tout avancer aujourd'hui.";
+  } else if (intent === "daily_review") {
+    selected = activeMissions(pool)[0];
+    listen = "Voici ta revue du jour. Une mission claire suffit.";
+    intentLabel = INTENT_LABELS.daily_review;
   } else {
     // general
     selected = activeMissions(pool)[0];
@@ -433,6 +459,7 @@ export function askGigi(
     project_specific: `Reste dans ${PROJECT_NAMES[selected.projectId]}. Une mission claire suffit.`,
     revenue: "Une action. Aucun bruit. Démarre ici.",
     focus: "Le reste peut attendre.",
+    daily_review: "Le reste peut attendre — concentre-toi sur cette mission.",
     alternative: "Tu peux avancer sans tout rouvrir.",
     creative: "Amuse-toi, mais garde le cap.",
     maintenance: "Un peu d'ordre, puis on repart.",

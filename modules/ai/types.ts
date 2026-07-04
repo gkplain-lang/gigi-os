@@ -9,6 +9,9 @@ import type {
 import type { AiMemoryContext } from "./memoryContext/types";
 import type { DecisionQualityReport } from "./decisionQuality/types";
 import type { ActionProposal } from "@/modules/agents/types";
+import type { DailyReviewSnapshot } from "@/modules/dailyReview/types";
+import type { HistoryEvent } from "@/modules/history/historyTypes";
+import type { MissionExecutionHints } from "@/modules/missionExecution/types";
 
 export type AiAvailability = "not_configured" | "available" | "error";
 
@@ -64,6 +67,9 @@ export interface AiBrainRequest {
   intentLock?: ProjectIntentLock;
   /** Bounded read-only memory context for AI prompts */
   memoryContext?: AiMemoryContext;
+  /** V0.6.1 — full history for daily review (read-only) */
+  historyEvents?: HistoryEvent[];
+  executionHints?: MissionExecutionHints | null;
 }
 
 export interface AiBrainResponse {
@@ -87,6 +93,8 @@ export interface AiBrainResponse {
   decisionQuality?: DecisionQualityReport;
   /** V0.6 — dry-run action proposals, never auto-executed */
   actionProposals?: ActionProposal[];
+  /** V0.6.1 — read-only daily review */
+  dailyReview?: DailyReviewSnapshot;
 }
 
 export interface AiProviderJsonResponse {
