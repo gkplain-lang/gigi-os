@@ -109,7 +109,8 @@ V2.1 — Execution Logs & Manual Completion
 V2.2 — Execution Report Review
 V2.3 — Follow-up Action Generator
 V2.4 — History & Learning Loop
-V2.5 — Mission Recommendation Feedback Loop (planned)
+V2.5 — Mission Recommendation Feedback Loop
+V2.6 — Mission Decision Center (planned)
 ```
 
 ---
@@ -1377,11 +1378,11 @@ See [HISTORY_LEARNING_LOOP.md](./HISTORY_LEARNING_LOOP.md). Links forward to V2.
 
 ---
 
-# 27. V2.5 — Mission Recommendation Feedback Loop (planned)
+# 27. V2.5 — Mission Recommendation Feedback Loop
 
 ## Goal
 
-Use V2.4 local history to improve future mission recommendations — clearer missions, fewer recurring blockers, better daily focus.
+Use V2.4 local history to improve mission recommendations with signals, scores, and explanations.
 
 ## Core Question
 
@@ -1389,20 +1390,68 @@ Use V2.4 local history to improve future mission recommendations — clearer mis
 Can Gigi learn from local execution history to recommend better missions?
 ```
 
+## Features
+
+```text
+Mission feedback module (modules/missionFeedback/)
+Storage key gigi-os-v25-mission-feedback-loop
+Engine: signals from HistoryLearning V2.4
+Scoring 0–100 with decision labels
+MissionFeedbackPanel on /, /projects/[id], /history summary
+MissionFeedbackBadge on project mission cards
+Conversation intent mission_feedback
+Documentation (MISSION_RECOMMENDATION_FEEDBACK_LOOP.md)
+```
+
+## Not in V2.5
+
+```text
+Replacing catalog mission engine or auto-changing daily mission
+External API calls or cloud sync
+Modification of v03–v24 localStorage keys
+Automatic deletion of existing data
+```
+
+## Acceptance Criteria
+
+V2.5 is complete when:
+
+- user can regenerate feedback from V2.4 history;
+- scores persist in gigi-os-v25-mission-feedback-loop;
+- project and mission pages show « Pourquoi cette mission ? » without breaking V1.6;
+- conversation explains local-only limits;
+- npm run build passes.
+
+See [MISSION_RECOMMENDATION_FEEDBACK_LOOP.md](./MISSION_RECOMMENDATION_FEEDBACK_LOOP.md). Links forward to V2.6 Mission Decision Center.
+
+---
+
+# 28. V2.6 — Mission Decision Center (planned)
+
+## Goal
+
+Centralize daily mission decision: compare candidates, accept/refuse, transform to plan/action, decision history.
+
+## Core Question
+
+```text
+Can the user consciously choose today's mission with full local context?
+```
+
 ## Features (planned)
 
 ```text
-Feedback from history signals and outcomes
-Avoid overly vague missions
-Prioritize missions that unblock projects
-Account for recurring blockers and abandoned actions
-Improve daily mission selection
+Compare multiple mission candidates side by side
+Explain recommended mission with V2.5 feedback
+Explicit accept/refuse flow
+Transform chosen mission into action plan
+Local decision history
 Still no real execution
 ```
 
 ---
 
-# 28. Later — SaaS Version (planned)
+# 29. Later — SaaS Version (planned)
 
 ## Goal
 

@@ -1,13 +1,40 @@
 "use client";
 
+import { useCallback, useMemo, useState } from "react";
+import Link from "next/link";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { HistoryTimeline } from "@/components/history/HistoryTimeline";
 import { HistoryLearningPanel } from "@/components/historyLearning/HistoryLearningPanel";
+import { MissionFeedbackSummaryCard } from "@/components/missionFeedback/MissionFeedbackSummaryCard";
+import {
+  generateGlobalMissionFeedbackSummary,
+  getCopyableGlobalMissionFeedbackText,
+  regenerateMissionFeedbackFromHistory,
+} from "@/modules/missionFeedback";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { REFINED_PAGE_META } from "@/modules/dailyUseRefinement";
 
 export function HistoryPageContent() {
   const { state, isHydrated } = useGigi();
+  const [feedbackKey, setFeedbackKey] = useState(0);
+
+  const feedbackSummary = useMemo(
+    () => generateGlobalMissionFeedbackSummary(),
+    [feedbackKey]
+  );
+
+  const handleRegenerateFeedback = useCallback(() => {
+    regenerateMissionFeedbackFromHistory();
+    setFeedbackKey((k) => k + 1);
+  }, []);
+
+  const handleCopyFeedback = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(getCopyableGlobalMissionFeedbackText());
+    } catch {
+      /* fallback */
+    }
+  }, []);
 
   if (!isHydrated) return null;
 
@@ -21,6 +48,24 @@ export function HistoryPageContent() {
         </div>
         <div className="gigi-panel-raised mt-6 rounded-xl p-5 md:p-6">
           <HistoryLearningPanel />
+        </div>
+        <div className="gigi-panel-raised mt-6 rounded-xl p-5 md:p-6">
+          <MissionFeedbackSummaryCard
+            summary={feedbackSummary}
+            onRegenerate={handleRegenerateFeedback}
+            onCopyGlobal={handleCopyFeedback}
+          />
+          <p className="mt-3 text-[12px] text-text-muted">
+            Détail par mission sur{" "}
+            <Link href="/" className="text-accent-soft underline">
+              la mission du jour
+            </Link>{" "}
+            ou sur chaque{" "}
+            <Link href="/projects" className="text-accent-soft underline">
+              fiche projet
+            </Link>
+            .
+          </p>
         </div>
       </div>
     </div>

@@ -50,6 +50,17 @@ import {
   detectHistoryLearningIntent,
   generateGlobalSummary,
 } from "@/modules/historyLearning";
+import {
+  MISSION_DECISION_LABELS,
+  MISSION_FEEDBACK_DISCLAIMER,
+  buildMissionFeedbackGuidanceHints,
+  detectMissionFeedbackIntent,
+  generateGlobalMissionFeedbackSummary,
+  getBestDailyMissionRecommendation,
+  getDefaultScoreableMissions,
+  regenerateMissionFeedbackFromHistory,
+} from "@/modules/missionFeedback";
+import { listHistoryEntries } from "@/modules/historyLearning/historyLearningStore";
 import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions/types";
 import type {
   ConversationContext,
@@ -357,6 +368,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   execution_review: "Review d'exécution",
   follow_up_action: "Action de suivi",
   history_learning: "Historique & apprentissage",
+  mission_feedback: "Feedback mission",
 };
 
 function clarificationResponse(): GigiConversationResponse {
@@ -393,6 +405,52 @@ function allDoneResponse(
 }
 
 // ---------------------------------------------------------------- main
+
+function buildMissionFeedbackResponse(
+  objective: string,
+  projectId: string | null,
+  completedMissionIds: string[] = []
+): GigiConversationResponse {
+  const hints = buildMissionFeedbackGuidanceHints(objective);
+  const pool = getDefaultScoreableMissions(projectId ?? undefined);
+  if (listHistoryEntries().length > 0) {
+    regenerateMissionFeedbackFromHistory(pool);
+  }
+  const summary = generateGlobalMissionFeedbackSummary(projectId ?? undefined);
+  const best = getBestDailyMissionRecommendation(completedMissionIds);
+
+  if (best) {
+    const mission = MISSION_CATALOG.find((m) => m.id === best.missionId);
+    return {
+      intent: "mission_feedback",
+      intentLabel: `${INTENT_LABELS.mission_feedback}${mission ? ` · ${mission.title.slice(0, 40)}` : ""}`,
+      listen:
+        "Voici ce que l'historique local suggère — score indicatif, pas une vérité absolue.",
+      needsClarification: false,
+      priorityProjectName: mission ? PROJECT_NAMES[mission.projectId] : undefined,
+      missionFeedbackSummaryText: summary.summaryText,
+      missionFeedbackTopMissionTitle: mission?.title,
+      missionFeedbackScoreLabel: `${MISSION_DECISION_LABELS[best.decision]} · ${best.score}/100 · conf. ${best.confidence}%`,
+      missionFeedbackGuidance: hints,
+      missionFeedbackBlockedMessage: MISSION_FEEDBACK_DISCLAIMER,
+      finalMessage: best.reasons[0]
+        ? best.reasons[0]
+        : "Ouvre la mission du jour ou un projet pour le détail « Pourquoi cette mission ? ».",
+    };
+  }
+
+  return {
+    intent: "mission_feedback",
+    intentLabel: INTENT_LABELS.mission_feedback,
+    listen:
+      "Pas assez d'historique local pour affiner les recommandations — archive des exécutions dans /history d'abord.",
+    needsClarification: false,
+    missionFeedbackSummaryText: summary.summaryText,
+    missionFeedbackGuidance: hints,
+    missionFeedbackBlockedMessage: MISSION_FEEDBACK_DISCLAIMER,
+    finalMessage: "Les missions du catalogue restent disponibles — le feedback V2.5 s'enrichit avec l'historique V2.4.",
+  };
+}
 
 function buildHistoryLearningResponse(
   objective: string,
@@ -680,6 +738,19 @@ export function askGigi(
   _projects: unknown,
   context: ConversationContext = {}
 ): GigiConversationResponse {
+  const missionFeedbackIntent = detectMissionFeedbackIntent(objective);
+  if (missionFeedbackIntent.isMissionFeedback) {
+    const projectId =
+      missionFeedbackIntent.projectId ??
+      context.currentProjectId ??
+      detectProject(normalize(objective));
+    return buildMissionFeedbackResponse(
+      objective,
+      projectId,
+      context.completedMissionIds ?? []
+    );
+  }
+
   const historyIntent = detectHistoryLearningIntent(objective);
   if (historyIntent.isHistoryLearning) {
     const projectId =
@@ -893,6 +964,7 @@ export function askGigi(
     execution_review: "Review basée sur les logs manuels — ouvre /actions pour le détail.",
     follow_up_action: "Propositions locales — ajoute manuellement à la file si tu retiens.",
     history_learning: "Historique local uniquement — archive manuellement depuis /actions ou /history.",
+    mission_feedback: "Recommandations basées sur l'historique V2.4 — ouvre / ou /projects pour le détail.",
   };
 
   return {

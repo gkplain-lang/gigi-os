@@ -10,6 +10,7 @@ import { OnboardingBanner } from "@/components/onboarding/OnboardingBanner";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { askGigi } from "@/modules/conversation/conversationBrain";
 import { getRefinedMissionPageMeta } from "@/modules/dailyUseRefinement";
+import { MissionFeedbackPanel } from "@/components/missionFeedback/MissionFeedbackPanel";
 
 const STATUS_BADGE: Record<string, string> = {
   recommended: "Recommandée",
@@ -132,6 +133,12 @@ export function MissionPageContent() {
             <TaskChecklist
               tasks={tasks}
               title={mission.status === "in_progress" ? "Tes étapes" : "Tes 3 tâches"}
+            />
+            <MissionFeedbackPanel
+              missionId={mission.id}
+              projectId={mission.projectId}
+              missionTitle={mission.title}
+              showTopScores={false}
             />
           </div>
 

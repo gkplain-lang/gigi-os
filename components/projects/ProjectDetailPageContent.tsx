@@ -9,6 +9,7 @@ import { StatusPill } from "@/components/ui/StatusPill";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { ProjectMissionCard } from "@/components/projects/ProjectMissionCard";
 import { ActionPlanPanel } from "@/components/actionPlans/ActionPlanPanel";
+import { MissionFeedbackPanel } from "@/components/missionFeedback/MissionFeedbackPanel";
 import {
   buildProjectDetailContext,
   getProjectAskGigiHref,
@@ -274,6 +275,8 @@ export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContent
                 </ul>
               )}
             </section>
+
+            <MissionFeedbackPanel projectId={project.id} showTopScores={false} />
           </aside>
         </div>
       </div>
