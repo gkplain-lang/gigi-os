@@ -1,4 +1,6 @@
+import Link from "next/link";
 import type { HistoryEvent } from "@/modules/history/historyTypes";
+import { EMPTY_STATES } from "@/modules/dailyUse";
 import { HistoryEventCard } from "./HistoryEventCard";
 
 interface HistoryTimelineProps {
@@ -14,6 +16,26 @@ const groupLabels: Record<HistoryEvent["group"], string> = {
 export function HistoryTimeline({ events }: HistoryTimelineProps) {
   const groups = ["today", "yesterday", "earlier"] as const;
 
+  if (events.length === 0) {
+    const empty = EMPTY_STATES.history;
+    return (
+      <div className="py-6 text-center">
+        <p className="text-[15px] font-medium text-text-primary">{empty.title}</p>
+        <p className="mx-auto mt-2 max-w-sm text-[13.5px] leading-relaxed text-text-muted">
+          {empty.body}
+        </p>
+        {empty.actionHref && empty.actionLabel && (
+          <Link
+            href={empty.actionHref}
+            className="gigi-focus mt-4 inline-block text-[13px] text-accent-soft hover:underline"
+          >
+            {empty.actionLabel}
+          </Link>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="animate-fade-in space-y-10">
       {groups.map((group) => {
@@ -26,7 +48,6 @@ export function HistoryTimeline({ events }: HistoryTimelineProps) {
               {groupLabels[group]}
             </h2>
             <div className="relative space-y-6">
-              {/* Vertical memory line, aligned to icon centers */}
               <span
                 className="pointer-events-none absolute left-4 top-2 bottom-2 w-px -translate-x-1/2 bg-white/[0.06]"
                 aria-hidden

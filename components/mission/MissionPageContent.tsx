@@ -8,6 +8,7 @@ import { TaskChecklist } from "@/components/mission/TaskChecklist";
 import { DailyUseStrip } from "@/components/daily/DailyUseStrip";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { askGigi } from "@/modules/conversation/conversationBrain";
+import { getMissionPageMeta } from "@/modules/dailyUse";
 
 const STATUS_BADGE: Record<string, string> = {
   recommended: "Recommandée",
@@ -49,7 +50,11 @@ export function MissionPageContent() {
     });
     return (
       <div className="animate-fade-in">
-        <PageHeader title="Mission du jour" meta="C'est fait. Gigi peut préparer la suite." right={badge} />
+        <PageHeader
+          title="Mission du jour"
+          meta={getMissionPageMeta("completed")}
+          right={badge}
+        />
         <DailyUseStrip />
         <MissionDone
           completedTitle={mission.title}
@@ -64,7 +69,7 @@ export function MissionPageContent() {
   if (!active) {
     return (
       <div className="animate-fade-in">
-        <PageHeader title="Mission du jour" right={badge} />
+        <PageHeader title="Mission du jour" meta={getMissionPageMeta(mission.status)} right={badge} />
         <DailyUseStrip />
         <div className="max-w-2xl">
           <MissionCard
@@ -80,10 +85,7 @@ export function MissionPageContent() {
   }
 
   const ignored = getDecision().alternatives.slice(0, 3);
-  const meta =
-    mission.status === "in_progress"
-      ? "Mission en cours — Gigi garde le reste au calme."
-      : "Gigi a choisi. Une action, aucun bruit.";
+  const meta = getMissionPageMeta(mission.status);
 
   return (
     <div className="animate-fade-in">

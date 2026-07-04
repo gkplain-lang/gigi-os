@@ -1,44 +1,69 @@
 "use client";
 
 import Link from "next/link";
-import { MessageCircle, MessageSquare, Sun } from "lucide-react";
+import { ArrowRight, MessageCircle, MessageSquare, Sun } from "lucide-react";
 import { useGigi } from "@/components/providers/GigiProvider";
-import { V10_PROMISE } from "@/modules/release";
+import {
+  buildDailyUseStripSummary,
+  DAILY_USE_GUARDRAILS,
+  getDailyReviewHref,
+  V11_PROMISE,
+} from "@/modules/dailyUse";
+import { cn } from "@/lib/utils";
 
 export function DailyUseStrip() {
   const { state, isHydrated } = useGigi();
 
   if (!isHydrated) return null;
 
-  const { mission } = state;
-  const inProgress = mission.status === "in_progress";
-  const nextHint = inProgress
-    ? "Continue ta mission — coche tes étapes."
-    : mission.status === "recommended"
-      ? "Lance la mission quand tu es prêt."
-      : "Parle à Gigi pour la suite.";
+  const summary = buildDailyUseStripSummary(state.mission);
+  const { nextAction } = summary;
+  const isPrimary = nextAction.emphasis === "primary";
 
   return (
     <div className="gigi-panel mb-4 rounded-xl p-4">
-      <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">
-        Aujourd&apos;hui
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">
+          Aujourd&apos;hui · {summary.projectName}
+        </p>
+        <span
+          className="rounded-md border border-border bg-surface px-2 py-0.5 text-[10.5px] text-text-muted"
+          title={DAILY_USE_GUARDRAILS.long}
+        >
+          {DAILY_USE_GUARDRAILS.short}
+        </span>
+      </div>
+
+      <p className="mt-2 text-[15px] font-semibold leading-snug text-text-primary">
+        {summary.missionTitle}
       </p>
-      <p className="mt-1.5 text-[14px] font-medium text-text-primary">{mission.title}</p>
-      <p className="mt-1 text-[13px] text-text-muted">{nextHint}</p>
-      <p className="mt-2 text-[11.5px] italic text-text-muted/80">{V10_PROMISE}</p>
+
+      <div
+        className={cn(
+          "mt-3 rounded-lg border px-3 py-2.5",
+          isPrimary
+            ? "border-[rgba(142,167,194,0.35)] bg-accent-dim/40"
+            : "border-border bg-surface/60"
+        )}
+      >
+        <p className="text-[11px] font-medium uppercase tracking-wider text-text-muted">
+          {nextAction.label}
+        </p>
+        <p className="mt-1 text-[13px] leading-relaxed text-text-secondary">{nextAction.hint}</p>
+      </div>
 
       <div className="mt-3.5 flex flex-wrap gap-2">
         <Link
           href="/conversation"
-          className="gigi-chip gigi-focus inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12.5px]"
+          className="gigi-btn-primary gigi-focus inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-[13px] font-medium"
         >
           <MessageCircle className="h-3.5 w-3.5" aria-hidden />
           Parler à Gigi
+          <ArrowRight className="h-3.5 w-3.5 opacity-70" aria-hidden />
         </Link>
         <Link
-          href="/conversation"
+          href={getDailyReviewHref()}
           className="gigi-chip gigi-focus inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12.5px]"
-          title="Demande : bilan du jour"
         >
           <Sun className="h-3.5 w-3.5" aria-hidden />
           Bilan du jour
@@ -48,9 +73,11 @@ export function DailyUseStrip() {
           className="gigi-chip gigi-focus inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12.5px] text-text-muted"
         >
           <MessageSquare className="h-3.5 w-3.5" aria-hidden />
-          Feedback
+          Donner un avis
         </Link>
       </div>
+
+      <p className="mt-3 text-[11px] italic text-text-muted/75">{V11_PROMISE}</p>
     </div>
   );
 }
