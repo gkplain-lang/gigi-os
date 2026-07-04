@@ -2,26 +2,14 @@ import type { GigiLocalState } from "./gigiStateTypes";
 import { STORAGE_KEY } from "./gigiStateTypes";
 import { createInitialState } from "./initialState";
 import { refreshHistoryGroups } from "../history/historyUtils";
-import type { MissionStatus } from "../missions/missionTypes";
-
-function migrateMissionStatus(status: string): MissionStatus {
-  if (status === "started") return "in_progress";
-  if (status === "rejected") return "rejected_for_now";
-  return status as MissionStatus;
-}
+import { migrateExecutionState } from "../missionExecution/executionState";
 
 function migrateState(state: GigiLocalState): GigiLocalState {
-  return {
+  const withHistory = {
     ...state,
-    mission: {
-      ...state.mission,
-      status: migrateMissionStatus(state.mission.status),
-    },
-    completedMissionIds: state.completedMissionIds ?? [],
-    postponedMissionIds: state.postponedMissionIds ?? [],
-    rejectedMissionIds: state.rejectedMissionIds ?? [],
     history: refreshHistoryGroups(state.history ?? []),
   };
+  return migrateExecutionState(withHistory);
 }
 
 export function loadState(): GigiLocalState {

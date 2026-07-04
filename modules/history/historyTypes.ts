@@ -8,6 +8,14 @@ export type HistoryEventType =
   | "document_created"
   | "data_reset";
 
+export interface HistoryEventMeta {
+  missionId?: string;
+  projectId?: string;
+  projectName?: string;
+  reason?: string;
+  nextStep?: string;
+}
+
 export interface HistoryEvent {
   id: string;
   type: HistoryEventType;
@@ -15,4 +23,5 @@ export interface HistoryEvent {
   description?: string;
   date: string;
   group: "today" | "yesterday" | "earlier";
+  meta?: HistoryEventMeta;
 }

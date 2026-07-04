@@ -15,17 +15,30 @@ import { createInitialState } from "@/modules/storage/initialState";
 import { loadState, saveState } from "@/modules/storage/localStorage";
 import { createHistoryEntry } from "@/modules/history/historyUtils";
 import { explainDecisionFromProjects } from "@/modules/decision-engine/runDecisionEngine";
+import {
+  applyCompleteMissionState,
+  applyDismissMissionState,
+  applyPostponeMissionState,
+  applyPrepareNextMissionState,
+  applyRecommendedMissionState,
+  applyStartMissionState,
+  buildExecutionSnapshot,
+  missionStatusToPhase,
+  type MissionExecutionHints,
+} from "@/modules/missionExecution";
+import type { MissionExecutionSnapshot } from "@/modules/missionExecution";
 import { askGigi } from "@/modules/conversation/conversationBrain";
 
 interface GigiContextValue {
   state: GigiLocalState;
   isHydrated: boolean;
+  execution: MissionExecutionSnapshot;
   startMission: () => void;
   completeMission: () => void;
   postponeMission: () => void;
   rejectMission: () => void;
   resetLocalData: () => void;
-  applyRecommendedMission: (mission: Mission) => void;
+  applyRecommendedMission: (mission: Mission, hints?: MissionExecutionHints | null) => void;
   applyNextMission: () => boolean;
   hasNextMission: () => boolean;
   getDecision: () => ReturnType<typeof explainDecisionFromProjects>;
@@ -34,11 +47,12 @@ interface GigiContextValue {
 
 const GigiContext = createContext<GigiContextValue | null>(null);
 
-const MISSION_STATUS_LABELS: Record<string, string> = {
-  in_progress: "Mission en cours",
+const PHASE_LABELS: Record<string, string> = {
+  proposed: "Mission proposée",
+  active: "Mission en cours",
   completed: "Mission terminée",
-  postponed: "Reporté",
-  rejected_for_now: "Pas maintenant",
+  postponed: "Reportée",
+  dismissed: "Pas maintenant",
 };
 
 function persist(next: GigiLocalState) {
@@ -59,65 +73,22 @@ export function GigiProvider({ children }: { children: ReactNode }) {
     setState((prev) => persist(updater(prev)));
   }, []);
 
+  const execution = useMemo(() => buildExecutionSnapshot(state), [state]);
+
   const startMission = useCallback(() => {
-    updateState((prev) => ({
-      ...prev,
-      mission: { ...prev.mission, status: "in_progress" },
-      history: [
-        createHistoryEntry(
-          "mission_started",
-          `Mission démarrée : ${prev.mission.title.replace(/\.$/, "")}.`
-        ),
-        ...prev.history,
-      ],
-    }));
+    updateState((prev) => applyStartMissionState(prev));
   }, [updateState]);
 
   const completeMission = useCallback(() => {
-    updateState((prev) => {
-      const alreadyCompleted = prev.completedMissionIds.includes(prev.mission.id);
-      return {
-        ...prev,
-        mission: { ...prev.mission, status: "completed" },
-        completedMissionIds: alreadyCompleted
-          ? prev.completedMissionIds
-          : [...prev.completedMissionIds, prev.mission.id],
-        projects: prev.projects.map((p) =>
-          p.id === prev.mission.projectId ? { ...p } : p
-        ),
-        history: [
-          createHistoryEntry(
-            "mission_completed",
-            `Mission terminée : ${prev.mission.title.replace(/\.$/, "")}.`
-          ),
-          ...prev.history,
-        ],
-      };
-    });
+    updateState((prev) => applyCompleteMissionState(prev));
   }, [updateState]);
 
   const postponeMission = useCallback(() => {
-    updateState((prev) => ({
-      ...prev,
-      mission: { ...prev.mission, status: "postponed" },
-      postponedMissionIds: [...prev.postponedMissionIds, prev.mission.id],
-      history: [
-        createHistoryEntry("mission_postponed", "Mission reportée."),
-        ...prev.history,
-      ],
-    }));
+    updateState((prev) => applyPostponeMissionState(prev));
   }, [updateState]);
 
   const rejectMission = useCallback(() => {
-    updateState((prev) => ({
-      ...prev,
-      mission: { ...prev.mission, status: "rejected_for_now" },
-      rejectedMissionIds: [...prev.rejectedMissionIds, prev.mission.id],
-      history: [
-        createHistoryEntry("mission_rejected", "Mission refusée pour maintenant."),
-        ...prev.history,
-      ],
-    }));
+    updateState((prev) => applyDismissMissionState(prev));
   }, [updateState]);
 
   const resetLocalData = useCallback(() => {
@@ -138,43 +109,18 @@ export function GigiProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const applyRecommendedMission = useCallback(
-    (mission: Mission) => {
-      updateState((prev) => ({
-        ...prev,
-        mission: { ...mission, status: "recommended" },
-        history: [
-          createHistoryEntry(
-            "decision_created",
-            `Gigi a recommandé : ${mission.title.replace(/\.$/, "")}.`
-          ),
-          ...prev.history,
-        ],
-      }));
+    (mission: Mission, hints?: MissionExecutionHints | null) => {
+      updateState((prev) => applyRecommendedMissionState(prev, mission, hints));
     },
     [updateState]
   );
 
-  // Reuses the existing deterministic brain to pick the next available mission
-  // (completed ones are already excluded by askGigi). Pure composition — no logic change.
   const applyNextMission = useCallback(() => {
     let applied = false;
     updateState((prev) => {
-      const res = askGigi("Quelle est la prochaine mission ?", prev.projects, {
-        completedMissionIds: prev.completedMissionIds,
-      });
-      if (!res.mission) return prev;
-      applied = true;
-      return {
-        ...prev,
-        mission: { ...res.mission, status: "recommended" },
-        history: [
-          createHistoryEntry(
-            "decision_created",
-            `Gigi a recommandé : ${res.mission.title.replace(/\.$/, "")}.`
-          ),
-          ...prev.history,
-        ],
-      };
+      const result = applyPrepareNextMissionState(prev);
+      applied = result.applied;
+      return result.state;
     });
     return applied;
   }, [updateState]);
@@ -191,8 +137,9 @@ export function GigiProvider({ children }: { children: ReactNode }) {
   const getMissionProjectLabel = useCallback(
     (projectId: string) => {
       if (projectId !== state.mission.projectId) return undefined;
-      if (state.mission.status === "recommended") return undefined;
-      return MISSION_STATUS_LABELS[state.mission.status];
+      const phase = missionStatusToPhase(state.mission.status);
+      if (phase === "proposed") return undefined;
+      return PHASE_LABELS[phase];
     },
     [state.mission]
   );
@@ -201,6 +148,7 @@ export function GigiProvider({ children }: { children: ReactNode }) {
     () => ({
       state,
       isHydrated,
+      execution,
       startMission,
       completeMission,
       postponeMission,
@@ -215,6 +163,7 @@ export function GigiProvider({ children }: { children: ReactNode }) {
     [
       state,
       isHydrated,
+      execution,
       startMission,
       completeMission,
       postponeMission,

@@ -21,5 +21,6 @@ export function createInitialState(): GigiLocalState {
     completedMissionIds: [],
     postponedMissionIds: [],
     rejectedMissionIds: [],
+    executionHints: null,
   };
 }

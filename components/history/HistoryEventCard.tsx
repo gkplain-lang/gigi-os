@@ -69,6 +69,12 @@ export function HistoryEventCard({ event }: HistoryEventCardProps) {
         {event.description && (
           <p className="mt-1 text-[14px] leading-relaxed text-text-muted">{event.description}</p>
         )}
+        {event.meta?.projectName && (
+          <p className="mt-1 text-[12.5px] text-text-muted/80">
+            {event.meta.projectName}
+            {event.meta.nextStep ? ` · Suite : ${event.meta.nextStep}` : ""}
+          </p>
+        )}
       </div>
     </div>
   );
