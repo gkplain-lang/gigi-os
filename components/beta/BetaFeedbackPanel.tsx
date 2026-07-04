@@ -8,6 +8,7 @@ import {
   listBetaFeedback,
   type BetaFeedbackType,
 } from "@/modules/beta";
+import { REFINED_EMPTY_STATES } from "@/modules/dailyUseRefinement";
 
 interface BetaFeedbackPanelProps {
   /** Pre-fill route context */
@@ -205,6 +206,12 @@ export function BetaFeedbackPanel({ defaultRoute, compact }: BetaFeedbackPanelPr
       <p style={{ marginTop: 12, fontSize: 11, color: "#71767f", fontStyle: "italic" }}>
         Stockage localStorage uniquement — pas de Supabase, pas d&apos;API externe.
       </p>
+
+      {entries.length === 0 && (
+        <p style={{ marginTop: 12, fontSize: 13, color: "#71767f", lineHeight: 1.5 }}>
+          {REFINED_EMPTY_STATES.feedbackEntries.body}
+        </p>
+      )}
 
       {entries.length > 0 && (
         <div style={{ marginTop: 16 }}>

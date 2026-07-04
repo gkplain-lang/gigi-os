@@ -96,6 +96,9 @@ V0.8 — Integrations Alpha
 V0.9 — Private Beta
 V1.0 — Daily Use Release
 V1.1 — Daily Use Improvements
+V1.2 — Visual Polish
+V1.2.1 — Accent Dim Fix
+V1.3 — Daily Use Refinement
 V2.0 — Multi-user SaaS
 ```
 
@@ -838,7 +841,53 @@ See [V1_1_DAILY_USE_IMPROVEMENTS.md](./V1_1_DAILY_USE_IMPROVEMENTS.md) for full 
 
 ---
 
-# 16. V2.0 — SaaS Version
+# 16. V1.3 — Daily Use Refinement
+
+## Goal
+
+Refine daily UX on stable V1.2.1 — clearer copy, empty states, CTA labels, simulation messaging — without new powers or design changes.
+
+## Core Question
+
+```text
+Does the user immediately know what to do now, on every daily page?
+```
+
+## Features
+
+```text
+Daily use refinement module (modules/dailyUseRefinement/)
+Refined page meta and mission CTA labels
+Feedback page integrated in AppShell
+Improved empty states (history, conversation, feedback)
+Clearer simulation / dry-run messaging
+Documentation (V1_3_DAILY_USE_REFINEMENT.md)
+```
+
+## Not in V1.3
+
+```text
+Palette or design changes
+Real integrations, n8n, payment, landing
+New external capabilities
+Heavy new architecture
+```
+
+## Acceptance Criteria
+
+V1.3 is complete when:
+
+- daily pages have clearer, shorter copy;
+- empty states guide the user;
+- /feedback matches app shell consistency;
+- dry-run guardrails remain enforced;
+- npm run build passes.
+
+See [V1_3_DAILY_USE_REFINEMENT.md](./V1_3_DAILY_USE_REFINEMENT.md) for full details.
+
+---
+
+# 17. V2.0 — SaaS Version
 
 ## Goal
 
@@ -891,7 +940,7 @@ V2.0 is complete when:
 
 ---
 
-# 17. Future Versions
+# 18. Future Versions
 
 ## V3.0 — Agent Team
 
@@ -942,7 +991,7 @@ Gigi OS becomes a complete operating system for small AI-driven companies.
 
 ---
 
-# 18. Priority Rules
+# 19. Priority Rules
 
 When deciding what to build next, use these rules.
 
@@ -976,7 +1025,7 @@ The product must stay calm and focused.
 
 ---
 
-# 19. Current Phase
+# 20. Current Phase
 
 Current phase:
 
@@ -1016,7 +1065,7 @@ AI_MODULES.md
 
 ---
 
-# 20. First Development Milestone
+# 21. First Development Milestone
 
 The first real development milestone is:
 
@@ -1055,7 +1104,7 @@ GitHub sync
 
 ---
 
-# 21. Definition of Done
+# 22. Definition of Done
 
 A roadmap phase is done when:
 
@@ -1078,7 +1127,7 @@ the next action is unclear
 
 ---
 
-# 22. Strategic Principle
+# 23. Strategic Principle
 
 Gigi OS must not grow by adding random features.
 
@@ -1092,7 +1141,7 @@ I opened Gigi OS and immediately knew what to do.
 
 ---
 
-# 23. Final Roadmap Statement
+# 24. Final Roadmap Statement
 
 Gigi OS starts as a simple mission recommendation system.
 

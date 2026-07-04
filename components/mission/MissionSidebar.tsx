@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MessageCircle, Compass } from "lucide-react";
+import { SIDEBAR_LINK_LABELS } from "@/modules/dailyUseRefinement";
 import type { Mission } from "@/modules/missions/missionTypes";
 import type { AlternativeConsidered } from "@/modules/decision-engine/decisionTypes";
 
@@ -52,14 +53,14 @@ export function MissionSidebar({ mission, ignored }: MissionSidebarProps) {
           className="gigi-btn gigi-focus flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-[13.5px]"
         >
           <MessageCircle className="h-4 w-4" />
-          Gigi
+          {SIDEBAR_LINK_LABELS.talkToGigi}
         </Link>
         <Link
           href="/brain"
           className="gigi-btn gigi-focus flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-[13.5px]"
         >
           <Compass className="h-4 w-4" />
-          Décision
+          {SIDEBAR_LINK_LABELS.seeDecision}
         </Link>
       </div>
     </div>

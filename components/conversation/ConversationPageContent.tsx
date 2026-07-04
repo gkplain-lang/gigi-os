@@ -15,13 +15,16 @@ import type {
   ConversationExchange,
 } from "@/modules/conversation/conversationTypes";
 import {
-  CONVERSATION_APPLY_HINT,
   CONVERSATION_PLACEHOLDER,
   CONVERSATION_PROMPT_CHIPS,
   CONVERSATION_PROPOSAL_EMPTY,
-  DAILY_USE_GUARDRAILS,
-  PAGE_META,
 } from "@/modules/dailyUse";
+import {
+  CONVERSATION_LABELS,
+  REFINED_EMPTY_STATES,
+  REFINED_PAGE_META,
+  SIMULATION_NOTE,
+} from "@/modules/dailyUseRefinement";
 import { GigiAnswer } from "./GigiAnswer";
 
 const PROMPT_CHIPS = [...CONVERSATION_PROMPT_CHIPS];
@@ -135,7 +138,7 @@ export function ConversationPageContent() {
   const proposalPanel = (
     <div className={latest?.response.mission ? "gigi-panel-feature rounded-2xl p-5" : "gigi-panel rounded-xl p-5"}>
       <p className="text-[11px] font-medium uppercase tracking-wider text-accent-soft/90">
-        Mission proposée
+        {CONVERSATION_LABELS.proposalTitle}
       </p>
       {latest?.response.mission ? (
         <>
@@ -162,13 +165,13 @@ export function ConversationPageContent() {
                   <span className="text-text-secondary">{latest.response.tasks[0]}</span>
                 </p>
               )}
-              <p className="text-[11.5px] text-text-muted/80">{CONVERSATION_APPLY_HINT}</p>
+              <p className="text-[11.5px] text-text-muted/80">{CONVERSATION_LABELS.applyHint}</p>
               <button
                 type="button"
                 onClick={applyLatest}
                 className="gigi-btn-primary gigi-focus w-full rounded-lg px-4 py-2.5 text-[14px] font-medium"
               >
-                Appliquer cette mission
+                {CONVERSATION_LABELS.applyMission}
               </button>
               <button
                 type="button"
@@ -193,17 +196,27 @@ export function ConversationPageContent() {
     <div className="animate-fade-in">
       <PageHeader
         title="Gigi"
-        meta={PAGE_META.conversation}
+        meta={REFINED_PAGE_META.conversation}
         right={<AiEngineBadge mode={brainMode} />}
       />
 
-      <p className="mb-4 text-[12px] text-text-muted" title={DAILY_USE_GUARDRAILS.long}>
-        {DAILY_USE_GUARDRAILS.short}
+      <p className="mb-4 text-[12px] text-text-muted" title={SIMULATION_NOTE.long}>
+        {SIMULATION_NOTE.short}
       </p>
 
       <div className="grid gap-5 lg:grid-cols-3 lg:items-start">
         {/* Conversation column */}
         <div className="lg:col-span-2">
+          {exchanges.length === 0 && (
+            <div className="gigi-panel mb-5 rounded-xl px-4 py-3">
+              <p className="text-[13px] font-medium text-text-primary">
+                {REFINED_EMPTY_STATES.conversation.title}
+              </p>
+              <p className="mt-1 text-[12.5px] leading-relaxed text-text-muted">
+                {REFINED_EMPTY_STATES.conversation.body}
+              </p>
+            </div>
+          )}
           {exchanges.length === 0 && (
             <div className="mb-5 flex flex-wrap gap-2">
               {PROMPT_CHIPS.map((chip) => (

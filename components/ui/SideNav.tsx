@@ -10,7 +10,8 @@ import { AuthAccountStrip } from "./AuthAccountStrip";
 import { MemoryStatusStrip } from "@/components/memory/MemoryStatusStrip";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { cn } from "@/lib/utils";
-import { DAILY_USE_GUARDRAILS, SIDEBAR_FEEDBACK_LABEL, SIDEBAR_READY_LABEL } from "@/modules/dailyUse";
+import { SIDEBAR_READY_LABEL } from "@/modules/dailyUse";
+import { SIDEBAR_LINK_LABELS, SIMULATION_NOTE } from "@/modules/dailyUseRefinement";
 
 const iconMap = {
   target: Target,
@@ -73,7 +74,7 @@ export function SideNav() {
 
       <div
         className="gigi-panel mb-4 rounded-lg px-3 py-2.5"
-        title={DAILY_USE_GUARDRAILS.long}
+        title={SIMULATION_NOTE.long}
       >
         <div className="flex items-center gap-2">
           <span className="relative flex h-2 w-2 items-center justify-center" aria-hidden>
@@ -83,7 +84,7 @@ export function SideNav() {
           <span className="text-[12.5px] font-medium text-text-secondary">{SIDEBAR_READY_LABEL}</span>
         </div>
         <p className="mt-1 pl-4 text-[10.5px] leading-snug text-text-muted">
-          {DAILY_USE_GUARDRAILS.short}
+          {SIMULATION_NOTE.short}
         </p>
       </div>
 
@@ -102,7 +103,7 @@ export function SideNav() {
           href="/feedback"
           className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
         >
-          {SIDEBAR_FEEDBACK_LABEL}
+          {SIDEBAR_LINK_LABELS.giveFeedback}
         </Link>
         <AuthAccountStrip />
         <MemoryStatusStrip />
