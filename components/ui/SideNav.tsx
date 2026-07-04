@@ -10,6 +10,7 @@ import { AuthAccountStrip } from "./AuthAccountStrip";
 import { MemoryStatusStrip } from "@/components/memory/MemoryStatusStrip";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { cn } from "@/lib/utils";
+import { DAILY_USE_GUARDRAILS, SIDEBAR_FEEDBACK_LABEL, SIDEBAR_READY_LABEL } from "@/modules/dailyUse";
 
 const iconMap = {
   target: Target,
@@ -64,9 +65,17 @@ export function SideNav() {
         </span>
       </div>
 
-      <div className="mb-4 flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2">
-        <span className="h-1.5 w-1.5 rounded-full bg-ok" aria-hidden />
-        <span className="text-[12.5px] text-text-secondary">Gigi est prêt</span>
+      <div
+        className="mb-4 rounded-lg border border-border bg-surface px-3 py-2"
+        title={DAILY_USE_GUARDRAILS.long}
+      >
+        <div className="flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-ok" aria-hidden />
+          <span className="text-[12.5px] text-text-secondary">{SIDEBAR_READY_LABEL}</span>
+        </div>
+        <p className="mt-1 pl-3.5 text-[10.5px] leading-snug text-text-muted">
+          {DAILY_USE_GUARDRAILS.short}
+        </p>
       </div>
 
       <p className="px-3 pb-1.5 text-[11px] font-medium uppercase tracking-wider text-text-muted">
@@ -84,7 +93,7 @@ export function SideNav() {
           href="/feedback"
           className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
         >
-          Feedback bêta
+          {SIDEBAR_FEEDBACK_LABEL}
         </Link>
         <AuthAccountStrip />
         <MemoryStatusStrip />

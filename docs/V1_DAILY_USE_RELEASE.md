@@ -117,7 +117,8 @@ Identiques à V0.9 :
 - Collecter feedbacks locaux régulièrement
 - Prioriser clarté UX sur nouveaux pouvoirs
 - Intégrations réelles **opt-in** uniquement, avec confirmation
-- V1.1+ : améliorations ciblées post-retours daily use
+- **V1.1** : améliorations UX daily use — voir [V1_1_DAILY_USE_IMPROVEMENTS.md](./V1_1_DAILY_USE_IMPROVEMENTS.md)
+- V2.0+ : fondation SaaS
 
 ---
 

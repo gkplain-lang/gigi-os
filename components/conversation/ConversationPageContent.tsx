@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { ArrowUp, Check, RefreshCw } from "lucide-react";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -13,86 +14,101 @@ import type {
   ConversationContext,
   ConversationExchange,
 } from "@/modules/conversation/conversationTypes";
+import {
+  CONVERSATION_APPLY_HINT,
+  CONVERSATION_PLACEHOLDER,
+  CONVERSATION_PROMPT_CHIPS,
+  CONVERSATION_PROPOSAL_EMPTY,
+  DAILY_USE_GUARDRAILS,
+  PAGE_META,
+} from "@/modules/dailyUse";
 import { GigiAnswer } from "./GigiAnswer";
 
-const PROMPT_CHIPS = [
-  "Gigi, fais ma revue du jour",
-  "Que faire dans Buildy Crafts aujourd'hui ?",
-  "Je veux gagner 500 €/mois rapidement",
-  "Quel projet dois-je ignorer aujourd'hui ?",
-  "Quelle mission est prioritaire maintenant ?",
-];
+const PROMPT_CHIPS = [...CONVERSATION_PROMPT_CHIPS];
 
 export function ConversationPageContent() {
   const { state, isHydrated, applyRecommendedMission } = useGigi();
   const { isAiConfigured } = useAiAvailability();
   const { memoryStatus } = useMemoryStatus();
+  const searchParams = useSearchParams();
   const [input, setInput] = useState("");
   const [exchanges, setExchanges] = useState<ConversationExchange[]>([]);
   const [brainMode, setBrainMode] = useState<AiBrainMode>("local_only");
   const [asking, setAsking] = useState(false);
+  const prefilledAsk = useRef(false);
+
+  const ask = useCallback(
+    async (objective: string, contextOverride?: ConversationContext) => {
+      const trimmed = objective.trim();
+      if (!trimmed || asking) return;
+
+      const context: ConversationContext = {
+        currentMissionId: state.mission.id,
+        currentProjectId: state.mission.projectId,
+        completedMissionIds: state.completedMissionIds,
+        ...contextOverride,
+      };
+
+      setAsking(true);
+
+      const memoryContext = tryBuildAiMemoryContext({
+        localState: state,
+        memoryStatus,
+      });
+
+      const aiResult = await askAiBrain(
+        {
+          userMessage: trimmed,
+          currentMission: state.mission,
+          projects: state.projects,
+          history: state.history.map((h) => ({
+            title: h.title,
+            type: h.type,
+            date: h.date,
+          })),
+          memoryStatus: {
+            mode: memoryStatus.mode,
+            label: memoryStatus.label,
+            lastBackupAt: memoryStatus.lastBackupAt,
+          },
+          completedMissionIds: state.completedMissionIds,
+          postponedMissionIds: state.postponedMissionIds,
+          rejectedMissionIds: state.rejectedMissionIds,
+          conversationContext: context,
+          memoryContext,
+          historyEvents: state.history,
+          executionHints: state.executionHints ?? null,
+        },
+        { preferLocal: !isAiConfigured }
+      );
+
+      setBrainMode(aiResult.mode);
+      const response = aiBrainToGigiResponse(aiResult);
+
+      setExchanges((prev) => [
+        ...prev,
+        {
+          id: `x-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+          objective: trimmed,
+          response,
+          applied: false,
+        },
+      ]);
+      setInput("");
+      setAsking(false);
+    },
+    [asking, isAiConfigured, memoryStatus, state]
+  );
+
+  useEffect(() => {
+    if (!isHydrated || prefilledAsk.current) return;
+    const askParam = searchParams.get("ask")?.trim();
+    if (!askParam) return;
+    prefilledAsk.current = true;
+    void ask(askParam);
+  }, [ask, isHydrated, searchParams]);
 
   if (!isHydrated) return null;
-
-  const ask = async (objective: string, contextOverride?: ConversationContext) => {
-    const trimmed = objective.trim();
-    if (!trimmed || asking) return;
-
-    const context: ConversationContext = {
-      currentMissionId: state.mission.id,
-      currentProjectId: state.mission.projectId,
-      completedMissionIds: state.completedMissionIds,
-      ...contextOverride,
-    };
-
-    setAsking(true);
-
-    const memoryContext = tryBuildAiMemoryContext({
-      localState: state,
-      memoryStatus,
-    });
-
-    const aiResult = await askAiBrain(
-      {
-        userMessage: trimmed,
-        currentMission: state.mission,
-        projects: state.projects,
-        history: state.history.map((h) => ({
-          title: h.title,
-          type: h.type,
-          date: h.date,
-        })),
-        memoryStatus: {
-          mode: memoryStatus.mode,
-          label: memoryStatus.label,
-          lastBackupAt: memoryStatus.lastBackupAt,
-        },
-        completedMissionIds: state.completedMissionIds,
-        postponedMissionIds: state.postponedMissionIds,
-        rejectedMissionIds: state.rejectedMissionIds,
-        conversationContext: context,
-        memoryContext,
-        historyEvents: state.history,
-        executionHints: state.executionHints ?? null,
-      },
-      { preferLocal: !isAiConfigured }
-    );
-
-    setBrainMode(aiResult.mode);
-    const response = aiBrainToGigiResponse(aiResult);
-
-    setExchanges((prev) => [
-      ...prev,
-      {
-        id: `x-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-        objective: trimmed,
-        response,
-        applied: false,
-      },
-    ]);
-    setInput("");
-    setAsking(false);
-  };
 
   const latest = exchanges[exchanges.length - 1];
 
@@ -146,10 +162,7 @@ export function ConversationPageContent() {
                   <span className="text-text-secondary">{latest.response.tasks[0]}</span>
                 </p>
               )}
-              <p className="text-[11.5px] text-text-muted/80">
-                Appliquer enregistre la mission et ses tâches en local. Tu pourras la démarrer
-                puis la terminer depuis l&apos;accueil.
-              </p>
+              <p className="text-[11.5px] text-text-muted/80">{CONVERSATION_APPLY_HINT}</p>
               <button
                 type="button"
                 onClick={applyLatest}
@@ -170,8 +183,7 @@ export function ConversationPageContent() {
         </>
       ) : (
         <p className="mt-2 text-[13.5px] leading-relaxed text-text-muted">
-          Pose un objectif à Gigi. Il lit tes projets et te propose une seule mission claire, avec
-          ses raisons.
+          {CONVERSATION_PROPOSAL_EMPTY}
         </p>
       )}
     </div>
@@ -181,9 +193,13 @@ export function ConversationPageContent() {
     <div className="animate-fade-in">
       <PageHeader
         title="Gigi"
-        meta="Ton assistant de décision. Dis-lui où tu veux aller."
+        meta={PAGE_META.conversation}
         right={<AiEngineBadge mode={brainMode} />}
       />
+
+      <p className="mb-4 text-[12px] text-text-muted" title={DAILY_USE_GUARDRAILS.long}>
+        {DAILY_USE_GUARDRAILS.short}
+      </p>
 
       <div className="grid gap-5 lg:grid-cols-3 lg:items-start">
         {/* Conversation column */}
@@ -250,7 +266,7 @@ export function ConversationPageContent() {
                   }
                 }}
                 rows={1}
-                placeholder="Que faire dans Buildy Crafts aujourd'hui ?"
+                placeholder={CONVERSATION_PLACEHOLDER}
                 className="max-h-40 min-h-[40px] flex-1 resize-none bg-transparent py-2 text-[14.5px] text-text-primary placeholder:text-text-muted focus:outline-none"
               />
               <button

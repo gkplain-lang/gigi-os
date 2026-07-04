@@ -3,6 +3,7 @@
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ProjectList } from "@/components/projects/ProjectList";
 import { useGigi } from "@/components/providers/GigiProvider";
+import { PAGE_META } from "@/modules/dailyUse";
 
 export function ProjectsPageContent() {
   const { state, isHydrated, getMissionProjectLabel } = useGigi();
@@ -13,10 +14,7 @@ export function ProjectsPageContent() {
 
   return (
     <div className="animate-fade-in">
-      <PageHeader
-        title="Projets"
-        meta="Ton portefeuille. Gigi a déjà choisi la mission du jour — le reste attend son tour."
-      />
+      <PageHeader title="Projets" meta={PAGE_META.projects} />
       <ProjectList
         projects={state.projects}
         missionProjectId={state.mission.projectId}
