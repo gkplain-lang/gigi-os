@@ -92,8 +92,64 @@ La persistance réelle, l'auth et la migration arriveront en **V0.4.2 / V0.4.3**
 
 ---
 
+## V0.4.2 — Vérifier la connexion
+
+Cette étape ajoute une **vérification de connexion** sûre, sans auth ni migration.
+
+### 1. Créer / remplir `.env.local`
+
+Si `.env.local` n'existe pas encore :
+
+```bash
+cp .env.local.example .env.local
+```
+
+Puis colle tes valeurs (depuis **Settings → API** de ton projet Supabase) :
+
+- **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
+- **anon public** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+> `.env.local` est ignoré par git : tes clés ne seront jamais commitées.
+
+### 2. Redémarrer le serveur
+
+Next.js ne lit les variables `.env.local` qu'au démarrage. Après édition :
+
+```bash
+# arrête le serveur (Ctrl+C) puis
+npm run dev
+```
+
+### 3. Ouvrir la page de vérification
+
+Va sur **[http://localhost:3000/dev/supabase](http://localhost:3000/dev/supabase)**
+(le port peut être 3001/3002 si 3000 est occupé).
+
+Cette page n'est **pas** dans la navigation et n'apparaît qu'en développement.
+
+### 4. Comprendre les statuts
+
+- **Non configuré** — les variables d'environnement manquent. L'app continue en local.
+- **Connecté** — Supabase répond. Tout est prêt côté connexion.
+- **Connecté (accès données limité par RLS)** — la connexion marche, mais la RLS
+  restreint l'accès aux données (normal tant qu'il n'y a pas d'authentification).
+- **Erreur / accès bloqué** — l'URL ou la clé anon est incorrecte, ou le schéma n'a pas été exécuté.
+
+### 5. Ce que fait / ne fait pas la V0.4.2
+
+- ✅ Vérifie que la connexion Supabase est possible.
+- ✅ Garde **localStorage comme stockage principal** (`gigi-os-v03-state`).
+- ❌ Pas d'authentification.
+- ❌ Pas de migration des données locales.
+- ❌ Aucune lecture/écriture Supabase dans le produit.
+
+L'authentification et la migration arriveront plus tard (voir `docs/SUPABASE_PLAN.md`).
+
+---
+
 ## Rappel sécurité
 
 - Clé `anon public` uniquement côté client.
 - RLS obligatoire : rien n'est public par défaut.
 - `.env.local` jamais commité.
+- Aucune clé n'est jamais affichée dans les logs.
