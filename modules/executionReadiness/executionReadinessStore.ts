@@ -15,6 +15,7 @@ export function createEmptyExecutionReadinessState(): ExecutionReadinessState {
     manualBridgePackets: [],
     commandPacks: [],
     localReviewSessions: [],
+    guidedProjectActionFlows: [],
     version: EXECUTION_READINESS_VERSION,
   };
 }
@@ -38,6 +39,9 @@ export function loadExecutionReadinessState(): ExecutionReadinessState {
       commandPacks: Array.isArray(parsed.commandPacks) ? parsed.commandPacks : [],
       localReviewSessions: Array.isArray(parsed.localReviewSessions)
         ? parsed.localReviewSessions
+        : [],
+      guidedProjectActionFlows: Array.isArray(parsed.guidedProjectActionFlows)
+        ? parsed.guidedProjectActionFlows
         : [],
       version: EXECUTION_READINESS_VERSION,
     };

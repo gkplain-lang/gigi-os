@@ -17,6 +17,8 @@ import {
 import { useIsClient } from "./useIsClient";
 import { V4SettingsJourneyStrip } from "@/components/executionExperience/V4SettingsJourneyStrip";
 import { EXECUTION_EXPERIENCE_V45_DISCLAIMER } from "@/modules/executionExperience";
+import { generateGuidedActionSummary } from "@/modules/executionExperience/guidedActionSummary";
+import { GUIDED_ACTION_V46_DISCLAIMER } from "@/modules/executionExperience/guidedActionPolicy";
 
 function formatLastUpdated(iso: string | undefined): string | null {
   if (!iso) return null;
@@ -34,6 +36,7 @@ export function SettingsExecutionReadinessSection() {
   const bridgeSummary = generateManualBridgeSummary();
   const commandPackSummary = generateCommandPackSummary();
   const localReviewSummary = generateLocalReviewSummary();
+  const guidedActionSummary = generateGuidedActionSummary();
   const connectorCount = getSandboxConnectorRegistry().length;
   const state = loadExecutionReadinessState();
   const preparedCount = state.requests.length;
@@ -123,6 +126,22 @@ export function SettingsExecutionReadinessSection() {
           secret · résultat collé uniquement · Gigi ne lit pas terminal/fichiers/API
         </p>
         <p className="mt-2 text-[11px] italic text-amber-200/85">{EXECUTION_READINESS_V44_DISCLAIMER}</p>
+      </div>
+
+      <div className="mt-4 rounded-lg border border-indigo-500/20 bg-indigo-500/5 px-4 py-3">
+        <p className="text-[12px] font-medium text-text-primary">Actions guidées V4.6</p>
+        <p className="mt-1 text-[12.5px] text-text-secondary">{guidedActionSummary.summaryText}</p>
+        <p className="mt-2 text-[11.5px] text-text-muted">
+          {guidedActionSummary.totalFlows} parcours · {guidedActionSummary.activeFlows} actif(s) ·
+          local uniquement · aucune exécution réelle
+        </p>
+        <p className="mt-2 text-[11px] italic text-amber-200/85">{GUIDED_ACTION_V46_DISCLAIMER}</p>
+        <Link
+          href="/guided-actions"
+          className="gigi-focus mt-2 inline-flex text-[13px] font-medium text-accent-soft underline-offset-2 hover:underline"
+        >
+          Parcours guidés →
+        </Link>
       </div>
 
       <div className="mt-4 flex flex-wrap gap-4">

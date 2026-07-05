@@ -138,6 +138,10 @@ import {
   detectVisibleExecutionExperienceIntent,
 } from "@/modules/executionExperience";
 import {
+  buildGuidedActionConversationResponse,
+  detectGuidedActionIntent,
+} from "@/modules/executionExperience/guidedActionConversation";
+import {
   buildAggregateContextFromAction,
   buildLifecycleRecord,
 } from "@/modules/closedLoopLifecycle/closedLoopLifecycleEngine";
@@ -1089,6 +1093,11 @@ export function askGigi(
   const visibilityIntent = detectVisibleExecutionExperienceIntent(objective);
   if (visibilityIntent.isVisibleExecutionExperience) {
     return buildVisibleExecutionExperienceResponse(objective);
+  }
+
+  const guidedActionIntent = detectGuidedActionIntent(objective);
+  if (guidedActionIntent.isGuidedAction) {
+    return buildGuidedActionConversationResponse(objective);
   }
 
   const localReviewIntent = detectLocalReviewIntent(objective);

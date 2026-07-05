@@ -64,4 +64,8 @@ export const PAGE_META = {
     title: "Revue locale",
     subtitle: "Analyse prudente d'un résultat collé — Gigi ne lit pas ton terminal ni exécute de commande.",
   },
+  "/guided-actions": {
+    title: "Parcours d'action guidée",
+    subtitle: "Action liée à ton projet — Gigi prépare étape par étape, sans exécution automatique.",
+  },
 } as const;
