@@ -4,8 +4,10 @@ import Link from "next/link";
 import {
   EXECUTION_READINESS_EMPTY_SUMMARY,
   EXECUTION_READINESS_V4_TAGLINE,
-  EXECUTION_READINESS_V41_DISCLAIMER,
+  EXECUTION_READINESS_V42_DISCLAIMER,
   generateGlobalExecutionReadinessSummary,
+  generateManualBridgeSummary,
+  getSandboxConnectorRegistry,
   loadExecutionReadinessState,
 } from "@/modules/executionReadiness";
 import { useIsClient } from "./useIsClient";
@@ -23,6 +25,8 @@ export function SettingsExecutionReadinessSection() {
   if (!isClient) return null;
 
   const summary = generateGlobalExecutionReadinessSummary();
+  const bridgeSummary = generateManualBridgeSummary();
+  const connectorCount = getSandboxConnectorRegistry().length;
   const state = loadExecutionReadinessState();
   const preparedCount = state.requests.length;
   const decisionCount = state.decisions.length;
@@ -32,7 +36,7 @@ export function SettingsExecutionReadinessSection() {
   return (
     <section className="gigi-panel mb-6 rounded-xl border border-violet-500/25 p-5">
       <p className="text-[10px] font-semibold uppercase tracking-wider text-violet-200/90">
-        Préparation V4 — centre de permissions (V4.1)
+        Préparation V4 — permissions & pont manuel (V4.2)
       </p>
       <p className="mt-2 text-[13px] leading-relaxed text-text-secondary">
         Gigi ne déclenche aucune action réelle. Les demandes restent sur cet appareil ; les
@@ -75,10 +79,25 @@ export function SettingsExecutionReadinessSection() {
       </div>
 
       <p className="mt-3 text-[11.5px] leading-relaxed text-amber-200/85">
-        {EXECUTION_READINESS_V41_DISCLAIMER}
+        {EXECUTION_READINESS_V42_DISCLAIMER}
       </p>
 
+      <div className="mt-4 rounded-lg border border-indigo-500/20 bg-indigo-500/5 px-4 py-3">
+        <p className="text-[12px] font-medium text-text-primary">Pont manuel V4.2</p>
+        <p className="mt-1 text-[12.5px] text-text-secondary">{bridgeSummary.summaryText}</p>
+        <p className="mt-2 text-[11.5px] text-text-muted">
+          {bridgeSummary.totalPackets} paquet(s) · {connectorCount} connecteurs sandbox (non
+          actifs) · aucun secret stocké
+        </p>
+      </div>
+
       <div className="mt-4 flex flex-wrap gap-4">
+        <Link
+          href="/manual-bridge"
+          className="gigi-focus inline-flex text-[13px] font-medium text-accent-soft underline-offset-2 hover:underline"
+        >
+          Pont manuel d&apos;exécution →
+        </Link>
         <Link
           href="/permissions"
           className="gigi-focus inline-flex text-[13px] font-medium text-accent-soft underline-offset-2 hover:underline"

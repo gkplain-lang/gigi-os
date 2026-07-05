@@ -125,7 +125,9 @@ import {
 } from "@/modules/projectsCommand";
 import {
   buildExecutionReadinessConversationResponse,
+  buildManualBridgeConversationResponse,
   detectExecutionReadinessIntent,
+  detectManualBridgeIntent,
 } from "@/modules/executionReadiness";
 import {
   buildAggregateContextFromAction,
@@ -1074,6 +1076,11 @@ export function askGigi(
       missionProjectId: context.currentMission?.projectId ?? context.currentProjectId,
       missionTitle: context.currentMission?.title,
     });
+  }
+
+  const manualBridgeIntent = detectManualBridgeIntent(objective);
+  if (manualBridgeIntent.isManualBridge) {
+    return buildManualBridgeConversationResponse(objective);
   }
 
   const executionReadinessIntent = detectExecutionReadinessIntent(objective);

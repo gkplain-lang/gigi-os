@@ -126,8 +126,9 @@ V3.5 — Public Landing & Onboarding (delivered)
 V3.6 — Projects Command Center (delivered — v3.6.0)
 V3.7 — Settings & Local Data Control (delivered — v3.7.0)
 V4.0 — Controlled Real Execution Readiness (delivered — v4.0.0)
-V4.1 — Execution Permission Center (implemented)
-V4.2 — Real Connector Sandbox / Manual Bridge (planned)
+V4.1 — Execution Permission Center (delivered — v4.1.0)
+V4.2 — Real Connector Sandbox / Manual Bridge (implemented)
+V4.3 — First Controlled Local Adapter / Human-Launched Command Packs (planned)
 ```
 
 ---
@@ -2001,47 +2002,44 @@ See [V4_EXECUTION_POLICY.md](./V4_EXECUTION_POLICY.md).
 
 ---
 
-# 40.1 V4.1 — Execution Permission Center (implemented)
+# 40.1 V4.1 — Execution Permission Center (delivered)
 
-## Goal
+## Delivered (v4.1.0)
 
-Centralize local permission requests — filters, detail view, dry-run expiration, local revocation, audit journal export — **still no real execution**.
-
-## Core Question
-
-```text
-Can the user review, expire, and revoke local dry-run permissions in one place without breaking V4.0 trust?
-```
-
-## Implemented
-
-- Route `/permissions` — Execution Permission Center UI
-- Embed intégré sur `/actions` (`ExecutionPermissionCenterEmbed`)
-- Module extensions `modules/executionReadiness/` (expiration, revocation, filters, audit export, recent audit)
-- Integrations `/actions`, `/history`, `/settings`, `/conversation`, SideNav
+- Route `/permissions`, embed `/actions`, integrations settings/history/conversation
 - Docs : [V4_1_EXECUTION_PERMISSION_CENTER.md](./V4_1_EXECUTION_PERMISSION_CENTER.md)
-
-## Not in V4.1
-
-- Real shell / GitHub / n8n / API execution
-- Connectors, sync, auth/provider changes
-- Permanent permissions or auto-approval
-- Background execution
-
-See [V4_EXECUTION_POLICY.md](./V4_EXECUTION_POLICY.md).
 
 ---
 
-# 40.2 V4.2 — Real Connector Sandbox / Manual Bridge (planned)
+# 40.2 V4.2 — Real Connector Sandbox / Manual Bridge (implemented)
 
 ## Goal
 
-Controlled sandbox for future real connectors — manual bridge only, explicit human validation, still no unattended execution.
+Sandbox registry for future connectors + manual execution packets — copyable steps, human validation, **no real execution**.
 
-## Not coded in V4.1
+## Implemented
 
-- No real connector without explicit product validation
-- No automatic bridge to external services
+- Route `/manual-bridge` — Manual Bridge panel
+- Module extensions `manualBridge*.ts` in `modules/executionReadiness/`
+- Integrations `/actions`, `/permissions`, `/settings`, `/history`, conversation
+- Docs : [V4_2_REAL_CONNECTOR_SANDBOX_MANUAL_BRIDGE.md](./V4_2_REAL_CONNECTOR_SANDBOX_MANUAL_BRIDGE.md)
+
+## Not in V4.2
+
+- Real connectors, fetch, shell exec, secrets storage
+- Auto-approval, permanent permissions, background jobs
+
+---
+
+# 40.3 V4.3 — First Controlled Local Adapter / Human-Launched Command Packs (planned)
+
+## Goal
+
+Strictly controlled local adapters — human-launched command packs only, no unattended execution.
+
+## Not coded in V4.2
+
+- No real adapter without explicit product validation
 
 ---
 

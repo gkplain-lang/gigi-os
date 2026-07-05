@@ -63,6 +63,12 @@ export function PermissionCenterPageContent() {
             ))}
           </ul>
           <Link
+            href="/manual-bridge"
+            className="gigi-focus mt-4 inline-flex text-[12.5px] font-medium text-accent-soft hover:underline"
+          >
+            Pont manuel d&apos;exécution →
+          </Link>
+          <Link
             href="/actions"
             className="gigi-focus mt-4 inline-flex text-[12.5px] font-medium text-accent-soft hover:underline"
           >
