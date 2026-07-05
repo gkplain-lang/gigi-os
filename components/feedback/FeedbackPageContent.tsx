@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { BetaFeedbackPanel } from "@/components/beta/BetaFeedbackPanel";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { BETA_FEEDBACK_PROMPTS } from "@/modules/publicEntry/betaTesterCopy";
 import {
   REFINED_EMPTY_STATES,
   REFINED_PAGE_META,
@@ -20,6 +21,26 @@ export function FeedbackPageContent() {
         <p className="mb-4 text-[12px] leading-relaxed text-text-secondary italic">
           {SIMULATION_NOTE.pageHint}
         </p>
+
+        <div className="gigi-panel mb-4 rounded-xl p-4">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+            Retour testeur bêta
+          </p>
+          <p className="mt-2 text-[13px] text-text-secondary">
+            Tes retours restent sur cet appareil — aucun envoi API, aucune sync cloud.
+          </p>
+          <ul className="mt-3 space-y-1 text-[12.5px] text-text-muted">
+            {BETA_FEEDBACK_PROMPTS.map((prompt) => (
+              <li key={prompt}>· {prompt}</li>
+            ))}
+          </ul>
+          <Link
+            href="/beta"
+            className="gigi-focus mt-3 inline-flex text-[12.5px] font-medium text-accent-soft hover:underline"
+          >
+            Checklist bêta complète →
+          </Link>
+        </div>
 
         <div className="gigi-form-card rounded-xl p-5">
           <p className="text-[11px] font-semibold uppercase tracking-wider text-accent-soft/80">

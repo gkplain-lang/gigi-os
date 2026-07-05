@@ -122,6 +122,8 @@ V3.1 — Mission Command Center UX
 V3.2 — Action Flow Simplification (delivered)
 V3.3 — Learning & Next Mission Loop (delivered)
 V3.4 — Stabilisation & Public Beta Readiness (delivered)
+V3.5 — Public Landing & Onboarding (in progress — branch v3.5-public-landing-onboarding)
+V3.6 — Projects Command Center (planned)
 V4.0 — Controlled Real Execution Readiness (planned)
 ```
 
@@ -1889,7 +1891,45 @@ Can a new user complete one full manual cycle without confusion or broken routes
 
 `almost_beta_ready` — external tester pass recommended before public beta.
 
-See [V3_4_PUBLIC_BETA_READINESS.md](./V3_4_PUBLIC_BETA_READINESS.md). Links forward to V4.0.
+See [V3_4_PUBLIC_BETA_READINESS.md](./V3_4_PUBLIC_BETA_READINESS.md). Links forward to V3.5 Route B.
+
+---
+
+# 39.1 V3.5 — Public Landing & Onboarding (in progress)
+
+## Goal
+
+Make Gigi understandable and testable for external users — landing, discovery onboarding, beta checklist.
+
+## Core Question
+
+```text
+Can a new visitor understand Gigi, start testing, and find the mission-first flow without confusion?
+```
+
+## Delivered (branch — pending commit)
+
+- `/landing` — product presentation
+- `/onboarding` — 5-step discovery guide
+- `/onboarding/setup` — existing project setup wizard
+- `/beta` — tester checklist + local feedback prompts
+- Sidebar discovery links, discreet links on `/`
+- Docs: [V3_5_PUBLIC_LANDING_ONBOARDING.md](./V3_5_PUBLIC_LANDING_ONBOARDING.md), [BETA_TESTER_GUIDE.md](./BETA_TESTER_GUIDE.md)
+
+## Not in V3.5
+
+- Payment, auth gate, cloud sync, real execution
+- No new localStorage key (guide uses React state)
+
+---
+
+# 39.2 V3.6 — Projects Command Center (planned)
+
+## Goal
+
+Strategic projects page — status, next mission per project, enriched detail, project history.
+
+**Not coded in V3.5.**
 
 ---
 

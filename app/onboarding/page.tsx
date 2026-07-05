@@ -1,5 +1,5 @@
-import { OnboardingPageContent } from "@/components/onboarding/OnboardingPageContent";
+import { OnboardingGuideFlow } from "@/components/onboarding/OnboardingGuideFlow";
 
 export default function OnboardingPage() {
-  return <OnboardingPageContent />;
+  return <OnboardingGuideFlow />;
 }
