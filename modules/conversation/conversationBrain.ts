@@ -124,6 +124,10 @@ import {
   detectProjectsCommandIntent,
 } from "@/modules/projectsCommand";
 import {
+  buildExecutionReadinessConversationResponse,
+  detectExecutionReadinessIntent,
+} from "@/modules/executionReadiness";
+import {
   buildAggregateContextFromAction,
   buildLifecycleRecord,
 } from "@/modules/closedLoopLifecycle/closedLoopLifecycleEngine";
@@ -444,6 +448,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   closed_loop_lifecycle: "Cycle d'action",
   mission_os: "Pilotage mission V3",
   projects_command: "Centre projets V3.6",
+  execution_readiness: "Préparation exécution V4",
 };
 
 function clarificationResponse(): GigiConversationResponse {
@@ -1071,6 +1076,11 @@ export function askGigi(
     });
   }
 
+  const executionReadinessIntent = detectExecutionReadinessIntent(objective);
+  if (executionReadinessIntent.isExecutionReadiness) {
+    return buildExecutionReadinessConversationResponse(objective);
+  }
+
   const missionOSIntent = detectMissionOSIntent(objective);
   if (missionOSIntent.isMissionOS) {
     const mission = context.currentMission;
@@ -1376,6 +1386,8 @@ export function askGigi(
     mission_os: "Pilotage V3 — une mission, une prochaine action, tout reste manuel.",
     projects_command:
       "Centre projets V3.6 — ouvre /projects pour voir priorités, missions et actions par projet.",
+    execution_readiness:
+      "V4.0 — préparation permission uniquement ; ouvre /actions pour valider une demande locale.",
   };
 
   return {

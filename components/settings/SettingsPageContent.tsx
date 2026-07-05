@@ -14,6 +14,7 @@ import { LocalDataExportPanel } from "./LocalDataExportPanel";
 import { LocalDataImportPanel } from "./LocalDataImportPanel";
 import { LocalDataResetPanel } from "./LocalDataResetPanel";
 import { LocalPreferencesPanel } from "./LocalPreferencesPanel";
+import { SettingsExecutionReadinessSection } from "./SettingsExecutionReadinessSection";
 import { SettingsSafetyNote } from "./SettingsSafetyNote";
 import { useIsClient } from "./useIsClient";
 
@@ -58,6 +59,8 @@ export function SettingsPageContent() {
         <LocalDataResetPanel />
 
         <LocalPreferencesPanel />
+
+        <SettingsExecutionReadinessSection />
 
         <SettingsSafetyNote />
       </div>

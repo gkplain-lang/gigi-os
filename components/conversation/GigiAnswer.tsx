@@ -219,6 +219,74 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
               <p className="text-[14px] font-medium text-text-primary">{response.finalMessage}</p>
             )}
           </div>
+        ) : response.intent === "execution_readiness" ? (
+          <div className="mt-3 space-y-3">
+            {response.executionReadinessBlockedMessage && (
+              <p className="text-[12.5px] leading-relaxed text-amber-200/90">
+                {response.executionReadinessBlockedMessage}
+              </p>
+            )}
+            <div className="gigi-panel rounded-xl p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                {response.intentLabel ?? "Préparation exécution · Gigi V4"}
+              </p>
+              {response.executionReadinessRequestTitle && (
+                <p className="mt-2 text-[15px] font-medium text-text-primary">
+                  {response.executionReadinessRequestTitle.replace(/^Readiness · /, "")}
+                </p>
+              )}
+              {response.executionReadinessSummaryText && (
+                <p className="mt-2 text-[13px] text-text-secondary">
+                  {response.executionReadinessSummaryText}
+                </p>
+              )}
+              {(response.executionReadinessRiskLabel ||
+                response.executionReadinessStatusLabel) && (
+                <p className="mt-2 text-[12.5px] text-accent-soft">
+                  {response.executionReadinessRiskLabel &&
+                    `Risque · ${response.executionReadinessRiskLabel}`}
+                  {response.executionReadinessStatusLabel &&
+                    ` · ${response.executionReadinessStatusLabel}`}
+                </p>
+              )}
+              {response.executionReadinessCapabilitiesText && (
+                <p className="mt-2 text-[12px] text-text-muted">
+                  Capacités : {response.executionReadinessCapabilitiesText}
+                </p>
+              )}
+              {response.warning && (
+                <p className="mt-2 text-[12.5px] text-amber-200/90">{response.warning}</p>
+              )}
+              <Link
+                href="/actions"
+                className="gigi-btn-secondary gigi-focus mt-3 inline-flex rounded-lg px-3.5 py-2 text-[13px] font-medium"
+              >
+                Ouvrir /actions
+              </Link>
+            </div>
+            {response.executionReadinessGuidance &&
+              response.executionReadinessGuidance.length > 0 && (
+                <div className="gigi-panel rounded-xl p-4">
+                  <Label>Guidance V4</Label>
+                  <ol className="mt-2.5 space-y-2">
+                    {response.executionReadinessGuidance.map((hint, i) => (
+                      <li
+                        key={i}
+                        className="flex gap-2.5 text-[13.5px] leading-relaxed text-text-secondary"
+                      >
+                        <span className="mt-0.5 font-medium tabular-nums text-accent-soft">
+                          {i + 1}.
+                        </span>
+                        {hint}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+            {response.finalMessage && (
+              <p className="text-[14px] font-medium text-text-primary">{response.finalMessage}</p>
+            )}
+          </div>
         ) : response.intent === "mission_os" ? (
           <div className="mt-3 space-y-3">
             {response.missionOSBlockedMessage && (

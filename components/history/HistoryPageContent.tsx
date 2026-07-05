@@ -43,6 +43,8 @@ import {
 } from "@/modules/missionFeedback";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { RecentLearningSection } from "@/components/history/RecentLearningSection";
+import { ExecutionReadinessSummaryCard } from "@/components/executionReadiness/ExecutionReadinessSummaryCard";
+import { generateGlobalExecutionReadinessSummary } from "@/modules/executionReadiness";
 
 export function HistoryPageContent() {
   const { state, isHydrated } = useGigi();
@@ -75,6 +77,7 @@ export function HistoryPageContent() {
   const recentIntakes = listExecutionReportIntakes(4);
   const lifecycleSummary = generateGlobalLifecycleSummary();
   const recentLifecycles = listClosedLoopLifecycles(4);
+  const executionReadinessSummary = generateGlobalExecutionReadinessSummary();
 
   if (!isHydrated) return null;
 
@@ -87,6 +90,9 @@ export function HistoryPageContent() {
           meta="Ce que tu as fait, ce que Gigi en tire, et la suite recommandée — tout reste local et manuel."
         />
         <RecentLearningSection />
+        <div className="gigi-panel-raised mb-4 rounded-xl p-5 md:p-6">
+          <ExecutionReadinessSummaryCard summary={executionReadinessSummary} />
+        </div>
         <p className="mb-4 text-[12.5px] leading-relaxed text-text-muted">
           <span className="font-medium text-text-secondary">Parcours bêta :</span> rapport →
           apprentissage ici → mission sur{" "}

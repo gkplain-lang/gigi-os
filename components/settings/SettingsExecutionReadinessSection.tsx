@@ -1,0 +1,88 @@
+"use client";
+
+import Link from "next/link";
+import {
+  EXECUTION_READINESS_DISCLAIMER,
+  EXECUTION_READINESS_EMPTY_SUMMARY,
+  EXECUTION_READINESS_V4_TAGLINE,
+  generateGlobalExecutionReadinessSummary,
+  loadExecutionReadinessState,
+} from "@/modules/executionReadiness";
+import { useIsClient } from "./useIsClient";
+
+function formatLastUpdated(iso: string | undefined): string | null {
+  if (!iso) return null;
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toLocaleString("fr-FR");
+}
+
+export function SettingsExecutionReadinessSection() {
+  const isClient = useIsClient();
+
+  if (!isClient) return null;
+
+  const summary = generateGlobalExecutionReadinessSummary();
+  const state = loadExecutionReadinessState();
+  const preparedCount = state.requests.length;
+  const decisionCount = state.decisions.length;
+  const lastUpdatedLabel = formatLastUpdated(state.lastUpdatedAt);
+  const hasData = preparedCount > 0 || decisionCount > 0;
+
+  return (
+    <section className="gigi-panel mb-6 rounded-xl border border-violet-500/25 p-5">
+      <p className="text-[10px] font-semibold uppercase tracking-wider text-violet-200/90">
+        Préparation V4 — exécution contrôlée
+      </p>
+      <p className="mt-2 text-[13px] leading-relaxed text-text-secondary">
+        En V4.0, Gigi ne lance aucune action réelle. Les demandes restent sur cet appareil ; les
+        approbations autorisent uniquement un dry-run local (simulation). Les capacités sensibles
+        restent bloquées — la validation humaine finale t&apos;appartient toujours.
+      </p>
+      <p className="mt-2 text-[12px] text-text-muted italic">{EXECUTION_READINESS_V4_TAGLINE}</p>
+
+      <div className="mt-4 rounded-lg border border-border/50 bg-surface-2/15 px-4 py-3">
+        {hasData ? (
+          <>
+            <p className="text-[13px] text-text-secondary">{summary.summaryText}</p>
+            <dl className="mt-3 grid gap-2 text-[12.5px] sm:grid-cols-3">
+              <div>
+                <dt className="text-text-muted">Demandes préparées</dt>
+                <dd className="font-medium text-text-primary">{preparedCount}</dd>
+              </div>
+              <div>
+                <dt className="text-text-muted">Décisions locales</dt>
+                <dd className="font-medium text-text-primary">{decisionCount}</dd>
+              </div>
+              <div>
+                <dt className="text-text-muted">Dernière mise à jour</dt>
+                <dd className="font-medium text-text-primary">
+                  {lastUpdatedLabel ?? "—"}
+                </dd>
+              </div>
+            </dl>
+            {summary.activeRequests > 0 && (
+              <p className="mt-2 text-[11.5px] text-text-muted">
+                {summary.activeRequests} active(s) · {summary.awaitingApproval} en attente ·{" "}
+                {summary.approvedDryRun} dry-run approuvé(s) (simulation uniquement)
+              </p>
+            )}
+          </>
+        ) : (
+          <p className="text-[13px] text-text-secondary">{EXECUTION_READINESS_EMPTY_SUMMARY}</p>
+        )}
+      </div>
+
+      <p className="mt-3 text-[11.5px] leading-relaxed text-amber-200/85">
+        {EXECUTION_READINESS_DISCLAIMER}
+      </p>
+
+      <Link
+        href="/actions"
+        className="gigi-focus mt-4 inline-flex text-[13px] font-medium text-accent-soft underline-offset-2 hover:underline"
+      >
+        Voir les demandes d&apos;exécution →
+      </Link>
+    </section>
+  );
+}
