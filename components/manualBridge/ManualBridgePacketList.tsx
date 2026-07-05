@@ -6,6 +6,8 @@ import { ManualBridgeStatusBadge } from "./ManualBridgeStatusBadge";
 import { ExecutionRiskBadge } from "@/components/executionReadiness/ExecutionRiskBadge";
 import { cn } from "@/lib/utils";
 
+import { ExecutionRouteEmptyHint } from "@/components/executionExperience/ExecutionRouteEmptyHint";
+
 interface ManualBridgePacketListProps {
   packets: ManualExecutionPacket[];
   selectedId: string | null;
@@ -19,9 +21,14 @@ export function ManualBridgePacketList({
 }: ManualBridgePacketListProps) {
   if (packets.length === 0) {
     return (
-      <p className="rounded-lg border border-border/40 px-4 py-8 text-center text-[13px] text-text-muted">
-        Aucun paquet — prépare-en un depuis une permission ou ce panel.
-      </p>
+      <ExecutionRouteEmptyHint
+        message="Rien ici pour l'instant. Prépare une action depuis /actions, puis transforme une permission en paquet manuel."
+        nextSteps={[
+          { label: "Ouvrir Actions", href: "/actions" },
+          { label: "Centre de permissions", href: "/permissions" },
+          { label: "Packs commandes", href: "/command-packs" },
+        ]}
+      />
     );
   }
 

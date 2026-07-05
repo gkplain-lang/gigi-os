@@ -15,6 +15,8 @@ import {
   loadExecutionReadinessState,
 } from "@/modules/executionReadiness";
 import { useIsClient } from "./useIsClient";
+import { V4SettingsJourneyStrip } from "@/components/executionExperience/V4SettingsJourneyStrip";
+import { EXECUTION_EXPERIENCE_V45_DISCLAIMER } from "@/modules/executionExperience";
 
 function formatLastUpdated(iso: string | undefined): string | null {
   if (!iso) return null;
@@ -42,14 +44,19 @@ export function SettingsExecutionReadinessSection() {
   return (
     <section className="gigi-panel mb-6 rounded-xl border border-violet-500/25 p-5">
       <p className="text-[10px] font-semibold uppercase tracking-wider text-violet-200/90">
-        Préparation V4 — permissions & pont manuel (V4.2)
+        Exécution contrôlée V4 · V4.5 visible
       </p>
       <p className="mt-2 text-[13px] leading-relaxed text-text-secondary">
         Gigi ne déclenche aucune action réelle. Les demandes restent sur cet appareil ; les
         approbations autorisent uniquement un dry-run local (simulation). Les capacités sensibles
         restent bloquées — la validation humaine finale t&apos;appartient toujours.
       </p>
+      <p className="mt-2 text-[12px] font-medium text-amber-200/90">
+        Ces modules sont locaux. Ils ne déclenchent aucune action réelle.
+      </p>
       <p className="mt-2 text-[12px] text-text-muted italic">{EXECUTION_READINESS_V4_TAGLINE}</p>
+      <V4SettingsJourneyStrip />
+      <p className="mt-3 text-[11px] italic text-text-muted">{EXECUTION_EXPERIENCE_V45_DISCLAIMER}</p>
 
       <div className="mt-4 rounded-lg border border-border/50 bg-surface-2/15 px-4 py-3">
         {hasData ? (

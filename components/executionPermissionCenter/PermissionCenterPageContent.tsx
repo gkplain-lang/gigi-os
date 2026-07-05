@@ -17,6 +17,7 @@ import { PermissionCenterFilters } from "./PermissionCenterFilters";
 import { PermissionRequestListItem } from "./PermissionRequestListItem";
 import { PermissionRequestDetail } from "./PermissionRequestDetail";
 import { PermissionAuditExportPanel } from "./PermissionAuditExportPanel";
+import { ExecutionRouteEmptyHint } from "@/components/executionExperience/ExecutionRouteEmptyHint";
 import { useIsClient } from "@/components/settings/useIsClient";
 
 export function PermissionCenterPageContent() {
@@ -96,16 +97,14 @@ export function PermissionCenterPageContent() {
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
           <div className="space-y-2">
             {viewModel.requests.length === 0 ? (
-              <div className="gigi-empty-state rounded-xl px-6 py-10 text-center">
-                <p className="text-[14px] font-medium text-text-primary">Aucune demande</p>
-                <p className="mt-2 text-[13px] text-text-secondary">
-                  Crée une demande depuis l&apos;action dominante sur{" "}
-                  <Link href="/actions" className="text-accent-soft hover:underline">
-                    /actions
-                  </Link>
-                  .
-                </p>
-              </div>
+              <ExecutionRouteEmptyHint
+                message="Rien ici pour l'instant. Prépare une demande locale depuis l'action dominante sur /actions."
+                nextSteps={[
+                  { label: "Ouvrir Actions", href: "/actions" },
+                  { label: "Pont manuel", href: "/manual-bridge" },
+                  { label: "Packs commandes", href: "/command-packs" },
+                ]}
+              />
             ) : (
               viewModel.requests.map((request) => (
                 <PermissionRequestListItem

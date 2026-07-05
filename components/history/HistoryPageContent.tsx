@@ -49,6 +49,7 @@ import { ManualBridgeHistoryCard } from "@/components/manualBridge/ManualBridgeH
 import { CommandPackHistoryCard } from "@/components/commandPacks/CommandPackHistoryCard";
 import { LocalReviewHistoryCard } from "@/components/localReview/LocalReviewHistoryCard";
 import { generateGlobalExecutionReadinessSummary } from "@/modules/executionReadiness";
+import { ControlledExecutionActivitySummary } from "@/components/executionExperience/ControlledExecutionActivitySummary";
 
 export function HistoryPageContent() {
   const { state, isHydrated } = useGigi();
@@ -94,6 +95,7 @@ export function HistoryPageContent() {
           meta="Ce que tu as fait, ce que Gigi en tire, et la suite recommandée — tout reste local et manuel."
         />
         <RecentLearningSection />
+        <ControlledExecutionActivitySummary />
         <div className="gigi-panel-raised mb-4 rounded-xl p-5 md:p-6">
           <ExecutionReadinessSummaryCard summary={executionReadinessSummary} />
         </div>

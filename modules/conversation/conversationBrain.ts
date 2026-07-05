@@ -134,6 +134,10 @@ import {
   detectLocalReviewIntent,
 } from "@/modules/executionReadiness";
 import {
+  buildVisibleExecutionExperienceResponse,
+  detectVisibleExecutionExperienceIntent,
+} from "@/modules/executionExperience";
+import {
   buildAggregateContextFromAction,
   buildLifecycleRecord,
 } from "@/modules/closedLoopLifecycle/closedLoopLifecycleEngine";
@@ -1080,6 +1084,11 @@ export function askGigi(
       missionProjectId: context.currentMission?.projectId ?? context.currentProjectId,
       missionTitle: context.currentMission?.title,
     });
+  }
+
+  const visibilityIntent = detectVisibleExecutionExperienceIntent(objective);
+  if (visibilityIntent.isVisibleExecutionExperience) {
+    return buildVisibleExecutionExperienceResponse(objective);
   }
 
   const localReviewIntent = detectLocalReviewIntent(objective);

@@ -129,8 +129,9 @@ V4.0 — Controlled Real Execution Readiness (delivered — v4.0.0)
 V4.1 — Execution Permission Center (delivered — v4.1.0)
 V4.2 — Real Connector Sandbox / Manual Bridge (delivered — v4.2.0)
 V4.3 — Human-Launched Command Packs (delivered — v4.3.0)
-V4.4 — Local Review Runner / Read-Only Verification Layer (implemented)
-V4.5 — Human-Gated Read-Only Adapters / Verified Manual Checks (planned)
+V4.4 — Local Review Runner / Read-Only Verification Layer (delivered — v4.4.0)
+V4.5 — Visible Execution Experience (implemented)
+V4.6 — Guided Project Action Flow (planned)
 ```
 
 ---
@@ -2082,15 +2083,36 @@ Read-only local review of user-pasted output — probable status, signal detecti
 
 ---
 
-# 40.5 V4.5 — Human-Gated Read-Only Adapters / Verified Manual Checks (planned)
+# 40.5 V4.5 — Visible Execution Experience (implemented)
 
 ## Goal
 
-Strictly human-gated read-only adapters — verified manual checks only.
+Make V4.0–V4.4 capabilities visible, understandable and testable from the UI in ~30 seconds — **without adding real execution**.
 
-## Not coded in V4.4
+## Delivered
 
-- No real adapter without explicit product validation
+- Home `/` visibility panel, V4 journey, demo strip (UI-only, no auto localStorage writes)
+- `/actions` action center overview with counters from existing summaries
+- Conversation visibility intent with route guidance
+- Empty states with security reminders across V4 routes
+- Settings V4 journey strip + history activity summary
+- Doc: `docs/V4_5_VISIBLE_EXECUTION_EXPERIENCE.md`
+
+## Not in V4.5
+
+- Real execution, active connectors, network calls, secrets, permanent permissions
+
+---
+
+# 40.6 V4.6 — Guided Project Action Flow (planned)
+
+## Goal
+
+Guided flow from project context through action → permission → manual bridge → command pack → local review — still human-gated, no automatic real execution.
+
+## Not coded in V4.5
+
+- No project-scoped auto-chaining without explicit user validation
 
 ---
 
