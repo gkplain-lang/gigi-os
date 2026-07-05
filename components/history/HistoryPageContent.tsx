@@ -50,6 +50,7 @@ import { CommandPackHistoryCard } from "@/components/commandPacks/CommandPackHis
 import { LocalReviewHistoryCard } from "@/components/localReview/LocalReviewHistoryCard";
 import { generateGlobalExecutionReadinessSummary } from "@/modules/executionReadiness";
 import { ControlledExecutionActivitySummary } from "@/components/executionExperience/ControlledExecutionActivitySummary";
+import { GuidedActionHistoryCard } from "@/components/guidedActionFlow/GuidedActionHistoryCard";
 
 export function HistoryPageContent() {
   const { state, isHydrated } = useGigi();
@@ -96,6 +97,9 @@ export function HistoryPageContent() {
         />
         <RecentLearningSection />
         <ControlledExecutionActivitySummary />
+        <div className="gigi-panel-raised mb-4 rounded-xl p-5 md:p-6">
+          <GuidedActionHistoryCard />
+        </div>
         <div className="gigi-panel-raised mb-4 rounded-xl p-5 md:p-6">
           <ExecutionReadinessSummaryCard summary={executionReadinessSummary} />
         </div>

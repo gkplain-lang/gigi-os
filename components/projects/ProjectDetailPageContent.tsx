@@ -15,6 +15,7 @@ import { ClosedLoopMissionOS } from "@/components/missionOS/ClosedLoopMissionOS"
 import { ProjectDetailCommandStrip } from "@/components/projects/ProjectDetailCommandStrip";
 import { ProjectDetailActiveAction } from "@/components/projects/ProjectDetailActiveAction";
 import { ProjectDetailLearning } from "@/components/projects/ProjectDetailLearning";
+import { GuidedActionProjectSection } from "@/components/guidedActionFlow/GuidedActionProjectSection";
 import { buildMissionLearningViewModel } from "@/modules/missionOS";
 import {
   buildProjectsCommandViewModel,
@@ -215,6 +216,10 @@ export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContent
         {projectCommandCard && <ProjectDetailActiveAction card={projectCommandCard} />}
 
         <ProjectDetailLearning viewModel={projectLearning} />
+
+        <div className="mb-6">
+          <GuidedActionProjectSection projectId={project.id} projectName={project.name} />
+        </div>
 
         <div className="mb-6">
           <ClosedLoopMissionOS

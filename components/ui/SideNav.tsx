@@ -132,6 +132,12 @@ export function SideNav() {
           </Link>
         )}
         <Link
+          href="/guided-actions"
+          className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
+        >
+          Actions guidées
+        </Link>
+        <Link
           href="/local-review"
           className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
         >

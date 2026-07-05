@@ -19,6 +19,7 @@ import { ExecutionReadinessHomeHint } from "@/components/executionReadiness/Exec
 import { GigiExecutionVisibilityPanel } from "@/components/executionExperience/GigiExecutionVisibilityPanel";
 import { V4ExecutionJourney } from "@/components/executionExperience/V4ExecutionJourney";
 import { GigiCapabilityDemoStrip } from "@/components/executionExperience/GigiCapabilityDemoStrip";
+import { GuidedActionHomeStrip } from "@/components/guidedActionFlow/GuidedActionHomeStrip";
 import { buildMissionLearningViewModel } from "@/modules/missionOS";
 import { useMemo } from "react";
 
@@ -122,6 +123,13 @@ export function MissionPageContent() {
           <GigiExecutionVisibilityPanel className="mb-6" />
           <V4ExecutionJourney className="mb-6" />
           <GigiCapabilityDemoStrip className="mb-6" />
+          <GuidedActionHomeStrip
+            className="mb-6"
+            missionId={state.mission.id}
+            missionTitle={state.mission.title}
+            projectId={state.mission.projectId}
+            projectName={state.mission.projectName}
+          />
           {missionCommandBlock}
           <MissionDone
             completedTitle={mission.title}
@@ -147,6 +155,13 @@ export function MissionPageContent() {
           <GigiExecutionVisibilityPanel className="mb-6" />
           <V4ExecutionJourney className="mb-6" />
           <GigiCapabilityDemoStrip className="mb-6" />
+          <GuidedActionHomeStrip
+            className="mb-6"
+            missionId={state.mission.id}
+            missionTitle={state.mission.title}
+            projectId={state.mission.projectId}
+            projectName={state.mission.projectName}
+          />
           {missionCommandBlock}
           <div className="gigi-mission-control relative max-w-3xl">
             <div className="gigi-mission-spotlight" aria-hidden />
@@ -187,6 +202,13 @@ export function MissionPageContent() {
         <GigiExecutionVisibilityPanel className="mb-6" />
         <V4ExecutionJourney className="mb-6" />
         <GigiCapabilityDemoStrip className="mb-6" />
+        <GuidedActionHomeStrip
+          className="mb-6"
+          missionId={state.mission.id}
+          missionTitle={state.mission.title}
+          projectId={state.mission.projectId}
+          projectName={state.mission.projectName}
+        />
         {missionCommandBlock}
 
         <div className="gigi-mission-control grid gap-5 lg:grid-cols-[minmax(0,1fr)_260px] lg:items-start">

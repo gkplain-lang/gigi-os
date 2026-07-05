@@ -130,8 +130,9 @@ V4.1 — Execution Permission Center (delivered — v4.1.0)
 V4.2 — Real Connector Sandbox / Manual Bridge (delivered — v4.2.0)
 V4.3 — Human-Launched Command Packs (delivered — v4.3.0)
 V4.4 — Local Review Runner / Read-Only Verification Layer (delivered — v4.4.0)
-V4.5 — Visible Execution Experience (implemented)
-V4.6 — Guided Project Action Flow (planned)
+V4.5 — Visible Execution Experience (delivered — v4.5.0)
+V4.6 — Guided Project Action Flow (implemented)
+V4.7 — Project Mission Composer / Daily Guided Execution (planned)
 ```
 
 ---
@@ -2104,15 +2105,35 @@ Make V4.0–V4.4 capabilities visible, understandable and testable from the UI i
 
 ---
 
-# 40.6 V4.6 — Guided Project Action Flow (planned)
+# 40.6 V4.6 — Guided Project Action Flow (implemented)
 
 ## Goal
 
-Guided flow from project context through action → permission → manual bridge → command pack → local review — still human-gated, no automatic real execution.
+Guided flow from project or mission context through action → permission → manual bridge → command pack → local review — still human-gated, no automatic real execution.
 
-## Not coded in V4.5
+## Delivered
 
-- No project-scoped auto-chaining without explicit user validation
+- `GuidedProjectActionFlow` model in `gigi-os-v40-execution-readiness` schema v5
+- Templates (Git branch, GitHub PR, n8n, launch checklist, build review)
+- Route `/guided-actions`, SideNav link, embeds on `/`, `/actions`, project detail
+- Conversation guided-action intent
+- Doc: `docs/V4_6_GUIDED_PROJECT_ACTION_FLOW.md`
+
+## Not in V4.6
+
+- Real execution, active connectors, auto-chaining without explicit user action
+
+---
+
+# 40.7 V4.7 — Project Mission Composer / Daily Guided Execution (planned)
+
+## Goal
+
+Daily guided execution composer tying mission selection to project-scoped guided flows with richer context pre-fill.
+
+## Not coded in V4.6
+
+- No automatic mission-to-flow creation without user validation
 
 ---
 
