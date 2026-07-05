@@ -142,6 +142,10 @@ import {
   detectGuidedActionIntent,
 } from "@/modules/executionExperience/guidedActionConversation";
 import {
+  buildMissionComposerConversationResponse,
+  detectMissionComposerIntent,
+} from "@/modules/missionComposer";
+import {
   buildAggregateContextFromAction,
   buildLifecycleRecord,
 } from "@/modules/closedLoopLifecycle/closedLoopLifecycleEngine";
@@ -1098,6 +1102,11 @@ export function askGigi(
   const guidedActionIntent = detectGuidedActionIntent(objective);
   if (guidedActionIntent.isGuidedAction) {
     return buildGuidedActionConversationResponse(objective);
+  }
+
+  const missionComposerIntent = detectMissionComposerIntent(objective);
+  if (missionComposerIntent.isMissionComposer) {
+    return buildMissionComposerConversationResponse(objective);
   }
 
   const localReviewIntent = detectLocalReviewIntent(objective);

@@ -18,6 +18,7 @@ import { GuidedActionSummaryStats } from "./GuidedActionSummaryStats";
 import { GuidedActionTemplateGallery } from "./GuidedActionTemplateGallery";
 import { GuidedActionFlowList } from "./GuidedActionFlowList";
 import { GuidedActionFlowDetail } from "./GuidedActionFlowDetail";
+import { getActiveDailyPriorityMission } from "@/modules/missionComposer";
 
 export function GuidedActionFlowPanel() {
   const isClient = useIsClient();
@@ -51,6 +52,8 @@ export function GuidedActionFlowPanel() {
   }, [effectiveSelectedId, revision]);
 
   if (!isClient || !summary) return null;
+
+  const dailyMission = getActiveDailyPriorityMission();
 
   function handleCreateFromTemplate(templateId: string) {
     const flow = createGuidedProjectActionFlow({
@@ -96,6 +99,34 @@ export function GuidedActionFlowPanel() {
             </Link>
           </div>
         </section>
+
+        {dailyMission && (
+          <section className="mb-6 rounded-xl border border-emerald-500/25 bg-emerald-500/[0.04] p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-emerald-200/90">
+              Partir d&apos;une mission · V4.7
+            </p>
+            <p className="mt-2 text-[13px] text-text-secondary">
+              Mission du jour : « {dailyMission.title} » ({dailyMission.projectName}). Tu peux la
+              transformer en parcours guidé — action explicite, aucune exécution réelle.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-3">
+              <Link
+                href="/mission-composer"
+                className="gigi-focus text-[12.5px] font-medium text-accent-soft hover:underline"
+              >
+                Mission du jour →
+              </Link>
+              {dailyMission.linkedGuidedFlowId && (
+                <Link
+                  href={`/guided-actions?flow=${dailyMission.linkedGuidedFlowId}`}
+                  className="gigi-focus text-[12.5px] text-text-muted hover:underline"
+                >
+                  Parcours lié →
+                </Link>
+              )}
+            </div>
+          </section>
+        )}
 
         <GuidedActionSummaryStats summary={summary} className="mb-6" />
 

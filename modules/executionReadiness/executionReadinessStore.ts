@@ -16,6 +16,8 @@ export function createEmptyExecutionReadinessState(): ExecutionReadinessState {
     commandPacks: [],
     localReviewSessions: [],
     guidedProjectActionFlows: [],
+    projectMissionCandidates: [],
+    dailyPriorityMissions: [],
     version: EXECUTION_READINESS_VERSION,
   };
 }
@@ -42,6 +44,12 @@ export function loadExecutionReadinessState(): ExecutionReadinessState {
         : [],
       guidedProjectActionFlows: Array.isArray(parsed.guidedProjectActionFlows)
         ? parsed.guidedProjectActionFlows
+        : [],
+      projectMissionCandidates: Array.isArray(parsed.projectMissionCandidates)
+        ? parsed.projectMissionCandidates
+        : [],
+      dailyPriorityMissions: Array.isArray(parsed.dailyPriorityMissions)
+        ? parsed.dailyPriorityMissions
         : [],
       version: EXECUTION_READINESS_VERSION,
     };

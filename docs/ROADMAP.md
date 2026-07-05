@@ -131,8 +131,9 @@ V4.2 — Real Connector Sandbox / Manual Bridge (delivered — v4.2.0)
 V4.3 — Human-Launched Command Packs (delivered — v4.3.0)
 V4.4 — Local Review Runner / Read-Only Verification Layer (delivered — v4.4.0)
 V4.5 — Visible Execution Experience (delivered — v4.5.0)
-V4.6 — Guided Project Action Flow (implemented)
-V4.7 — Project Mission Composer / Daily Guided Execution (planned)
+V4.6 — Guided Project Action Flow (delivered — v4.6.0)
+V4.7 — Project Mission Composer / Daily Guided Execution (implemented)
+V4.8 — Daily Mission Review / Execution Reflection (planned)
 ```
 
 ---
@@ -2125,15 +2126,35 @@ Guided flow from project or mission context through action → permission → ma
 
 ---
 
-# 40.7 V4.7 — Project Mission Composer / Daily Guided Execution (planned)
+# 40.7 V4.7 — Project Mission Composer / Daily Guided Execution (implemented)
 
 ## Goal
 
-Daily guided execution composer tying mission selection to project-scoped guided flows with richer context pre-fill.
+Mission-first composer: project-linked mission candidates, single daily priority mission, conversion to V4.6 guided flow — human-gated, local only.
 
-## Not coded in V4.6
+## Delivered
 
-- No automatic mission-to-flow creation without user validation
+- `ProjectMissionCandidate` + `DailyPriorityMission` in schema v6
+- `modules/missionComposer/` (types, templates, scoring, builder, summary, audit, conversation, policy)
+- Route `/mission-composer`, SideNav « Mission du jour »
+- Integrations: `/`, project detail, `/guided-actions`, `/actions`, settings, history, conversation
+- Doc: `docs/V4_7_PROJECT_MISSION_COMPOSER.md`
+
+## Not in V4.7
+
+- Real execution, active connectors, silent auto-persistence, cloud sync
+
+---
+
+# 40.8 V4.8 — Daily Mission Review / Execution Reflection (planned)
+
+## Goal
+
+End-of-day reflection on the chosen daily mission and linked guided flow — declarative, local only.
+
+## Not coded in V4.7
+
+- No automatic mission review without explicit user action
 
 ---
 

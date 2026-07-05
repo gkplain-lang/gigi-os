@@ -26,6 +26,7 @@ import { LocalReviewEmbed } from "@/components/localReview/LocalReviewEmbed";
 import { ActionCenterOverview } from "@/components/executionExperience/ActionCenterOverview";
 import { V4ExecutionJourney } from "@/components/executionExperience/V4ExecutionJourney";
 import { GuidedActionFlowEmbed } from "@/components/guidedActionFlow/GuidedActionFlowEmbed";
+import { MissionComposerActions } from "@/components/missionComposer/MissionComposerActions";
 
 export function ActionQueuePageContent() {
   const { state, isHydrated } = useActionQueue();
@@ -102,6 +103,7 @@ export function ActionQueuePageContent() {
         />
 
         <ActionCenterOverview />
+        <MissionComposerActions />
         <GuidedActionFlowEmbed />
         <V4ExecutionJourney className="mb-6" compact />
 

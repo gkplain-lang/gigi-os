@@ -68,4 +68,8 @@ export const PAGE_META = {
     title: "Parcours d'action guidée",
     subtitle: "Action liée à ton projet — Gigi prépare étape par étape, sans exécution automatique.",
   },
+  "/mission-composer": {
+    title: "Mission du jour",
+    subtitle: "Choisis une mission prioritaire — Gigi prépare le parcours guidé, aucune exécution réelle.",
+  },
 } as const;
