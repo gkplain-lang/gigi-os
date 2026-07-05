@@ -36,4 +36,4 @@ export const VALIDATION_CENTER_NOTE =
   "Valider ne lance aucune action. Cela marque seulement l'action comme approuvée localement.";
 
 export const QUEUE_DRY_RUN_NOTE =
-  "File locale — aucune exécution automatique, aucun Git, aucun appel externe.";
+  "File locale — aucune exécution automatique, aucun Git, aucun appel externe. Valider = approbation locale uniquement.";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import Link from "next/link";
 import { MissionDecisionHistoryPanel } from "@/components/missionDecision/MissionDecisionHistoryPanel";
 import { generateGlobalDecisionSummary, listMissionDecisions } from "@/modules/missionDecision";
@@ -46,16 +46,13 @@ import { REFINED_PAGE_META } from "@/modules/dailyUseRefinement";
 
 export function HistoryPageContent() {
   const { state, isHydrated } = useGigi();
-  const [feedbackKey, setFeedbackKey] = useState(0);
-
-  const feedbackSummary = useMemo(
-    () => generateGlobalMissionFeedbackSummary(),
-    [feedbackKey]
+  const [feedbackSummary, setFeedbackSummary] = useState(() =>
+    generateGlobalMissionFeedbackSummary()
   );
 
   const handleRegenerateFeedback = useCallback(() => {
     regenerateMissionFeedbackFromHistory();
-    setFeedbackKey((k) => k + 1);
+    setFeedbackSummary(generateGlobalMissionFeedbackSummary());
   }, []);
 
   const handleCopyFeedback = useCallback(async () => {

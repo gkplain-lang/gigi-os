@@ -116,7 +116,8 @@ V2.8 — Safe Action Workspace
 V2.9 — Manual Execution Handoff
 V2.10 — Execution Report Intake
 V2.11 — Closed Loop Action Lifecycle
-V2.12 — V3 Readiness Audit & Stabilisation (planned)
+V2.12 — V3 Readiness Audit & Stabilisation
+V3.0 — Closed Loop Mission OS (planned)
 ```
 
 ---
@@ -1665,7 +1666,7 @@ See [CLOSED_LOOP_ACTION_LIFECYCLE.md](./CLOSED_LOOP_ACTION_LIFECYCLE.md). Links 
 
 ---
 
-# 34. V2.12 — V3 Readiness Audit & Stabilisation (planned)
+# 34. V2.12 — V3 Readiness Audit & Stabilisation
 
 ## Goal
 
@@ -1677,9 +1678,90 @@ Prepare Gigi V3.0: audit closed loop flow, fix UX inconsistencies, priority lint
 Is the local closed loop stable enough to define V3.0 scope?
 ```
 
+## Features
+
+```text
+Full V2.0–V2.11 architecture audit
+Routes and UX "next step" audit
+localStorage registry (all protected keys documented)
+Security audit (no auto-execute, no external calls in V2.x)
+Lint/build classification
+docs/V3_READINESS_AUDIT.md
+docs/V3_SCOPE.md
+Safe micro-fixes only (wording, lint deps, eslint cleanup)
+```
+
+## Not in V2.12
+
+```text
+New product features or localStorage keys
+Mass refactor of providers, auth, persistence
+Real execution, sync, GitHub, n8n
+Commits to cursor-audit/
+```
+
+## Acceptance Criteria
+
+V2.12 is complete when:
+
+- V3_READINESS_AUDIT.md concludes ready / almost_ready / not_ready;
+- V3_SCOPE.md defines V3.0 Closed Loop Mission OS;
+- npm run build passes;
+- V2.x modules lint clean;
+- no new localStorage keys;
+- global lint debt classified (not necessarily all fixed).
+
+See [V3_READINESS_AUDIT.md](./V3_READINESS_AUDIT.md) and [V3_SCOPE.md](./V3_SCOPE.md). Decision: **almost_ready**. Links forward to V3.0 Closed Loop Mission OS.
+
 ---
 
-# 35. Later — SaaS Version (planned)
+# 35. V3.0 — Closed Loop Mission OS (planned)
+
+## Goal
+
+Unify the V2.x closed loop behind a mission-first UX: one mission, one action in progress, clear next step — still manual and local-first.
+
+## Core Question
+
+```text
+Can the user complete one full action cycle without confusion or false sense of auto-execution?
+```
+
+## Features
+
+```text
+Mission hub with active cycle summary
+Guided action flow (progressive disclosure on /actions)
+Consistent "next step" on all main screens
+Reuse V1.6–V2.11 modules without removal
+Preserve all localStorage keys v03–v211
+Optional lint provider cleanup
+User-facing "How Gigi works" one-pager
+```
+
+## Not in V3.0
+
+```text
+Real execution, GitHub verification, auto-sync
+New localStorage keys without explicit version bump
+Payment, public landing, SaaS multi-tenant
+Cloud memory or automatic data migration
+```
+
+## Acceptance Criteria
+
+V3.0 is complete when:
+
+- criteria in V3_SCOPE.md are met;
+- existing v19–v211 data survives upgrade;
+- dry-run guardrails V0.6–V2.11 preserved;
+- npm run build passes.
+
+See [V3_SCOPE.md](./V3_SCOPE.md).
+
+---
+
+# 36. Later — SaaS Version (planned)
 
 ## Goal
 
