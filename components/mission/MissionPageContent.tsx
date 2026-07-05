@@ -13,6 +13,8 @@ import { getRefinedMissionPageMeta } from "@/modules/dailyUseRefinement";
 import { MissionFeedbackPanel } from "@/components/missionFeedback/MissionFeedbackPanel";
 import { MissionDecisionCenter } from "@/components/missionDecision/MissionDecisionCenter";
 import { MissionCommandCenter } from "@/components/missionOS/MissionCommandCenter";
+import { MissionLearningPanel } from "@/components/missionOS/MissionLearningPanel";
+import { buildMissionLearningViewModel } from "@/modules/missionOS";
 import { useMemo } from "react";
 
 const STATUS_BADGE: Record<string, string> = {
@@ -68,6 +70,15 @@ export function MissionPageContent() {
     />
   );
 
+  const learningViewModel = useMemo(
+    () =>
+      buildMissionLearningViewModel({
+        projectId: state.mission.projectId,
+        completedMissionIds: state.completedMissionIds,
+      }),
+    [state.mission.projectId, state.completedMissionIds]
+  );
+
   if (!isHydrated) return null;
 
   const { mission } = state;
@@ -75,8 +86,9 @@ export function MissionPageContent() {
   const active = mission.status === "recommended" || mission.status === "in_progress";
 
   const missionCommandBlock = (
-    <div className="mb-6">
+    <div className="mb-6 space-y-4">
       <MissionCommandCenter input={missionOSInput} decisionSlot={decisionSlot} />
+      <MissionLearningPanel viewModel={learningViewModel} />
     </div>
   );
 

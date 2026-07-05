@@ -43,6 +43,7 @@ import {
 } from "@/modules/missionFeedback";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { REFINED_PAGE_META } from "@/modules/dailyUseRefinement";
+import { RecentLearningSection } from "@/components/history/RecentLearningSection";
 import { ClosedLoopMissionOS } from "@/components/missionOS/ClosedLoopMissionOS";
 
 export function HistoryPageContent() {
@@ -93,6 +94,7 @@ export function HistoryPageContent() {
       <div className="gigi-page-spotlight" aria-hidden />
       <div className="gigi-page-content">
         <PageHeader title="Historique" meta={REFINED_PAGE_META.history} />
+        <RecentLearningSection />
         <div className="mb-6">
           <ClosedLoopMissionOS input={historyOSInput} compact />
         </div>
