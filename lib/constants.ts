@@ -2,9 +2,12 @@ import { PRODUCT_NAME, PRODUCT_TAGLINE } from "./branding";
 
 export const NAV_ITEMS = [
   { href: "/", label: "Mission", icon: "target" as const },
-  { href: "/conversation", label: "Gigi", icon: "message" as const },
   { href: "/projects", label: "Projets", icon: "layers" as const },
+  { href: "/mission-composer", label: "Mission du jour", icon: "target" as const },
+  { href: "/mission-review", label: "Revue mission", icon: "clock" as const },
+  { href: "/guided-actions", label: "Actions guidées", icon: "actions" as const },
   { href: "/actions", label: "Actions", icon: "actions" as const },
+  { href: "/conversation", label: "Gigi", icon: "message" as const },
   { href: "/brain", label: "Décision", icon: "brain" as const },
   { href: "/history", label: "Historique", icon: "clock" as const },
 ] as const;

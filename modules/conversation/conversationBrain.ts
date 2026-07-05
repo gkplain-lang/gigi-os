@@ -149,6 +149,7 @@ import {
   buildMissionReviewConversationResponse,
   detectMissionReviewIntent,
 } from "@/modules/missionReview";
+import { buildMVPOverviewResponse, detectMVPOverviewIntent } from "./mvpOverviewIntent";
 import {
   buildAggregateContextFromAction,
   buildLifecycleRecord,
@@ -1084,6 +1085,11 @@ export function askGigi(
       projectId,
       completedMissionIds: context.completedMissionIds,
     });
+  }
+
+  const mvpOverviewIntent = detectMVPOverviewIntent(objective);
+  if (mvpOverviewIntent.isOverview) {
+    return buildMVPOverviewResponse();
   }
 
   const projectsCommandIntent = detectProjectsCommandIntent(

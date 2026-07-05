@@ -1,6 +1,5 @@
 "use client";
 
-import { PageHeader } from "@/components/ui/PageHeader";
 import { MissionCard } from "@/components/mission/MissionCard";
 import { MissionSidebar } from "@/components/mission/MissionSidebar";
 import { MissionDone } from "@/components/mission/MissionDone";
@@ -22,6 +21,13 @@ import { GigiCapabilityDemoStrip } from "@/components/executionExperience/GigiCa
 import { GuidedActionHomeStrip } from "@/components/guidedActionFlow/GuidedActionHomeStrip";
 import { MissionComposerHomePanel } from "@/components/missionComposer/MissionComposerHomePanel";
 import { MissionReviewHomePanel } from "@/components/missionReview/MissionReviewHomePanel";
+import {
+  MissionFocusHero,
+  NextActionCard,
+  ReviewPromptCard,
+  ProjectMomentumStrip,
+  AdvancedModulesCompact,
+} from "@/components/mvpPolish";
 import { buildMissionLearningViewModel } from "@/modules/missionOS";
 import { useMemo } from "react";
 
@@ -92,20 +98,44 @@ export function MissionPageContent() {
   const { mission } = state;
   const tasks = execution.tasks;
   const active = mission.status === "recommended" || mission.status === "in_progress";
-
-  const missionCommandBlock = (
-    <div className="mb-6 space-y-4">
-      <MissionDiscoveryStrip />
-      <MissionCommandCenter input={missionOSInput} decisionSlot={decisionSlot} />
-      <ExecutionReadinessHomeHint />
-      <MissionLearningPanel viewModel={learningViewModel} />
-    </div>
-  );
+  const projects = state.projects.map((p) => ({ id: p.id, name: p.name }));
 
   const badge = (
     <span className="rounded-full border border-[rgba(124,140,255,0.45)] bg-[rgba(124,140,255,0.18)] px-3 py-1 text-[12px] font-semibold text-accent-soft shadow-[0_0_16px_-4px_rgba(124,140,255,0.6)]">
       {STATUS_BADGE[mission.status]}
     </span>
+  );
+
+  // V5.0 — cockpit mission-first : mission du jour, prochaine action, revue, projets.
+  const cockpit = (
+    <div className="mb-6 space-y-4">
+      <MissionComposerHomePanel projects={projects} />
+      <div className="grid gap-4 lg:grid-cols-2">
+        <NextActionCard />
+        <ReviewPromptCard />
+      </div>
+      <MissionReviewHomePanel />
+      <ProjectMomentumStrip projects={projects} />
+    </div>
+  );
+
+  // V5.0 — modules techniques regroupés et repliés par défaut.
+  const advancedModules = (
+    <AdvancedModulesCompact className="mb-6">
+      <GigiExecutionVisibilityPanel />
+      <V4ExecutionJourney />
+      <GigiCapabilityDemoStrip />
+      <GuidedActionHomeStrip
+        missionId={state.mission.id}
+        missionTitle={state.mission.title}
+        projectId={state.mission.projectId}
+        projectName={state.mission.projectName}
+      />
+      <MissionDiscoveryStrip />
+      <MissionCommandCenter input={missionOSInput} decisionSlot={decisionSlot} />
+      <ExecutionReadinessHomeHint />
+      <MissionLearningPanel viewModel={learningViewModel} />
+    </AdvancedModulesCompact>
   );
 
   if (mission.status === "completed") {
@@ -115,34 +145,16 @@ export function MissionPageContent() {
     return (
       <div className="gigi-shell-glow animate-fade-in">
         <div className="relative z-[1]">
-          <PageHeader
-            title="Mission du jour"
-            meta={getRefinedMissionPageMeta("completed")}
-            right={badge}
-          />
+          <MissionFocusHero meta={getRefinedMissionPageMeta("completed")} right={badge} />
           {!isOnboardingComplete && <OnboardingBanner />}
           <DailyUseStrip />
-          <MissionComposerHomePanel
-            className="mb-6"
-            projects={state.projects.map((p) => ({ id: p.id, name: p.name }))}
-          />
-          <MissionReviewHomePanel className="mb-6" />
-          <GigiExecutionVisibilityPanel className="mb-6" />
-          <V4ExecutionJourney className="mb-6" />
-          <GigiCapabilityDemoStrip className="mb-6" />
-          <GuidedActionHomeStrip
-            className="mb-6"
-            missionId={state.mission.id}
-            missionTitle={state.mission.title}
-            projectId={state.mission.projectId}
-            projectName={state.mission.projectName}
-          />
-          {missionCommandBlock}
+          {cockpit}
           <MissionDone
             completedTitle={mission.title}
             nextTitle={next.mission?.title}
             onNext={applyNextMission}
           />
+          {advancedModules}
         </div>
       </div>
     );
@@ -152,29 +164,10 @@ export function MissionPageContent() {
     return (
       <div className="gigi-shell-glow animate-fade-in">
         <div className="relative z-[1]">
-          <PageHeader
-            title="Mission du jour"
-            meta={getRefinedMissionPageMeta(mission.status)}
-            right={badge}
-          />
+          <MissionFocusHero meta={getRefinedMissionPageMeta(mission.status)} right={badge} />
           {!isOnboardingComplete && <OnboardingBanner />}
           <DailyUseStrip />
-          <MissionComposerHomePanel
-            className="mb-6"
-            projects={state.projects.map((p) => ({ id: p.id, name: p.name }))}
-          />
-          <MissionReviewHomePanel className="mb-6" />
-          <GigiExecutionVisibilityPanel className="mb-6" />
-          <V4ExecutionJourney className="mb-6" />
-          <GigiCapabilityDemoStrip className="mb-6" />
-          <GuidedActionHomeStrip
-            className="mb-6"
-            missionId={state.mission.id}
-            missionTitle={state.mission.title}
-            projectId={state.mission.projectId}
-            projectName={state.mission.projectName}
-          />
-          {missionCommandBlock}
+          {cockpit}
           <div className="gigi-mission-control relative max-w-3xl">
             <div className="gigi-mission-spotlight" aria-hidden />
             <div className="relative z-[1]">
@@ -187,6 +180,7 @@ export function MissionPageContent() {
               />
             </div>
           </div>
+          {advancedModules}
         </div>
       </div>
     );
@@ -198,37 +192,12 @@ export function MissionPageContent() {
   return (
     <div className="gigi-shell-glow animate-fade-in">
       <div className="relative z-[1]">
-        <div className="gigi-mission-hero-strip">
-          <div>
-            <p className="gigi-mission-control-label">Mission Control</p>
-            <h1 className="text-[21px] font-bold tracking-tight text-text-primary md:text-[24px]">
-              Mission du jour
-            </h1>
-            <p className="mt-1.5 text-[14px] text-text-secondary">{meta}</p>
-          </div>
-          {badge}
-        </div>
+        <MissionFocusHero meta={meta} right={badge} />
 
         {!isOnboardingComplete && <OnboardingBanner />}
         <DailyUseStrip />
-        <MissionComposerHomePanel
-          className="mb-6"
-          projects={state.projects.map((p) => ({ id: p.id, name: p.name }))}
-        />
-        <MissionReviewHomePanel className="mb-6" />
-        <GigiExecutionVisibilityPanel className="mb-6" />
-        <V4ExecutionJourney className="mb-6" />
-        <GigiCapabilityDemoStrip className="mb-6" />
-        <GuidedActionHomeStrip
-          className="mb-6"
-          missionId={state.mission.id}
-          missionTitle={state.mission.title}
-          projectId={state.mission.projectId}
-          projectName={state.mission.projectName}
-        />
-        {missionCommandBlock}
 
-        <div className="gigi-mission-control grid gap-5 lg:grid-cols-[minmax(0,1fr)_260px] lg:items-start">
+        <div className="mb-6 gigi-mission-control grid gap-5 lg:grid-cols-[minmax(0,1fr)_260px] lg:items-start">
           <div className="relative space-y-4">
             <div className="gigi-mission-spotlight" aria-hidden />
             <div className="relative z-[1]">
@@ -254,6 +223,9 @@ export function MissionPageContent() {
 
           <MissionSidebar mission={mission} ignored={ignored} />
         </div>
+
+        {cockpit}
+        {advancedModules}
       </div>
     </div>
   );

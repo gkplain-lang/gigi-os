@@ -133,8 +133,9 @@ V4.4 — Local Review Runner / Read-Only Verification Layer (delivered — v4.4.
 V4.5 — Visible Execution Experience (delivered — v4.5.0)
 V4.6 — Guided Project Action Flow (delivered — v4.6.0)
 V4.7 — Project Mission Composer / Daily Guided Execution (delivered — v4.7.0)
-V4.8 — Daily Mission Review / Execution Reflection (implemented)
-V4.9 — Weekly Focus Memory / Project Momentum (planned)
+V4.8 — Daily Mission Review / Execution Reflection (delivered — v4.8.0)
+V5.0 — MVP Product Polish (implemented)
+V5.1 — Gigi Assistant Quality Pass (planned)
 ```
 
 ---

@@ -131,24 +131,9 @@ export function SideNav() {
             {SIDEBAR_ONBOARDING_LABEL}
           </Link>
         )}
-        <Link
-          href="/mission-review"
-          className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
-        >
-          Revue mission
-        </Link>
-        <Link
-          href="/mission-composer"
-          className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
-        >
-          Mission du jour
-        </Link>
-        <Link
-          href="/guided-actions"
-          className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
-        >
-          Actions guidées
-        </Link>
+        <p className="px-1 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-wider text-text-muted/70">
+          Modules avancés
+        </p>
         <Link
           href="/local-review"
           className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
