@@ -14,6 +14,12 @@ import {
   listSafeActionWorkspaces,
   SAFE_ACTION_WORKSPACE_READINESS_LABELS,
 } from "@/modules/safeActionWorkspace";
+import {
+  generateGlobalHandoffSummary,
+  listManualExecutionHandoffs,
+  MANUAL_EXECUTION_HANDOFF_STATUS_LABELS,
+  MANUAL_EXECUTION_HANDOFF_TARGET_LABELS,
+} from "@/modules/manualExecutionHandoff";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { HistoryTimeline } from "@/components/history/HistoryTimeline";
 import { HistoryLearningPanel } from "@/components/historyLearning/HistoryLearningPanel";
@@ -54,6 +60,8 @@ export function HistoryPageContent() {
   const recentBridges = listMissionPlanBridges(4);
   const workspaceSummary = generateGlobalWorkspaceSummary();
   const recentWorkspaces = listSafeActionWorkspaces(4);
+  const handoffSummary = generateGlobalHandoffSummary();
+  const recentHandoffs = listManualExecutionHandoffs(4);
 
   if (!isHydrated) return null;
 
@@ -150,6 +158,37 @@ export function HistoryPageContent() {
           ) : (
             <p className="mt-2 text-[12px] text-text-muted">
               Aucun workspace — ouvre une action sur{" "}
+              <Link href="/actions" className="text-accent-soft underline">
+                /actions
+              </Link>
+              .
+            </p>
+          )}
+        </div>
+        <div className="gigi-panel-raised mt-6 rounded-xl p-5 md:p-6">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+            Manual Execution Handoffs · V2.9
+          </p>
+          <p className="mt-2 text-[13.5px] text-text-secondary">{handoffSummary.summaryText}</p>
+          {recentHandoffs.length > 0 ? (
+            <ul className="mt-3 space-y-2">
+              {recentHandoffs.map((h) => (
+                <li key={h.id} className="text-[12.5px] text-text-secondary">
+                  <span className="font-medium text-text-primary">
+                    {h.title.replace(/^Handoff · /, "")}
+                  </span>
+                  <span className="text-text-muted">
+                    {" "}
+                    — {MANUAL_EXECUTION_HANDOFF_TARGET_LABELS[h.target]} ·{" "}
+                    {MANUAL_EXECUTION_HANDOFF_STATUS_LABELS[h.status]} ·{" "}
+                    {h.updatedAt.slice(0, 10)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 text-[12px] text-text-muted">
+              Aucun handoff — crée-en un depuis{" "}
               <Link href="/actions" className="text-accent-soft underline">
                 /actions
               </Link>

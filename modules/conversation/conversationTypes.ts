@@ -23,7 +23,8 @@ export type ConversationIntent =
   | "mission_feedback"
   | "mission_decision"
   | "mission_plan_bridge"
-  | "safe_action_workspace";
+  | "safe_action_workspace"
+  | "manual_execution_handoff";
 
 export interface NotNowItem {
   projectName: string;
@@ -150,6 +151,16 @@ export interface GigiConversationResponse {
   safeActionWorkspaceReadinessLabel?: string;
   /** V2.8 — disclaimer */
   safeActionWorkspaceBlockedMessage?: string;
+  /** V2.9 — guidance for manual execution handoff */
+  manualExecutionHandoffGuidance?: string[];
+  /** V2.9 — handoff summary */
+  manualExecutionHandoffSummaryText?: string;
+  /** V2.9 — action title */
+  manualExecutionHandoffActionTitle?: string;
+  /** V2.9 — target label */
+  manualExecutionHandoffTargetLabel?: string;
+  /** V2.9 — disclaimer */
+  manualExecutionHandoffBlockedMessage?: string;
 }
 
 export interface ConversationContext {
