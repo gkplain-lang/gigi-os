@@ -28,7 +28,6 @@ export function isSupabaseConfigured(): boolean {
 export function getSupabaseClient(): SupabaseClient<Database> | null {
   if (!isSupabaseConfigured()) {
     if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
-      // eslint-disable-next-line no-console
       console.info(
         "[gigi] Supabase non configuré — l'app continue en local (localStorage)."
       );

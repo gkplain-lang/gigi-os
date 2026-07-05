@@ -156,7 +156,7 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
             )}
             <div className="gigi-panel rounded-xl p-4">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
-                Flux d&apos;action · V3.2
+                {response.intentLabel ?? "Pilotage · Gigi V3"}
               </p>
               {response.missionTitle && (
                 <p className="mt-2 text-[16px] font-semibold text-text-primary">
