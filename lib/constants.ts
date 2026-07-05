@@ -60,4 +60,8 @@ export const PAGE_META = {
     title: "Packs de commandes",
     subtitle: "Commandes structurées à copier — lancement humain, validation locale. Aucune exécution réelle.",
   },
+  "/local-review": {
+    title: "Revue locale",
+    subtitle: "Analyse prudente d'un résultat collé — Gigi ne lit pas ton terminal ni exécute de commande.",
+  },
 } as const;

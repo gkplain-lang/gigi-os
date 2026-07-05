@@ -105,6 +105,8 @@ export interface ExecutionReadinessState {
   manualBridgePackets?: import("./manualBridgeTypes").ManualExecutionPacket[];
   /** V4.3 — packs de commandes human-launched */
   commandPacks?: import("./commandPackTypes").CommandPack[];
+  /** V4.4 — sessions de revue locale read-only */
+  localReviewSessions?: import("./localReviewTypes").LocalReviewSession[];
   lastUpdatedAt?: string;
   version: number;
 }
@@ -144,7 +146,7 @@ export interface ExecutionReadinessIntent {
 }
 
 export const EXECUTION_READINESS_STORAGE_KEY = "gigi-os-v40-execution-readiness";
-export const EXECUTION_READINESS_VERSION = 3;
+export const EXECUTION_READINESS_VERSION = 4;
 
 export const EXECUTION_READINESS_DISCLAIMER =
   "V4.0 — Gigi ne lance rien. Cette étape prépare seulement les permissions futures : dry-run, périmètre, risques et rollback. Aucune exécution réelle.";
