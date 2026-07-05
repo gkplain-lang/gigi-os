@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { ClipboardList } from "lucide-react";
+import { ExecutionRouteEmptyHint } from "@/components/executionExperience/ExecutionRouteEmptyHint";
 
 interface ActionQueueEmptyStateProps {
   filterActive?: boolean;
@@ -18,12 +18,16 @@ export function ActionQueueEmptyState({ filterActive }: ActionQueueEmptyStatePro
           : "Prépare une action depuis un plan projet ou la conversation, puis ajoute-la à la file."}
       </p>
       {!filterActive && (
-        <Link
-          href="/projects"
-          className="gigi-btn-primary gigi-focus mt-5 inline-flex rounded-lg px-4 py-2.5 text-[14px] font-medium"
-        >
-          Voir mes projets
-        </Link>
+        <div className="mx-auto mt-5 max-w-lg text-left">
+          <ExecutionRouteEmptyHint
+            message="Prépare une action depuis un plan projet ou la conversation, puis explore le parcours V4."
+            nextSteps={[
+              { label: "Voir mes projets", href: "/projects" },
+              { label: "Centre d'action V4", href: "/actions" },
+              { label: "Packs commandes", href: "/command-packs" },
+            ]}
+          />
+        </div>
       )}
     </div>
   );

@@ -23,6 +23,8 @@ import { ExecutionPermissionCenterEmbed } from "@/components/executionPermission
 import { ManualBridgeEmbed } from "@/components/manualBridge/ManualBridgeEmbed";
 import { CommandPacksEmbed } from "@/components/commandPacks/CommandPacksEmbed";
 import { LocalReviewEmbed } from "@/components/localReview/LocalReviewEmbed";
+import { ActionCenterOverview } from "@/components/executionExperience/ActionCenterOverview";
+import { V4ExecutionJourney } from "@/components/executionExperience/V4ExecutionJourney";
 
 export function ActionQueuePageContent() {
   const { state, isHydrated } = useActionQueue();
@@ -95,8 +97,11 @@ export function ActionQueuePageContent() {
       <div className="gigi-page-content">
         <PageHeader
           title="Flux d'action"
-          meta="Une action à la fois — prépare, exécute hors de Gigi, colle le rapport. Rien n'est automatique."
+          meta="Une action à la fois — prépare, lance toi-même hors de Gigi, colle le rapport. Rien n'est automatique."
         />
+
+        <ActionCenterOverview />
+        <V4ExecutionJourney className="mb-6" compact />
 
         <ActionFlowView />
 

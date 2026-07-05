@@ -5,6 +5,8 @@ import { LocalReviewStatusBadge } from "./LocalReviewStatusBadge";
 import { ExecutionRiskBadge } from "@/components/executionReadiness/ExecutionRiskBadge";
 import { cn } from "@/lib/utils";
 
+import { ExecutionRouteEmptyHint } from "@/components/executionExperience/ExecutionRouteEmptyHint";
+
 export function LocalReviewSessionList({
   sessions,
   selectedId,
@@ -18,9 +20,14 @@ export function LocalReviewSessionList({
 }) {
   if (sessions.length === 0) {
     return (
-      <p className="text-[12.5px] text-text-muted">
-        Aucune revue — crée-en une ou associe-la à un pack de commandes.
-      </p>
+      <ExecutionRouteEmptyHint
+        message="Rien ici pour l'instant. Lance une commande toi-même, puis colle le résultat pour une analyse locale prudente."
+        nextSteps={[
+          { label: "Packs commandes", href: "/command-packs" },
+          { label: "Ouvrir Actions", href: "/actions" },
+        ]}
+        securityNote="Résultat collé uniquement — Gigi ne lit pas ton terminal ni tes fichiers."
+      />
     );
   }
 

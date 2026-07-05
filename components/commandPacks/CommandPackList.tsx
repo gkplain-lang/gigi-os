@@ -9,6 +9,8 @@ import { CommandPackStatusBadge } from "./CommandPackStatusBadge";
 import { ExecutionRiskBadge } from "@/components/executionReadiness/ExecutionRiskBadge";
 import { cn } from "@/lib/utils";
 
+import { ExecutionRouteEmptyHint } from "@/components/executionExperience/ExecutionRouteEmptyHint";
+
 interface CommandPackListProps {
   packs: CommandPack[];
   selectedId: string | null;
@@ -24,9 +26,14 @@ export function CommandPackList({
 }: CommandPackListProps) {
   if (packs.length === 0) {
     return (
-      <p className="text-[12.5px] text-text-muted">
-        Aucun pack — prépare-en un depuis un modèle ou un paquet pont manuel.
-      </p>
+      <ExecutionRouteEmptyHint
+        message="Rien ici pour l'instant. Essaie de préparer une action depuis /actions, puis transforme-la en pack de commandes."
+        nextSteps={[
+          { label: "Ouvrir Actions", href: "/actions" },
+          { label: "Pont manuel", href: "/manual-bridge" },
+          { label: "Modèles sandbox (ci-dessus)", href: "/command-packs" },
+        ]}
+      />
     );
   }
 
