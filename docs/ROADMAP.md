@@ -122,8 +122,9 @@ V3.1 — Mission Command Center UX
 V3.2 — Action Flow Simplification (delivered)
 V3.3 — Learning & Next Mission Loop (delivered)
 V3.4 — Stabilisation & Public Beta Readiness (delivered)
-V3.5 — Public Landing & Onboarding (in progress — branch v3.5-public-landing-onboarding)
-V3.6 — Projects Command Center (planned)
+V3.5 — Public Landing & Onboarding (delivered)
+V3.6 — Projects Command Center (in progress — branch v3.6-projects-command-center)
+V3.7 — Settings & Local Data Control (planned)
 V4.0 — Controlled Real Execution Readiness (planned)
 ```
 
@@ -1923,13 +1924,33 @@ Can a new visitor understand Gigi, start testing, and find the mission-first flo
 
 ---
 
-# 39.2 V3.6 — Projects Command Center (planned)
+# 39.2 V3.6 — Projects Command Center (in progress)
 
 ## Goal
 
-Strategic projects page — status, next mission per project, enriched detail, project history.
+Strategic `/projects` hub — priority project, next mission, active action, blockers, learning per project.
 
-**Not coded in V3.5.**
+## Delivered (branch — pending commit)
+
+- Module `modules/projectsCommand/`
+- UI command center on `/projects`, enriched `/projects/[projectId]`
+- Links on `/`, `/actions`, `/history`, conversation intent
+- Doc: [V3_6_PROJECTS_COMMAND_CENTER.md](./V3_6_PROJECTS_COMMAND_CENTER.md)
+
+## Not in V3.6
+
+- No auto create/accept mission or action
+- No new localStorage key (UI filters in React state)
+
+---
+
+# 39.3 V3.7 — Settings & Local Data Control (planned)
+
+## Goal
+
+Local data control center — export/import, controlled reset, mission preferences, prudence mode, build info.
+
+**Not coded in V3.6.**
 
 ---
 

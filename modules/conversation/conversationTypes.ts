@@ -27,7 +27,8 @@ export type ConversationIntent =
   | "manual_execution_handoff"
   | "execution_report_intake"
   | "closed_loop_lifecycle"
-  | "mission_os";
+  | "mission_os"
+  | "projects_command";
 
 export interface NotNowItem {
   projectName: string;
@@ -202,6 +203,22 @@ export interface GigiConversationResponse {
   missionOSReadinessLabel?: string;
   /** V3.0 — safety disclaimer */
   missionOSBlockedMessage?: string;
+  /** V3.6 — projects command guidance */
+  projectsCommandGuidance?: string[];
+  /** V3.6 — summary text */
+  projectsCommandSummaryText?: string;
+  /** V3.6 — recommended project name */
+  projectsCommandRecommendedName?: string;
+  /** V3.6 — recommended reason */
+  projectsCommandRecommendedReason?: string;
+  /** V3.6 — next mission title */
+  projectsCommandNextMissionTitle?: string;
+  /** V3.6 — active action title */
+  projectsCommandActiveActionTitle?: string;
+  /** V3.6 — primary route */
+  projectsCommandPrimaryRoute?: string;
+  /** V3.6 — disclaimer */
+  projectsCommandBlockedMessage?: string;
 }
 
 export interface ConversationContext {

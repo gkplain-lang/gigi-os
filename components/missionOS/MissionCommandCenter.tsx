@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo } from "react";
 import type { MissionOSBuildInput } from "@/modules/missionOS";
 import { buildMissionOSViewModel } from "@/modules/missionOS";
@@ -48,6 +49,14 @@ export function MissionCommandCenter({
         <p className="mt-1.5 max-w-2xl text-[14px] leading-relaxed text-text-secondary">
           {viewModel.currentMissionSummary}
         </p>
+        {input.projectId && input.projectName && (
+          <Link
+            href={`/projects/${input.projectId}`}
+            className="gigi-focus mt-2 inline-flex text-[12.5px] font-medium text-accent-soft underline-offset-2 hover:underline"
+          >
+            Projet · {input.projectName} →
+          </Link>
+        )}
       </div>
 
       <div className="space-y-4 p-5 md:p-6">
