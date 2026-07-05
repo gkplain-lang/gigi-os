@@ -328,7 +328,10 @@ export function OnboardingPageContent() {
           </div>
         )}
 
-        <div className="mt-6 border-t border-border pt-4">
+        <div className="mt-6 border-t border-border pt-4 flex flex-wrap gap-4">
+          <Link href="/onboarding" className="gigi-focus text-[12.5px] text-text-muted hover:text-text-secondary">
+            Guide découverte
+          </Link>
           <Link href="/" className="gigi-focus text-[12.5px] text-text-muted hover:text-text-secondary">
             Retour à l&apos;accueil
           </Link>

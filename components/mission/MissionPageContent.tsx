@@ -14,6 +14,7 @@ import { MissionFeedbackPanel } from "@/components/missionFeedback/MissionFeedba
 import { MissionDecisionCenter } from "@/components/missionDecision/MissionDecisionCenter";
 import { MissionCommandCenter } from "@/components/missionOS/MissionCommandCenter";
 import { MissionLearningPanel } from "@/components/missionOS/MissionLearningPanel";
+import { MissionDiscoveryStrip } from "@/components/mission/MissionDiscoveryStrip";
 import { buildMissionLearningViewModel } from "@/modules/missionOS";
 import { useMemo } from "react";
 
@@ -87,6 +88,7 @@ export function MissionPageContent() {
 
   const missionCommandBlock = (
     <div className="mb-6 space-y-4">
+      <MissionDiscoveryStrip />
       <MissionCommandCenter input={missionOSInput} decisionSlot={decisionSlot} />
       <MissionLearningPanel viewModel={learningViewModel} />
     </div>

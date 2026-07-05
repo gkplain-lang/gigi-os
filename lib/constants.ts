@@ -9,6 +9,13 @@ export const NAV_ITEMS = [
   { href: "/history", label: "Historique", icon: "clock" as const },
 ] as const;
 
+/** Entrée produit V3.5 — liens sidebar footer */
+export const DISCOVERY_NAV_ITEMS = [
+  { href: "/landing", label: "Présentation" },
+  { href: "/onboarding", label: "Démarrer" },
+  { href: "/beta", label: "Bêta" },
+] as const;
+
 export const APP_NAME = PRODUCT_NAME;
 export const APP_TAGLINE = PRODUCT_TAGLINE;
 

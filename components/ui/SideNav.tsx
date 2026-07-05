@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Target, MessageCircle, Layers, Compass, Clock, ClipboardList } from "lucide-react";
-import { NAV_ITEMS } from "@/lib/constants";
+import { NAV_ITEMS, DISCOVERY_NAV_ITEMS } from "@/lib/constants";
 import { GigiBrand } from "@/components/brand/GigiBrand";
 import { LocalResetButton } from "./LocalResetButton";
 import { AuthAccountStrip } from "./AuthAccountStrip";
@@ -97,6 +97,30 @@ export function SideNav() {
       </p>
       <nav className="flex flex-col gap-0.5">{secondary.map(renderLink)}</nav>
 
+      <p className="px-3 pb-1.5 pt-5 text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
+        Découverte
+      </p>
+      <nav className="flex flex-col gap-0.5">
+        {DISCOVERY_NAV_ITEMS.map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              aria-current={isActive ? "page" : undefined}
+              className={cn(
+                "gigi-focus rounded-lg px-3 py-2 text-[13px] transition-colors",
+                isActive
+                  ? "bg-[rgba(124,140,255,0.12)] text-text-primary"
+                  : "text-text-muted hover:bg-white/[0.04] hover:text-text-secondary"
+              )}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
+
       <div className="mt-auto space-y-3 border-t border-border px-3 pt-4">
         {!isOnboardingComplete && (
           <Link
@@ -112,6 +136,12 @@ export function SideNav() {
           className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
         >
           {SIDEBAR_LINK_LABELS.giveFeedback}
+        </Link>
+        <Link
+          href="/beta"
+          className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
+        >
+          Parcours bêta
         </Link>
         <AuthAccountStrip />
         <MemoryStatusStrip />
