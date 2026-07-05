@@ -12,6 +12,8 @@ import { ActionPlanPanel } from "@/components/actionPlans/ActionPlanPanel";
 import { MissionFeedbackPanel } from "@/components/missionFeedback/MissionFeedbackPanel";
 import { MissionPlanBridgePanel } from "@/components/missionPlanBridge/MissionPlanBridgePanel";
 import { ClosedLoopMissionOS } from "@/components/missionOS/ClosedLoopMissionOS";
+import { buildMissionLearningViewModel } from "@/modules/missionOS";
+import { useMemo } from "react";
 import { getTodayMissionDecision } from "@/modules/missionDecision";
 import { getAcceptedCandidateFromDecision } from "@/modules/missionPlanBridge";
 import {
@@ -59,6 +61,11 @@ export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContent
   const searchParams = useSearchParams();
   const planParam = searchParams.get("plan");
   const prepareParam = searchParams.get("prepare");
+
+  const projectLearning = useMemo(
+    () => buildMissionLearningViewModel({ projectId }),
+    [projectId]
+  );
 
   if (!isHydrated) return null;
 
@@ -113,6 +120,10 @@ export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContent
   const showProjectBridge =
     acceptedCandidateForProject?.projectId === project.id ? todayDecision : undefined;
 
+  const showProjectFollowUp =
+    projectLearning.hasLearning &&
+    projectLearning.recommendedNextMissionRoute.includes(project.id);
+
   return (
     <div className="gigi-page-shell animate-fade-in">
       <div className="gigi-page-spotlight" aria-hidden />
@@ -145,6 +156,17 @@ export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContent
               <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-text-secondary">
                 {project.description}
               </p>
+              {showProjectFollowUp && projectLearning.recommendedNextMissionTitle && (
+                <p className="mt-2 rounded-lg border border-emerald-500/20 bg-emerald-500/5 px-3 py-2 text-[12.5px] text-text-secondary">
+                  Suite recommandée pour ce projet :{" "}
+                  <Link
+                    href={projectLearning.recommendedNextMissionRoute}
+                    className="font-medium text-accent-soft underline-offset-2 hover:underline"
+                  >
+                    {projectLearning.recommendedNextMissionTitle}
+                  </Link>
+                </p>
+              )}
               <p className="mt-3 text-[12px] font-medium uppercase tracking-wide text-text-muted">
                 {PRIORITY_LABEL[project.priority]} · Score {summary.score}
               </p>

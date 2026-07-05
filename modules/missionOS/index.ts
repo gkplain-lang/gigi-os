@@ -67,6 +67,31 @@ export {
   buildMissionOSConversationResponse,
 } from "./missionOSConversation";
 
+export type {
+  MissionLearningSignal,
+  MissionLearningViewModel,
+  NextMissionRecommendationKind,
+} from "./missionOSLearningTypes";
+export {
+  MISSION_LEARNING_SIGNAL_LABELS,
+  NEXT_MISSION_KIND_LABELS,
+  MISSION_LEARNING_SAFETY_NOTE,
+} from "./missionOSLearningTypes";
+
+export {
+  buildMissionLearningViewModel,
+  getRecentLearningSignals,
+} from "./missionOSLearningLoop";
+export type { BuildMissionLearningInput } from "./missionOSLearningLoop";
+
+export {
+  detectMissionLearningIntent,
+  buildMissionLearningConversationResponse,
+} from "./missionOSLearningConversation";
+
+export { resolveNextMissionRecommendation } from "./missionOSNextMission";
+export type { NextMissionRecommendation } from "./missionOSNextMission";
+
 export const MISSION_OS_UX_LABELS = {
   bridge: "Passage mission → plan",
   workspace: "Espace d'action sécurisé",

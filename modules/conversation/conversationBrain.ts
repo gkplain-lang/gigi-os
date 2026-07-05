@@ -116,6 +116,10 @@ import {
   detectMissionOSIntent,
 } from "@/modules/missionOS/missionOSConversation";
 import {
+  buildMissionLearningConversationResponse,
+  detectMissionLearningIntent,
+} from "@/modules/missionOS/missionOSLearningConversation";
+import {
   buildAggregateContextFromAction,
   buildLifecycleRecord,
 } from "@/modules/closedLoopLifecycle/closedLoopLifecycleEngine";
@@ -1040,6 +1044,16 @@ export function askGigi(
   _projects: unknown,
   context: ConversationContext = {}
 ): GigiConversationResponse {
+  const missionLearningIntent = detectMissionLearningIntent(objective);
+  if (missionLearningIntent.isMissionLearning) {
+    const projectId =
+      context.currentProjectId ?? detectProject(normalize(objective)) ?? undefined;
+    return buildMissionLearningConversationResponse({
+      projectId,
+      completedMissionIds: context.completedMissionIds,
+    });
+  }
+
   const missionOSIntent = detectMissionOSIntent(objective);
   if (missionOSIntent.isMissionOS) {
     const mission = context.currentMission;

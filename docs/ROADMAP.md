@@ -120,7 +120,8 @@ V2.12 — V3 Readiness Audit & Stabilisation
 V3.0 — Closed Loop Mission OS
 V3.1 — Mission Command Center UX
 V3.2 — Action Flow Simplification (delivered)
-V3.3 — Learning & Next Mission Loop (planned)
+V3.3 — Learning & Next Mission Loop (delivered)
+V3.4 — V3 Stabilisation & Public Beta Readiness (planned)
 ```
 
 ---
@@ -1841,21 +1842,44 @@ See [V3_2_ACTION_FLOW_SIMPLIFICATION.md](./V3_2_ACTION_FLOW_SIMPLIFICATION.md). 
 
 ---
 
-# 38. V3.3 — Learning & Next Mission Loop (planned)
+# 38. V3.3 — Learning & Next Mission Loop (delivered)
 
 ## Goal
 
-Make post-report learning useful: what Gigi learned, impact on next mission, tighter history/missionFeedback/missionOS loop.
+Make post-report learning visible: what Gigi learned, what changes, recommended next mission — all read-only.
 
 ## Core Question
 
 ```text
-After a cycle closes, does the user know what to do next — without auto-accepting anything?
+After a cycle, does the user know what was learned and what to do next — without auto-accepting anything?
+```
+
+## Delivered
+
+- `buildMissionLearningViewModel` synthesizing historyLearning, missionFeedback, reviews, follow-ups, lifecycle, intake;
+- `MissionLearningPanel` on `/`, `RecentLearningSection` on `/history`;
+- Light learning encart on `/actions`; project follow-up hint when relevant;
+- Conversation learning intents before mission_os.
+
+See [V3_3_LEARNING_NEXT_MISSION_LOOP.md](./V3_3_LEARNING_NEXT_MISSION_LOOP.md). Links forward to V3.4 Stabilisation.
+
+---
+
+# 39. V3.4 — V3 Stabilisation & Public Beta Readiness (planned)
+
+## Goal
+
+Stabilize build, lint, full journey, docs, localStorage audit for public beta readiness.
+
+## Core Question
+
+```text
+Can a new user complete one full manual cycle without confusion or broken routes?
 ```
 
 ---
 
-# 39. Later — SaaS Version (planned)
+# 40. Later — SaaS Version (planned)
 
 ## Goal
 
