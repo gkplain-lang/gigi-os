@@ -68,8 +68,16 @@ import {
   generateDailyMissionDecision,
   generateGlobalDecisionSummary,
   getRecommendedCandidateTitle,
+  getTodayMissionDecision,
 } from "@/modules/missionDecision";
 import { formatCandidateComparison } from "@/modules/missionDecision/missionDecisionFormatter";
+import {
+  MISSION_PLAN_BRIDGE_DISCLAIMER,
+  buildMissionPlanBridgeGuidanceHints,
+  detectMissionPlanBridgeIntent,
+  generateGlobalBridgeSummary,
+  getAcceptedCandidateFromDecision,
+} from "@/modules/missionPlanBridge";
 import { listHistoryEntries } from "@/modules/historyLearning/historyLearningStore";
 import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions/types";
 import type {
@@ -380,6 +388,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   history_learning: "Historique & apprentissage",
   mission_feedback: "Feedback mission",
   mission_decision: "Décision mission",
+  mission_plan_bridge: "Bridge mission → plan",
 };
 
 function clarificationResponse(): GigiConversationResponse {
@@ -416,6 +425,39 @@ function allDoneResponse(
 }
 
 // ---------------------------------------------------------------- main
+
+function buildMissionPlanBridgeResponse(
+  objective: string,
+  projectId: string | null
+): GigiConversationResponse {
+  const hints = buildMissionPlanBridgeGuidanceHints(objective);
+  const summary = generateGlobalBridgeSummary();
+  const today = getTodayMissionDecision();
+  const accepted =
+    today && ["accepted", "converted_to_plan"].includes(today.status) ? today : undefined;
+  const candidate = accepted ? getAcceptedCandidateFromDecision(accepted) : undefined;
+  const bridgeTitle = candidate?.title ?? accepted?.finalUserChoice;
+
+  return {
+    intent: "mission_plan_bridge",
+    intentLabel: `${INTENT_LABELS.mission_plan_bridge}${bridgeTitle ? ` · ${bridgeTitle.slice(0, 36)}` : ""}`,
+    listen:
+      "Le bridge mission→plan prépare un plan d'action, une action et un ajout manuel à la file — Gigi n'exécute rien automatiquement.",
+    needsClarification: false,
+    priorityProjectName: projectId
+      ? PROJECT_NAMES[projectId as keyof typeof PROJECT_NAMES]
+      : candidate?.projectId
+        ? PROJECT_NAMES[candidate.projectId as keyof typeof PROJECT_NAMES]
+        : undefined,
+    missionPlanBridgeSummaryText: summary.summaryText,
+    missionPlanBridgeMissionTitle: bridgeTitle,
+    missionPlanBridgeGuidance: hints,
+    missionPlanBridgeBlockedMessage: MISSION_PLAN_BRIDGE_DISCLAIMER,
+    finalMessage: accepted
+      ? "Ouvre / et utilise « Transformer en plan » dans le panneau V2.7 — l'ajout à /actions reste pending_review uniquement."
+      : "Accepte d'abord une mission dans le centre de décision V2.6, puis crée le bridge manuellement.",
+  };
+}
 
 function buildMissionDecisionResponse(
   objective: string,
@@ -781,6 +823,15 @@ export function askGigi(
   _projects: unknown,
   context: ConversationContext = {}
 ): GigiConversationResponse {
+  const missionPlanBridgeIntent = detectMissionPlanBridgeIntent(objective);
+  if (missionPlanBridgeIntent.isMissionPlanBridge) {
+    const projectId =
+      missionPlanBridgeIntent.projectId ??
+      context.currentProjectId ??
+      detectProject(normalize(objective));
+    return buildMissionPlanBridgeResponse(objective, projectId);
+  }
+
   const missionDecisionIntent = detectMissionDecisionIntent(objective);
   if (missionDecisionIntent.isMissionDecision) {
     const projectId =
@@ -1018,6 +1069,7 @@ export function askGigi(
     history_learning: "Historique local uniquement — archive manuellement depuis /actions ou /history.",
     mission_feedback: "Recommandations basées sur l'historique V2.4 — ouvre / ou /projects pour le détail.",
     mission_decision: "Décision locale — ouvre / pour comparer et valider manuellement.",
+    mission_plan_bridge: "Bridge local — transforme une mission acceptée en plan sans exécution auto.",
   };
 
   return {

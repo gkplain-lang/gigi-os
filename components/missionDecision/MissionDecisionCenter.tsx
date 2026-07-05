@@ -19,6 +19,7 @@ import { MissionDecisionSummaryCard } from "./MissionDecisionSummaryCard";
 import { MissionDecisionCandidateCard } from "./MissionDecisionCandidateCard";
 import { MissionDecisionActions } from "./MissionDecisionActions";
 import { MissionDecisionHistoryPanel } from "./MissionDecisionHistoryPanel";
+import { MissionPlanBridgePanel } from "@/components/missionPlanBridge/MissionPlanBridgePanel";
 import { cn } from "@/lib/utils";
 
 interface MissionDecisionCenterProps {
@@ -198,6 +199,10 @@ export function MissionDecisionCenter({
             onConvertedToPlan={handleConvertedToPlan}
             copied={copied}
           />
+
+          {["accepted", "converted_to_plan"].includes(decision.status) && (
+            <MissionPlanBridgePanel decision={decision} />
+          )}
         </>
       ) : (
         <p className="rounded-lg border border-dashed border-border px-4 py-6 text-center text-[13px] text-text-muted">

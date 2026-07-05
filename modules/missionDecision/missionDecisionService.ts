@@ -58,9 +58,6 @@ const MISSION_DECISION_KEYWORDS = [
   "mission decision",
   "decision du jour",
   "decision mission",
-  "transforme cette mission en plan",
-  "prepare l action a partir de cette mission",
-  "prépare l'action à partir de cette mission",
   "cette mission est trop floue",
 ];
 
