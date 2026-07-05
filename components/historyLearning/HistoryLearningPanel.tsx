@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import type { HistoryLearningEntry } from "@/modules/historyLearning";
 import {
   HISTORY_LEARNING_DISCLAIMER,
@@ -25,7 +25,7 @@ export function HistoryLearningPanel({ className }: HistoryLearningPanelProps) {
   const [noteContent, setNoteContent] = useState("");
   const [copiedGlobal, setCopiedGlobal] = useState(false);
 
-  const summary = useMemo(() => generateGlobalSummary(), [entries]);
+  const summary = generateGlobalSummary();
 
   const refresh = useCallback(() => {
     setEntries(listHistoryEntries());
