@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useState } from "react";
 import type { QueuedAction } from "@/modules/actionQueue/types";
 import {
@@ -93,6 +94,13 @@ export function ExecutionReadinessPanel({
           ))}
         </div>
       )}
+
+      <Link
+        href="/permissions"
+        className="gigi-focus mt-4 inline-flex text-[12.5px] font-medium text-accent-soft hover:underline"
+      >
+        Ouvrir le centre de permissions →
+      </Link>
     </section>
   );
 }

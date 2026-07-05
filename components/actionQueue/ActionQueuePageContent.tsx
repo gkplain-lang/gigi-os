@@ -19,6 +19,7 @@ import {
 } from "@/modules/actionQueue";
 import { buildActionFlowViewModel } from "@/modules/missionOS";
 import { ExecutionReadinessPanel } from "@/components/executionReadiness/ExecutionReadinessPanel";
+import { ExecutionPermissionCenterEmbed } from "@/components/executionPermissionCenter/ExecutionPermissionCenterEmbed";
 
 export function ActionQueuePageContent() {
   const { state, isHydrated } = useActionQueue();
@@ -97,6 +98,8 @@ export function ActionQueuePageContent() {
         <ActionFlowView />
 
         <ExecutionReadinessPanel primaryAction={primaryAction} className="mb-6" />
+
+        <ExecutionPermissionCenterEmbed />
 
         <ActionFlowDetails
           groupedActions={flowViewModel.groupedActions}

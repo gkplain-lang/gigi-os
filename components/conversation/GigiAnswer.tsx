@@ -257,12 +257,20 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
               {response.warning && (
                 <p className="mt-2 text-[12.5px] text-amber-200/90">{response.warning}</p>
               )}
-              <Link
-                href="/actions"
-                className="gigi-btn-secondary gigi-focus mt-3 inline-flex rounded-lg px-3.5 py-2 text-[13px] font-medium"
-              >
-                Ouvrir /actions
-              </Link>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Link
+                  href="/permissions"
+                  className="gigi-btn-primary gigi-focus inline-flex rounded-lg px-3.5 py-2 text-[13px] font-medium"
+                >
+                  Centre de permissions
+                </Link>
+                <Link
+                  href="/actions"
+                  className="gigi-btn-secondary gigi-focus inline-flex rounded-lg px-3.5 py-2 text-[13px] font-medium"
+                >
+                  Ouvrir /actions
+                </Link>
+              </div>
             </div>
             {response.executionReadinessGuidance &&
               response.executionReadinessGuidance.length > 0 && (

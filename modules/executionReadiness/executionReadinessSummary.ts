@@ -45,6 +45,10 @@ export function generateGlobalExecutionReadinessSummary(): ExecutionReadinessGlo
   const blockedCount = active.filter(
     (r) => r.permissionStatus === "blocked" || r.riskLevel === "blocked"
   ).length;
+  const expiredCount = all.filter((r) => r.permissionStatus === "expired").length;
+  const revokedCount = all.filter(
+    (r) => r.permissionStatus === "revoked" || Boolean(r.revokedAt)
+  ).length;
 
   let summaryText = EXECUTION_READINESS_EMPTY_SUMMARY;
   if (all.length > 0) {
@@ -58,6 +62,8 @@ export function generateGlobalExecutionReadinessSummary(): ExecutionReadinessGlo
     awaitingApproval,
     approvedDryRun,
     blockedCount,
+    expiredCount,
+    revokedCount,
     summaryText,
   };
 }

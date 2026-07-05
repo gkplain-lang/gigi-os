@@ -48,4 +48,8 @@ export const PAGE_META = {
     title: "Réglages",
     subtitle: "Données locales, export, import et préférences — sous ton contrôle.",
   },
+  "/permissions": {
+    title: "Centre de permissions d'exécution",
+    subtitle: "Permissions locales et simulées — dry-run, validation humaine. Aucune exécution réelle.",
+  },
 } as const;

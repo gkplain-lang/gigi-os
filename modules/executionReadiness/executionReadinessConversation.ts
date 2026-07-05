@@ -15,11 +15,13 @@ import {
   buildExecutionReadinessGuidanceHints,
   generateGlobalExecutionReadinessSummary,
 } from "./executionReadinessSummary";
-import { listActiveExecutionReadinessRequests } from "./executionReadinessStore";
+import { listActiveExecutionReadinessRequests, listExecutionReadinessRequests } from "./executionReadinessStore";
+import { permissionCenterPolicyNotes } from "./permissionCenterPolicy";
+import { countByPermissionFilter } from "./permissionCenterFilters";
 import type { ExecutionReadinessIntent } from "./types";
 import {
-  EXECUTION_READINESS_DISCLAIMER,
   EXECUTION_READINESS_V4_TAGLINE,
+  EXECUTION_READINESS_V41_DISCLAIMER,
 } from "./types";
 import { assessRiskLevel, riskRationale } from "./executionReadinessRisk";
 import { policySafetyNotes } from "./executionReadinessPolicy";
@@ -70,6 +72,23 @@ const EXECUTION_READINESS_KEYWORDS = [
   "demande le droit d'agir",
   "fais le pour moi",
   "fais-le pour moi",
+  "quelles permissions",
+  "permissions donnees",
+  "permissions données",
+  "revoque les permissions",
+  "révoque les permissions",
+  "montre les demandes",
+  "demandes en attente",
+  "est ce bloque",
+  "est-ce bloqué",
+  "c est quoi qui est bloque",
+  "c'est quoi qui est bloqué",
+  "peux tu lancer github",
+  "peux-tu lancer github",
+  "appeler github",
+  "connecteur actif",
+  "centre de permissions",
+  "permission center",
 ];
 
 export function detectExecutionReadinessIntent(objective: string): ExecutionReadinessIntent {
@@ -85,8 +104,67 @@ export function buildExecutionReadinessConversationResponse(
 ): GigiConversationResponse {
   const hints = buildExecutionReadinessGuidanceHints(objective);
   const summary = generateGlobalExecutionReadinessSummary();
+  const permissionCounts = countByPermissionFilter(listExecutionReadinessRequests());
   const flow = buildActionFlowViewModel(loadActionQueueState().actions);
   const norm = normalize(objective);
+
+  const permissionCenterSummary = `${permissionCounts.all} demande(s) locale(s) · ${permissionCounts.awaiting} en attente · ${permissionCounts.approved_dry_run} dry-run · ${permissionCounts.expired} expirée(s) · ${permissionCounts.revoked} révoquée(s)`;
+
+  if (/revoque|révoque|retire.*permission/.test(norm)) {
+    return {
+      intent: "execution_readiness",
+      intentLabel: "Révocation · Gigi V4.1",
+      listen:
+        "Je ne révoque rien automatiquement. Tu peux révoquer localement chaque permission dry-run depuis le centre de permissions — changement d'état local uniquement.",
+      needsClarification: false,
+      executionReadinessSummaryText: permissionCenterSummary,
+      executionReadinessGuidance: [
+        ...hints,
+        "Ouvre /permissions ou /actions → centre de permissions.",
+        "Bouton « Révoquer localement » sur une demande dry-run approuvée.",
+        EXECUTION_READINESS_V41_DISCLAIMER,
+      ],
+      executionReadinessBlockedMessage: EXECUTION_READINESS_V41_DISCLAIMER,
+      finalMessage: "Aucune action externe — révocation locale et journal d'audit mis à jour.",
+    };
+  }
+
+  if (/permission|demande.*attente|centre de permission/.test(norm)) {
+    return {
+      intent: "execution_readiness",
+      intentLabel: "Centre de permissions · Gigi V4.1",
+      listen:
+        "Voici l'état de tes permissions locales — simulation et dry-run uniquement, aucune exécution réelle.",
+      needsClarification: false,
+      executionReadinessSummaryText: permissionCenterSummary,
+      executionReadinessGuidance: [
+        ...hints,
+        ...permissionCenterPolicyNotes(),
+        "Consulte /permissions pour filtres, détail, expiration et export du journal.",
+      ],
+      executionReadinessBlockedMessage: EXECUTION_READINESS_V41_DISCLAIMER,
+      finalMessage: "Ouvre /permissions ou le centre intégré sur /actions.",
+    };
+  }
+
+  if (/github|n8n|shell|connecteur|bloque|bloqué/.test(norm)) {
+    return {
+      intent: "execution_readiness",
+      intentLabel: "Capacités bloquées · Gigi V4.1",
+      listen:
+        "En V4.1, l'exécution réelle reste bloquée — GitHub, shell, n8n, API et autres connecteurs ne sont pas actifs.",
+      needsClarification: false,
+      executionReadinessSummaryText: summary.summaryText,
+      executionReadinessGuidance: [
+        ...hints,
+        ...policySafetyNotes(),
+        `${permissionCounts.blocked} demande(s) avec capacités bloquées ou risque élevé.`,
+        "Je peux préparer et simuler — la validation humaine reste obligatoire.",
+      ],
+      executionReadinessBlockedMessage: EXECUTION_READINESS_V41_DISCLAIMER,
+      finalMessage: "Consulte /permissions pour voir ce qui est bloqué localement.",
+    };
+  }
 
   const wantsPrepare =
     /prepare|prépare|autorise|permission|readiness|demande/.test(norm) &&
@@ -104,9 +182,9 @@ export function buildExecutionReadinessConversationResponse(
       });
       return {
         intent: "execution_readiness",
-        intentLabel: "Préparation exécution · Gigi V4",
+        intentLabel: "Préparation exécution · Gigi V4.1",
         listen:
-          "En V4.0 je ne peux pas exécuter réellement. J'ai préparé une demande d'autorisation locale — dry-run, périmètre, risques et rollback.",
+          "Je ne peux pas exécuter réellement en V4.1. J'ai préparé une demande d'autorisation locale — dry-run, périmètre, risques et rollback.",
         needsClarification: false,
         priorityProjectName: action.projectName,
         executionReadinessSummaryText: summary.summaryText,
@@ -119,8 +197,8 @@ export function buildExecutionReadinessConversationResponse(
           .join(" · "),
         executionReadinessCopyText: formatExecutionReadinessForCopy(request),
         executionReadinessGuidance: hints,
-        executionReadinessBlockedMessage: EXECUTION_READINESS_DISCLAIMER,
-        finalMessage: `Ouvre /actions pour valider la demande « ${request.title.replace(/^Readiness · /, "")} » — rien ne sera lancé automatiquement.`,
+        executionReadinessBlockedMessage: EXECUTION_READINESS_V41_DISCLAIMER,
+        finalMessage: `Ouvre /actions ou /permissions pour valider « ${request.title.replace(/^Readiness · /, "")} » — simulation uniquement, rien ne sera lancé.`,
       };
     }
   }
@@ -142,12 +220,12 @@ export function buildExecutionReadinessConversationResponse(
       intent: "execution_readiness",
       intentLabel: "Risques · Gigi V4",
       listen:
-        "Voici comment j'évalue le risque en V4.0 — simulation et préparation uniquement, aucune exécution réelle.",
+        "Voici comment j'évalue le risque en V4.1 — simulation et préparation uniquement, aucune exécution réelle.",
       needsClarification: false,
       executionReadinessSummaryText: summary.summaryText,
       executionReadinessRiskLabel: EXECUTION_RISK_LABELS[level],
       executionReadinessGuidance: [...hints, ...rationale],
-      executionReadinessBlockedMessage: EXECUTION_READINESS_DISCLAIMER,
+      executionReadinessBlockedMessage: EXECUTION_READINESS_V41_DISCLAIMER,
       warning: rationale[0],
       finalMessage: EXECUTION_READINESS_V4_TAGLINE,
     };
@@ -158,16 +236,17 @@ export function buildExecutionReadinessConversationResponse(
       intent: "execution_readiness",
       intentLabel: "Permissions · Gigi V4",
       listen:
-        "En V4.0 je ne peux pas agir seul. Je peux préparer une demande, expliquer les risques, définir le périmètre et le rollback — tu dois valider.",
+        "En V4.1 je ne peux pas agir seul. Je peux préparer une demande, expliquer les risques, définir le périmètre et le rollback — tu dois valider.",
       needsClarification: false,
       executionReadinessSummaryText: summary.summaryText,
       executionReadinessGuidance: [
         ...hints,
         ...policySafetyNotes(),
         "Capacités préparables : documentation, local, brouillons simulés.",
-        "Capacités bloquées en V4.0 : shell réel, GitHub réel, n8n, API, email/calendar réels.",
+        "Capacités bloquées en V4.1 : shell réel, GitHub réel, n8n, API, email/calendar réels.",
+        "Centre de permissions : /permissions",
       ],
-      executionReadinessBlockedMessage: EXECUTION_READINESS_DISCLAIMER,
+      executionReadinessBlockedMessage: EXECUTION_READINESS_V41_DISCLAIMER,
       finalMessage:
         "L'exécution réelle viendra plus tard, connecteur par connecteur, avec validation forte à chaque étape.",
     };
@@ -178,30 +257,30 @@ export function buildExecutionReadinessConversationResponse(
     const top = active[0];
     return {
       intent: "execution_readiness",
-      intentLabel: "Préparation exécution · Gigi V4",
-      listen: `${active.length} demande(s) locale(s) — je ne lance rien sans ta validation explicite.`,
+      intentLabel: "Préparation exécution · Gigi V4.1",
+      listen: `${active.length} demande(s) locale(s) — validation humaine requise, aucune exécution réelle.`,
       needsClarification: false,
       executionReadinessSummaryText: summary.summaryText,
       executionReadinessRequestTitle: top.title,
       executionReadinessRiskLabel: EXECUTION_RISK_LABELS[top.riskLevel],
       executionReadinessStatusLabel: EXECUTION_PERMISSION_STATUS_LABELS[top.permissionStatus],
       executionReadinessGuidance: hints,
-      executionReadinessBlockedMessage: EXECUTION_READINESS_DISCLAIMER,
-      finalMessage: "Ouvre /actions pour gérer les demandes V4.0.",
+      executionReadinessBlockedMessage: EXECUTION_READINESS_V41_DISCLAIMER,
+      finalMessage: "Ouvre /permissions ou /actions pour gérer les demandes locales.",
     };
   }
 
   return {
     intent: "execution_readiness",
-    intentLabel: "Préparation exécution · Gigi V4",
+    intentLabel: "Préparation exécution · Gigi V4.1",
     listen:
-      "Tu demandes si je peux agir — en V4.0 la réponse est non pour l'exécution réelle, oui pour préparer une demande contrôlée.",
+      "Tu demandes si je peux agir — en V4.1 la réponse est non pour l'exécution réelle, oui pour préparer une demande contrôlée.",
     needsClarification: false,
     executionReadinessSummaryText: summary.summaryText,
     executionReadinessGuidance: hints,
-    executionReadinessBlockedMessage: EXECUTION_READINESS_DISCLAIMER,
+    executionReadinessBlockedMessage: EXECUTION_READINESS_V41_DISCLAIMER,
     finalMessage: flow.primaryActionId
-      ? "Dis « prépare l'exécution » avec une action dominante sur /actions pour créer une demande locale."
-      : "Valide d'abord une action sur /actions, puis demande « prépare l'exécution ».",
+      ? "Dis « prépare l'exécution » sur /actions, puis consulte /permissions pour le centre complet."
+      : "Valide d'abord une action sur /actions, puis consulte /permissions.",
   };
 }

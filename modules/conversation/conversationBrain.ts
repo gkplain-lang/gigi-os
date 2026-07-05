@@ -1387,7 +1387,7 @@ export function askGigi(
     projects_command:
       "Centre projets V3.6 — ouvre /projects pour voir priorités, missions et actions par projet.",
     execution_readiness:
-      "V4.0 — préparation permission uniquement ; ouvre /actions pour valider une demande locale.",
+      "V4.1 — centre de permissions local ; ouvre /permissions ou /actions pour valider une demande (simulation uniquement).",
   };
 
   return {

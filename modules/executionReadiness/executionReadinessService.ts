@@ -19,6 +19,7 @@ import {
   getRequestsByActionId,
   upsertExecutionReadinessRequest,
 } from "./executionReadinessStore";
+import { applyDryRunApprovalTimestamps } from "./permissionCenterExpiration";
 
 function newId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
@@ -181,7 +182,7 @@ export function applyExecutionReadinessDecision(
     decidedAt: timestamp,
   });
 
-  const updated: ExecutionReadinessRequest = {
+  const updatedBase: ExecutionReadinessRequest = {
     ...request,
     permissionStatus: nextStatus,
     mode: decision === "approve_dry_run" ? "dry_run" : request.mode,
@@ -191,6 +192,13 @@ export function applyExecutionReadinessDecision(
       ...request.auditTrail,
     ],
   };
+
+  const updated =
+    decision === "approve_dry_run"
+      ? applyDryRunApprovalTimestamps(updatedBase, timestamp)
+      : decision === "revoke"
+        ? { ...updatedBase, revokedAt: timestamp }
+        : updatedBase;
 
   return upsertExecutionReadinessRequest(updated);
 }

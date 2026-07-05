@@ -30,14 +30,16 @@ export type ExecutionPermissionStatus =
   | "expired"
   | "simulated_only"
   | "blocked"
-  | "archived";
+  | "archived"
+  | "revoked";
 
 export type ExecutionReadinessDecisionType =
   | "approve_dry_run"
   | "reject"
   | "request_more_context"
   | "mark_simulated_only"
-  | "archive";
+  | "archive"
+  | "revoke";
 
 export interface ExecutionScope {
   id: string;
@@ -55,7 +57,7 @@ export interface ExecutionScope {
 export interface ExecutionReadinessAuditEntry {
   id: string;
   at: string;
-  type: "created" | "decision" | "note" | "status_change";
+  type: "created" | "decision" | "note" | "status_change" | "expired" | "revoked";
   message: string;
   decision?: ExecutionReadinessDecisionType;
 }
@@ -81,6 +83,12 @@ export interface ExecutionReadinessRequest {
   auditTrail: ExecutionReadinessAuditEntry[];
   createdAt: string;
   updatedAt: string;
+  /** V4.1 — horodatage approbation dry-run (jamais permanent) */
+  dryRunApprovedAt?: string;
+  /** V4.1 — expiration locale de l'approbation dry-run */
+  dryRunExpiresAt?: string;
+  /** V4.1 — révocation locale */
+  revokedAt?: string;
 }
 
 export interface ExecutionReadinessDecision {
@@ -103,7 +111,27 @@ export interface ExecutionReadinessGlobalSummary {
   awaitingApproval: number;
   approvedDryRun: number;
   blockedCount: number;
+  expiredCount: number;
+  revokedCount: number;
   summaryText: string;
+}
+
+export type PermissionCenterFilterId =
+  | "all"
+  | "awaiting"
+  | "approved_dry_run"
+  | "rejected"
+  | "expired"
+  | "blocked"
+  | "revoked";
+
+export interface PermissionCenterViewModel {
+  filter: PermissionCenterFilterId;
+  requests: ExecutionReadinessRequest[];
+  selectedId: string | null;
+  selectedRequest: ExecutionReadinessRequest | null;
+  totalCount: number;
+  filteredCount: number;
 }
 
 export interface ExecutionReadinessIntent {
@@ -119,3 +147,9 @@ export const EXECUTION_READINESS_DISCLAIMER =
 
 export const EXECUTION_READINESS_V4_TAGLINE =
   "Gigi ne fait pas encore tout. Mais il devient capable de demander le droit d'agir.";
+
+/** Durée par défaut d'une approbation dry-run locale (V4.1) — jamais permanente */
+export const DRY_RUN_APPROVAL_TTL_HOURS = 24;
+
+export const EXECUTION_READINESS_V41_DISCLAIMER =
+  "V4.1 — Centre de permissions local. Simulation et dry-run uniquement — aucune exécution réelle, aucune permission permanente.";
