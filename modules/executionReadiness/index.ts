@@ -261,3 +261,80 @@ export {
 } from "./commandPackConversation";
 
 export type { CommandPackIntent } from "./commandPackConversation";
+
+export type {
+  LocalReviewType,
+  LocalReviewInputType,
+  LocalReviewSessionStatus,
+  LocalReviewConfidence,
+  LocalReviewAuditEventType,
+  LocalReviewAuditEntry,
+  LocalReviewInput,
+  LocalReviewSignalReport,
+  LocalReviewSession,
+  LocalReviewGlobalSummary,
+} from "./localReviewTypes";
+
+export {
+  LOCAL_REVIEW_STATUS_LABELS,
+  EXECUTION_READINESS_V44_DISCLAIMER,
+} from "./localReviewTypes";
+
+export {
+  LOCAL_REVIEW_V44_RULES,
+  isLocalReviewReadOnly,
+  isLocalReviewExecutionBlocked,
+  getLocalReviewDisclaimer,
+  localReviewPolicyNotes,
+  validateLocalReviewSafety,
+} from "./localReviewPolicy";
+
+export {
+  detectSensitivePatterns,
+  sanitizePreview,
+  detectReviewSignals,
+  inferReviewStatus,
+  inferConfidence,
+  analyzeUserProvidedReviewInput,
+  inferInputType,
+} from "./localReviewSignals";
+
+export type { LocalReviewAnalysisResult } from "./localReviewSignals";
+
+export {
+  listLocalReviewSessions,
+  getLocalReviewSessionById,
+  createReviewSessionFromCommandPack,
+  createEmptyReviewSession,
+  saveReviewInput,
+  analyzeExistingReviewSession,
+  updateReviewSessionStatus,
+} from "./localReviewBuilder";
+
+export {
+  exportLocalReviewAsJson,
+  exportLocalReviewAsMarkdown,
+  exportAllLocalReviews,
+  downloadLocalReviewJson,
+  downloadLocalReviewMarkdown,
+  downloadAllLocalReviews,
+} from "./localReviewExport";
+
+export {
+  generateLocalReviewSummary,
+  LOCAL_REVIEW_EMPTY_SUMMARY,
+} from "./localReviewSummary";
+
+export {
+  LOCAL_REVIEW_AUDIT_EVENT_LABELS,
+  getRecentLocalReviewAudit,
+} from "./localReviewRecentAudit";
+
+export type { LocalReviewHistoryItem } from "./localReviewRecentAudit";
+
+export {
+  detectLocalReviewIntent,
+  buildLocalReviewConversationResponse,
+} from "./localReviewConversation";
+
+export type { LocalReviewIntent } from "./localReviewConversation";

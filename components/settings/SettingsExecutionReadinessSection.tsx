@@ -6,9 +6,11 @@ import {
   EXECUTION_READINESS_V4_TAGLINE,
   EXECUTION_READINESS_V42_DISCLAIMER,
   EXECUTION_READINESS_V43_DISCLAIMER,
+  EXECUTION_READINESS_V44_DISCLAIMER,
   generateGlobalExecutionReadinessSummary,
   generateManualBridgeSummary,
   generateCommandPackSummary,
+  generateLocalReviewSummary,
   getSandboxConnectorRegistry,
   loadExecutionReadinessState,
 } from "@/modules/executionReadiness";
@@ -29,6 +31,7 @@ export function SettingsExecutionReadinessSection() {
   const summary = generateGlobalExecutionReadinessSummary();
   const bridgeSummary = generateManualBridgeSummary();
   const commandPackSummary = generateCommandPackSummary();
+  const localReviewSummary = generateLocalReviewSummary();
   const connectorCount = getSandboxConnectorRegistry().length;
   const state = loadExecutionReadinessState();
   const preparedCount = state.requests.length;
@@ -105,7 +108,23 @@ export function SettingsExecutionReadinessSection() {
         <p className="mt-2 text-[11px] italic text-amber-200/85">{EXECUTION_READINESS_V43_DISCLAIMER}</p>
       </div>
 
+      <div className="mt-4 rounded-lg border border-teal-500/20 bg-teal-500/5 px-4 py-3">
+        <p className="text-[12px] font-medium text-text-primary">Revue locale V4.4</p>
+        <p className="mt-1 text-[12.5px] text-text-secondary">{localReviewSummary.summaryText}</p>
+        <p className="mt-2 text-[11.5px] text-text-muted">
+          {localReviewSummary.totalSessions} revue(s) · {localReviewSummary.sensitiveAlerts} alerte(s)
+          secret · résultat collé uniquement · Gigi ne lit pas terminal/fichiers/API
+        </p>
+        <p className="mt-2 text-[11px] italic text-amber-200/85">{EXECUTION_READINESS_V44_DISCLAIMER}</p>
+      </div>
+
       <div className="mt-4 flex flex-wrap gap-4">
+        <Link
+          href="/local-review"
+          className="gigi-focus inline-flex text-[13px] font-medium text-accent-soft underline-offset-2 hover:underline"
+        >
+          Revue locale →
+        </Link>
         <Link
           href="/command-packs"
           className="gigi-focus inline-flex text-[13px] font-medium text-accent-soft underline-offset-2 hover:underline"

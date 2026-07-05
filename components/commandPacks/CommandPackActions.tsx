@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { CommandPack } from "@/modules/executionReadiness";
 import {
   downloadCommandPackJson,
   downloadCommandPackMarkdown,
   getEffectiveCommandPackStatus,
   updateCommandPackStatus,
+  createReviewSessionFromCommandPack,
 } from "@/modules/executionReadiness";
 
 interface CommandPackActionsProps {
@@ -15,7 +18,9 @@ interface CommandPackActionsProps {
 }
 
 export function CommandPackActions({ pack, onUpdated }: CommandPackActionsProps) {
+  const router = useRouter();
   const [exportMsg, setExportMsg] = useState<string | null>(null);
+  const [reviewMsg, setReviewMsg] = useState<string | null>(null);
   const status = getEffectiveCommandPackStatus(pack);
   const active = !["cancelled", "expired", "marked_success_by_human", "marked_failed_by_human"].includes(
     status
@@ -34,6 +39,16 @@ export function CommandPackActions({ pack, onUpdated }: CommandPackActionsProps)
   function handleExportMd() {
     const result = downloadCommandPackMarkdown(pack.id);
     setExportMsg(result.ok ? `Markdown exporté : ${result.filename}` : result.error ?? "Erreur");
+  }
+
+  function handleCreateReview() {
+    const session = createReviewSessionFromCommandPack(pack.id);
+    if (session) {
+      setReviewMsg(`Revue créée : ${session.title}`);
+      router.push(`/local-review?session=${session.id}`);
+    } else {
+      setReviewMsg("Impossible de créer la revue.");
+    }
   }
 
   if (!active) {
@@ -67,6 +82,13 @@ export function CommandPackActions({ pack, onUpdated }: CommandPackActionsProps)
         Actions locales — statuts déclaratifs
       </p>
       <div className="flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={handleCreateReview}
+          className="gigi-btn-primary gigi-focus rounded-lg px-3 py-1.5 text-[12px] font-medium"
+        >
+          Créer une revue locale
+        </button>
         <button
           type="button"
           onClick={() =>
@@ -135,6 +157,14 @@ export function CommandPackActions({ pack, onUpdated }: CommandPackActionsProps)
         </button>
       </div>
       {exportMsg && <p className="text-[11px] text-text-muted">{exportMsg}</p>}
+      {reviewMsg && (
+        <p className="text-[11px] text-text-muted">
+          {reviewMsg}{" "}
+          <Link href="/local-review" className="text-accent-soft hover:underline">
+            /local-review
+          </Link>
+        </p>
+      )}
     </div>
   );
 }

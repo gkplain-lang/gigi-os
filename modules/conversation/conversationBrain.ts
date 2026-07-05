@@ -127,9 +127,11 @@ import {
   buildExecutionReadinessConversationResponse,
   buildManualBridgeConversationResponse,
   buildCommandPackConversationResponse,
+  buildLocalReviewConversationResponse,
   detectExecutionReadinessIntent,
   detectManualBridgeIntent,
   detectCommandPackIntent,
+  detectLocalReviewIntent,
 } from "@/modules/executionReadiness";
 import {
   buildAggregateContextFromAction,
@@ -1078,6 +1080,11 @@ export function askGigi(
       missionProjectId: context.currentMission?.projectId ?? context.currentProjectId,
       missionTitle: context.currentMission?.title,
     });
+  }
+
+  const localReviewIntent = detectLocalReviewIntent(objective);
+  if (localReviewIntent.isLocalReview) {
+    return buildLocalReviewConversationResponse(objective);
   }
 
   const commandPackIntent = detectCommandPackIntent(objective);

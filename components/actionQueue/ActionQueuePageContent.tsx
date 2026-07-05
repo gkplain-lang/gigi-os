@@ -22,6 +22,7 @@ import { ExecutionReadinessPanel } from "@/components/executionReadiness/Executi
 import { ExecutionPermissionCenterEmbed } from "@/components/executionPermissionCenter/ExecutionPermissionCenterEmbed";
 import { ManualBridgeEmbed } from "@/components/manualBridge/ManualBridgeEmbed";
 import { CommandPacksEmbed } from "@/components/commandPacks/CommandPacksEmbed";
+import { LocalReviewEmbed } from "@/components/localReview/LocalReviewEmbed";
 
 export function ActionQueuePageContent() {
   const { state, isHydrated } = useActionQueue();
@@ -106,6 +107,8 @@ export function ActionQueuePageContent() {
         <ManualBridgeEmbed />
 
         <CommandPacksEmbed />
+
+        <LocalReviewEmbed />
 
         <ActionFlowDetails
           groupedActions={flowViewModel.groupedActions}

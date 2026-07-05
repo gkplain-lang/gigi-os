@@ -128,8 +128,9 @@ V3.7 — Settings & Local Data Control (delivered — v3.7.0)
 V4.0 — Controlled Real Execution Readiness (delivered — v4.0.0)
 V4.1 — Execution Permission Center (delivered — v4.1.0)
 V4.2 — Real Connector Sandbox / Manual Bridge (delivered — v4.2.0)
-V4.3 — Human-Launched Command Packs (implemented)
-V4.4 — Local Review Runner / Read-Only Verification Layer (planned)
+V4.3 — Human-Launched Command Packs (delivered — v4.3.0)
+V4.4 — Local Review Runner / Read-Only Verification Layer (implemented)
+V4.5 — Human-Gated Read-Only Adapters / Verified Manual Checks (planned)
 ```
 
 ---
@@ -2056,13 +2057,38 @@ Structured command packs Gigi prepares for human copy/paste — no execution, de
 
 ---
 
-# 40.4 V4.4 — Local Review Runner / Read-Only Verification Layer (planned)
+# 40.4 V4.4 — Local Review Runner / Read-Only Verification Layer (implemented)
 
 ## Goal
 
-Read-only local verification layer — help human confirm outcomes without destructive execution.
+Read-only local review of user-pasted output — probable status, signal detection, no system access.
 
-## Not coded in V4.3
+## Implemented
+
+- Route `/local-review` — Local Review panel
+- Module extensions `localReview*.ts` in `modules/executionReadiness/`
+- Signal detection (success/warning/error keywords)
+- Sensitive pattern warnings (token, password, ghp_, etc.)
+- Generation from V4.3 command packs
+- Export JSON + Markdown
+- localStorage schema v4 — `localReviewSessions[]`
+- Integrations `/command-packs`, `/actions`, `/settings`, `/history`, conversation
+- Docs : [V4_4_LOCAL_REVIEW_RUNNER_READ_ONLY_VERIFICATION.md](./V4_4_LOCAL_REVIEW_RUNNER_READ_ONLY_VERIFICATION.md)
+
+## Not in V4.4
+
+- Terminal/file/API reading, real execution, active connectors
+- Secrets storage, permanent permissions, background jobs
+
+---
+
+# 40.5 V4.5 — Human-Gated Read-Only Adapters / Verified Manual Checks (planned)
+
+## Goal
+
+Strictly human-gated read-only adapters — verified manual checks only.
+
+## Not coded in V4.4
 
 - No real adapter without explicit product validation
 
