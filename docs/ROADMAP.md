@@ -118,7 +118,8 @@ V2.10 — Execution Report Intake
 V2.11 — Closed Loop Action Lifecycle
 V2.12 — V3 Readiness Audit & Stabilisation
 V3.0 — Closed Loop Mission OS
-V3.1 — Mission Command Center UX (planned)
+V3.1 — Mission Command Center UX
+V3.2 — Action Flow Simplification (planned)
 ```
 
 ---
@@ -1765,21 +1766,66 @@ See [V3_CLOSED_LOOP_MISSION_OS.md](./V3_CLOSED_LOOP_MISSION_OS.md). Links forwar
 
 ---
 
-# 36. V3.1 — Mission Command Center UX (planned)
+# 36. V3.1 — Mission Command Center UX
 
 ## Goal
 
-Further simplify the home mission hub: single dominant CTA, less visual noise, Decision Center + MissionOS fusion.
+Make `/` a true mission command hub: dominant mission, single primary CTA, clear cycle timeline, less noise.
 
 ## Core Question
 
 ```text
-Can the user decide and act in one glance without scrolling?
+Can the user understand in 5 seconds what to do now?
+```
+
+## Features
+
+```text
+MissionCommandCenter component on /
+Enriched MissionOSViewModel (primaryReason, timeline, primaryCta)
+MissionDecisionCenter in collapsible details
+MissionOSActionFlowStepper on /actions
+Conversation mission_os format V3.1
+docs/V3_1_MISSION_COMMAND_CENTER_UX.md
+No new localStorage keys
+```
+
+## Not in V3.1
+
+```text
+Replacing V2.x modules or QueuedActionCard panels
+Real execution or external calls
+New persistence layer
+```
+
+## Acceptance Criteria
+
+V3.1 is complete when:
+
+- / shows dominant mission + single CTA + timeline + safety;
+- /actions shows action flow stepper + existing cards;
+- conversation answers pilotage requests simply;
+- npm run build passes.
+
+See [V3_1_MISSION_COMMAND_CENTER_UX.md](./V3_1_MISSION_COMMAND_CENTER_UX.md). Links forward to V3.2 Action Flow Simplification.
+
+---
+
+# 37. V3.2 — Action Flow Simplification (planned)
+
+## Goal
+
+Progressive disclosure on /actions: state-based views, dominant active action, guided report/cycle.
+
+## Core Question
+
+```text
+Can the user focus on one action without six panels open?
 ```
 
 ---
 
-# 37. Later — SaaS Version (planned)
+# 38. Later — SaaS Version (planned)
 
 ## Goal
 

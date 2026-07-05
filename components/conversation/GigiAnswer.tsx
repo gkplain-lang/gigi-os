@@ -156,17 +156,23 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
             )}
             <div className="gigi-panel rounded-xl p-4">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
-                Gigi V3 · Closed Loop Mission OS
+                Mission Command Center · V3.1
               </p>
-              {response.missionOSPhaseLabel && (
-                <p className="mt-1.5 text-[13px] text-accent-soft">
-                  Phase : {response.missionOSPhaseLabel}
-                  {response.missionOSReadinessLabel && ` · ${response.missionOSReadinessLabel}`}
+              {response.missionTitle && (
+                <p className="mt-2 text-[16px] font-semibold text-text-primary">
+                  {response.missionTitle}
                 </p>
               )}
-              {response.missionOSStepLabel && (
-                <p className="mt-2 text-[15px] font-medium text-text-primary">
-                  {response.missionOSStepLabel}
+              {response.why && (
+                <p className="mt-2 text-[13px] text-text-secondary">
+                  <span className="font-medium text-text-primary">Pourquoi : </span>
+                  {response.why}
+                </p>
+              )}
+              {response.missionOSPhaseLabel && (
+                <p className="mt-2 text-[13px] text-accent-soft">
+                  Étape · {response.missionOSStepLabel ?? response.missionOSPhaseLabel}
+                  {response.missionOSReadinessLabel && ` · ${response.missionOSReadinessLabel}`}
                 </p>
               )}
               {response.missionOSNextActionLabel && response.missionOSNextActionRoute && (

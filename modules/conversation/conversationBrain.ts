@@ -1048,7 +1048,10 @@ export function askGigi(
       missionSummary: mission?.reason,
       missionId: mission?.id ?? context.currentMissionId,
       projectId: mission?.projectId ?? context.currentProjectId,
+      projectName: mission?.projectName,
       missionStatus: mission?.status,
+      missionConfidence: mission?.confidence,
+      missionImpact: mission?.expectedImpact,
     });
   }
 

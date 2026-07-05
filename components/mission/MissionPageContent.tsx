@@ -12,7 +12,7 @@ import { askGigi } from "@/modules/conversation/conversationBrain";
 import { getRefinedMissionPageMeta } from "@/modules/dailyUseRefinement";
 import { MissionFeedbackPanel } from "@/components/missionFeedback/MissionFeedbackPanel";
 import { MissionDecisionCenter } from "@/components/missionDecision/MissionDecisionCenter";
-import { ClosedLoopMissionOS } from "@/components/missionOS/ClosedLoopMissionOS";
+import { MissionCommandCenter } from "@/components/missionOS/MissionCommandCenter";
 import { useMemo } from "react";
 
 const STATUS_BADGE: Record<string, string> = {
@@ -43,15 +43,29 @@ export function MissionPageContent() {
       missionSummary: state.mission.reason,
       missionId: state.mission.id,
       projectId: state.mission.projectId,
+      projectName: state.mission.projectName,
       missionStatus: state.mission.status,
+      missionConfidence: state.mission.confidence,
+      missionImpact: state.mission.expectedImpact,
     }),
     [
       state.mission.id,
       state.mission.title,
       state.mission.reason,
       state.mission.projectId,
+      state.mission.projectName,
       state.mission.status,
+      state.mission.confidence,
+      state.mission.expectedImpact,
     ]
+  );
+
+  const decisionSlot = (
+    <MissionDecisionCenter
+      completedMissionIds={state.completedMissionIds}
+      currentMissionId={state.mission.id}
+      currentProjectId={state.mission.projectId}
+    />
   );
 
   if (!isHydrated) return null;
@@ -60,9 +74,9 @@ export function MissionPageContent() {
   const tasks = execution.tasks;
   const active = mission.status === "recommended" || mission.status === "in_progress";
 
-  const missionOSBlock = (
+  const missionCommandBlock = (
     <div className="mb-6">
-      <ClosedLoopMissionOS input={missionOSInput} />
+      <MissionCommandCenter input={missionOSInput} decisionSlot={decisionSlot} />
     </div>
   );
 
@@ -86,14 +100,7 @@ export function MissionPageContent() {
           />
           {!isOnboardingComplete && <OnboardingBanner />}
           <DailyUseStrip />
-          {missionOSBlock}
-          <div className="mb-6">
-            <MissionDecisionCenter
-              completedMissionIds={state.completedMissionIds}
-              currentMissionId={mission.id}
-              currentProjectId={mission.projectId}
-            />
-          </div>
+          {missionCommandBlock}
           <MissionDone
             completedTitle={mission.title}
             nextTitle={next.mission?.title}
@@ -115,14 +122,7 @@ export function MissionPageContent() {
           />
           {!isOnboardingComplete && <OnboardingBanner />}
           <DailyUseStrip />
-          {missionOSBlock}
-          <div className="mb-6">
-            <MissionDecisionCenter
-              completedMissionIds={state.completedMissionIds}
-              currentMissionId={mission.id}
-              currentProjectId={mission.projectId}
-            />
-          </div>
+          {missionCommandBlock}
           <div className="gigi-mission-control relative max-w-3xl">
             <div className="gigi-mission-spotlight" aria-hidden />
             <div className="relative z-[1]">
@@ -159,15 +159,7 @@ export function MissionPageContent() {
 
         {!isOnboardingComplete && <OnboardingBanner />}
         <DailyUseStrip />
-        {missionOSBlock}
-
-        <div className="mb-6">
-          <MissionDecisionCenter
-            completedMissionIds={state.completedMissionIds}
-            currentMissionId={mission.id}
-            currentProjectId={mission.projectId}
-          />
-        </div>
+        {missionCommandBlock}
 
         <div className="gigi-mission-control grid gap-5 lg:grid-cols-[minmax(0,1fr)_260px] lg:items-start">
           <div className="relative space-y-4">

@@ -43,10 +43,10 @@ export function MissionOSActionsBanner({ className }: MissionOSActionsBannerProp
           </p>
         </div>
         <Link
-          href={viewModel.nextActionRoute}
+          href={viewModel.primaryCtaRoute}
           className="gigi-btn-primary gigi-focus inline-flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2 text-[13px] font-medium"
         >
-          {viewModel.nextActionLabel}
+          {viewModel.primaryCtaLabel}
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>
