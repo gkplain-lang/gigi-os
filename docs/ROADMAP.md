@@ -132,8 +132,9 @@ V4.3 — Human-Launched Command Packs (delivered — v4.3.0)
 V4.4 — Local Review Runner / Read-Only Verification Layer (delivered — v4.4.0)
 V4.5 — Visible Execution Experience (delivered — v4.5.0)
 V4.6 — Guided Project Action Flow (delivered — v4.6.0)
-V4.7 — Project Mission Composer / Daily Guided Execution (implemented)
-V4.8 — Daily Mission Review / Execution Reflection (planned)
+V4.7 — Project Mission Composer / Daily Guided Execution (delivered — v4.7.0)
+V4.8 — Daily Mission Review / Execution Reflection (implemented)
+V4.9 — Weekly Focus Memory / Project Momentum (planned)
 ```
 
 ---
@@ -2146,15 +2147,35 @@ Mission-first composer: project-linked mission candidates, single daily priority
 
 ---
 
-# 40.8 V4.8 — Daily Mission Review / Execution Reflection (planned)
+# 40.8 V4.8 — Daily Mission Review / Execution Reflection (implemented)
 
 ## Goal
 
-End-of-day reflection on the chosen daily mission and linked guided flow — declarative, local only.
+Close the mission-first daily loop: review selected mission, capture outcomes/blockers/learnings, choose next decision — human-gated, local only.
 
-## Not coded in V4.7
+## Delivered
 
-- No automatic mission review without explicit user action
+- `DailyMissionReview` + `MissionExecutionReflection` in schema v7
+- `modules/missionReview/` (types, templates, builder, reflection, summary, audit, conversation, policy)
+- Route `/mission-review`, SideNav « Revue mission »
+- Integrations: `/`, `/mission-composer`, `/guided-actions`, `/actions`, settings, history, conversation
+- Doc: `docs/V4_8_DAILY_MISSION_REVIEW.md`
+
+## Not in V4.8
+
+- Real verification, active connectors, silent auto-persistence
+
+---
+
+# 40.9 V4.9 — Weekly Focus Memory / Project Momentum (planned)
+
+## Goal
+
+Weekly memory of focus and project momentum — declarative, local only.
+
+## Not coded in V4.8
+
+- No automatic weekly rollup without explicit user action
 
 ---
 

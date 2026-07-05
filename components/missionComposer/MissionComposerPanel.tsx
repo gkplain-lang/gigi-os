@@ -20,6 +20,7 @@ import { MissionComposerStats } from "./MissionComposerStats";
 import { DailyPriorityMissionCard } from "./DailyPriorityMissionCard";
 import { MissionCandidateList } from "./MissionCandidateList";
 import { MissionComposerProjectStrip } from "./MissionComposerProjectStrip";
+import { MissionReviewComposerEmbed } from "@/components/missionReview/MissionReviewComposerEmbed";
 
 interface MissionComposerPanelProps {
   projects: Array<{ id: string; name: string }>;
@@ -134,6 +135,8 @@ export function MissionComposerPanel({ projects }: MissionComposerPanelProps) {
             </p>
           )}
         </section>
+
+        <MissionReviewComposerEmbed />
 
         <section className="mb-6">
           <h2 className="text-[14px] font-semibold text-text-primary">2. Missions possibles</h2>

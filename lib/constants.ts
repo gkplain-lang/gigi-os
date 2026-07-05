@@ -72,4 +72,8 @@ export const PAGE_META = {
     title: "Mission du jour",
     subtitle: "Choisis une mission prioritaire — Gigi prépare le parcours guidé, aucune exécution réelle.",
   },
+  "/mission-review": {
+    title: "Revue de mission",
+    subtitle: "Bilan local de la mission du jour — tu valides la décision suivante.",
+  },
 } as const;

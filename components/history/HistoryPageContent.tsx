@@ -52,6 +52,7 @@ import { generateGlobalExecutionReadinessSummary } from "@/modules/executionRead
 import { ControlledExecutionActivitySummary } from "@/components/executionExperience/ControlledExecutionActivitySummary";
 import { GuidedActionHistoryCard } from "@/components/guidedActionFlow/GuidedActionHistoryCard";
 import { MissionComposerHistoryCard } from "@/components/missionComposer/MissionComposerHistoryCard";
+import { MissionReviewHistoryCard } from "@/components/missionReview/MissionReviewHistoryCard";
 
 export function HistoryPageContent() {
   const { state, isHydrated } = useGigi();
@@ -98,6 +99,9 @@ export function HistoryPageContent() {
         />
         <RecentLearningSection />
         <ControlledExecutionActivitySummary />
+        <div className="gigi-panel-raised mb-4 rounded-xl p-5 md:p-6">
+          <MissionReviewHistoryCard />
+        </div>
         <div className="gigi-panel-raised mb-4 rounded-xl p-5 md:p-6">
           <MissionComposerHistoryCard />
         </div>
