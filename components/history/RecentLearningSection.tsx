@@ -59,6 +59,12 @@ export function RecentLearningSection() {
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
         <Link
+          href="/projects"
+          className="gigi-btn-secondary gigi-focus inline-flex rounded-lg px-3.5 py-2 text-[13px] font-medium"
+        >
+          Centre projets
+        </Link>
+        <Link
           href="/actions"
           className="gigi-btn-secondary gigi-focus inline-flex rounded-lg px-3.5 py-2 text-[13px] font-medium"
         >

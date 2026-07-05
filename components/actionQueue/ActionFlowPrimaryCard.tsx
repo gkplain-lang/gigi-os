@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { ActionFlowViewModel } from "@/modules/missionOS";
+import { useActionQueue } from "@/components/providers/ActionQueueProvider";
 import { cn } from "@/lib/utils";
 
 interface ActionFlowPrimaryCardProps {
@@ -11,7 +12,9 @@ interface ActionFlowPrimaryCardProps {
 }
 
 export function ActionFlowPrimaryCard({ viewModel, className }: ActionFlowPrimaryCardProps) {
+  const { state } = useActionQueue();
   const hasPrimary = Boolean(viewModel.primaryActionId);
+  const primaryAction = state.actions.find((a) => a.id === viewModel.primaryActionId);
 
   return (
     <section
@@ -33,6 +36,15 @@ export function ActionFlowPrimaryCard({ viewModel, className }: ActionFlowPrimar
         <p className="mt-2 text-[13px] leading-relaxed text-text-muted">
           {viewModel.primaryActionSummary}
         </p>
+      )}
+
+      {primaryAction && (
+        <Link
+          href={`/projects/${primaryAction.projectId}`}
+          className="gigi-focus mt-2 inline-flex text-[12px] font-medium text-accent-soft underline-offset-2 hover:underline"
+        >
+          Projet · {primaryAction.projectName} →
+        </Link>
       )}
 
       <div className="mt-4 flex flex-wrap gap-2">

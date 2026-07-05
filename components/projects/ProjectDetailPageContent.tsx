@@ -12,7 +12,14 @@ import { ActionPlanPanel } from "@/components/actionPlans/ActionPlanPanel";
 import { MissionFeedbackPanel } from "@/components/missionFeedback/MissionFeedbackPanel";
 import { MissionPlanBridgePanel } from "@/components/missionPlanBridge/MissionPlanBridgePanel";
 import { ClosedLoopMissionOS } from "@/components/missionOS/ClosedLoopMissionOS";
+import { ProjectDetailCommandStrip } from "@/components/projects/ProjectDetailCommandStrip";
+import { ProjectDetailActiveAction } from "@/components/projects/ProjectDetailActiveAction";
+import { ProjectDetailLearning } from "@/components/projects/ProjectDetailLearning";
 import { buildMissionLearningViewModel } from "@/modules/missionOS";
+import {
+  buildProjectsCommandViewModel,
+  getProjectCommandCardById,
+} from "@/modules/projectsCommand";
 import { useMemo } from "react";
 import { getTodayMissionDecision } from "@/modules/missionDecision";
 import { getAcceptedCandidateFromDecision } from "@/modules/missionPlanBridge";
@@ -66,6 +73,22 @@ export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContent
     () => buildMissionLearningViewModel({ projectId }),
     [projectId]
   );
+
+  const projectCommandCard = useMemo(() => {
+    if (!isHydrated) return undefined;
+    const vm = buildProjectsCommandViewModel({
+      projects: state.projects,
+      missionProjectId: state.mission.projectId,
+      missionTitle: state.mission.title,
+    });
+    return getProjectCommandCardById(vm, projectId);
+  }, [
+    isHydrated,
+    state.projects,
+    state.mission.projectId,
+    state.mission.title,
+    projectId,
+  ]);
 
   if (!isHydrated) return null;
 
@@ -187,6 +210,12 @@ export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContent
           </div>
         </div>
 
+        {projectCommandCard && <ProjectDetailCommandStrip card={projectCommandCard} />}
+
+        {projectCommandCard && <ProjectDetailActiveAction card={projectCommandCard} />}
+
+        <ProjectDetailLearning viewModel={projectLearning} />
+
         <div className="mb-6">
           <ClosedLoopMissionOS
             input={{
@@ -246,7 +275,7 @@ export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContent
               </section>
             )}
 
-            <section>
+            <section id="missions">
               <PageHeader
                 title="Missions possibles"
                 meta="Suggestions locales — demande à Gigi pour trancher."

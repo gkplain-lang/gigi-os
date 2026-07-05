@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import type { GigiConversationResponse } from "@/modules/conversation/conversationTypes";
@@ -146,6 +147,77 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
                 </button>
               ))}
             </div>
+          </div>
+        ) : response.intent === "projects_command" ? (
+          <div className="mt-3 space-y-3">
+            {response.projectsCommandBlockedMessage && (
+              <p className="text-[12.5px] leading-relaxed text-amber-200/90">
+                {response.projectsCommandBlockedMessage}
+              </p>
+            )}
+            <div className="gigi-panel rounded-xl p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                {response.intentLabel ?? "Centre projets · Gigi V3.6"}
+              </p>
+              {response.projectsCommandRecommendedName && (
+                <p className="mt-2 text-[16px] font-semibold text-text-primary">
+                  {response.projectsCommandRecommendedName}
+                </p>
+              )}
+              {response.projectsCommandRecommendedReason && (
+                <p className="mt-2 text-[13px] text-text-secondary">
+                  {response.projectsCommandRecommendedReason}
+                </p>
+              )}
+              {response.projectsCommandNextMissionTitle && (
+                <p className="mt-2 text-[13px] text-accent-soft">
+                  Mission · {response.projectsCommandNextMissionTitle}
+                </p>
+              )}
+              {response.projectsCommandActiveActionTitle && (
+                <p className="mt-1 text-[12.5px] text-text-muted">
+                  Action · {response.projectsCommandActiveActionTitle}
+                </p>
+              )}
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Link
+                  href="/projects"
+                  className="gigi-btn-primary gigi-focus inline-flex rounded-lg px-3.5 py-2 text-[13px] font-medium"
+                >
+                  Ouvrir /projects
+                </Link>
+                {response.projectsCommandPrimaryRoute && (
+                  <Link
+                    href={response.projectsCommandPrimaryRoute}
+                    className="gigi-btn-secondary gigi-focus inline-flex rounded-lg px-3.5 py-2 text-[13px] font-medium"
+                  >
+                    Projet prioritaire
+                  </Link>
+                )}
+              </div>
+            </div>
+            {response.projectsCommandGuidance &&
+              response.projectsCommandGuidance.length > 0 && (
+                <div className="gigi-panel rounded-xl p-4">
+                  <Label>Guidance</Label>
+                  <ol className="mt-2.5 space-y-2">
+                    {response.projectsCommandGuidance.map((hint, i) => (
+                      <li
+                        key={i}
+                        className="flex gap-2.5 text-[13.5px] leading-relaxed text-text-secondary"
+                      >
+                        <span className="mt-0.5 font-medium tabular-nums text-accent-soft">
+                          {i + 1}.
+                        </span>
+                        {hint}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+            {response.finalMessage && (
+              <p className="text-[14px] font-medium text-text-primary">{response.finalMessage}</p>
+            )}
           </div>
         ) : response.intent === "mission_os" ? (
           <div className="mt-3 space-y-3">
