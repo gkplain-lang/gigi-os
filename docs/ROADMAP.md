@@ -112,7 +112,8 @@ V2.4 — History & Learning Loop
 V2.5 — Mission Recommendation Feedback Loop
 V2.6 — Mission Decision Center
 V2.7 — Mission-to-Plan Decision Bridge
-V2.8 — Safe Action Workspace (planned)
+V2.8 — Safe Action Workspace
+V2.9 — Manual Execution Handoff (planned)
 ```
 
 ---
@@ -1517,11 +1518,11 @@ See [MISSION_TO_PLAN_DECISION_BRIDGE.md](./MISSION_TO_PLAN_DECISION_BRIDGE.md). 
 
 ---
 
-# 30. V2.8 — Safe Action Workspace (planned)
+# 30. V2.8 — Safe Action Workspace
 
 ## Goal
 
-Secure workspace around a validated action: full context, plan, risks, logs, review, follow-ups, history, pre-execution checklist — still no real execution.
+Secure workspace around a validated or pending action: full local context, plan, risks, logs, review, follow-ups, history, pre-execution checklist — still no real execution.
 
 ## Core Question
 
@@ -1529,9 +1530,52 @@ Secure workspace around a validated action: full context, plan, risks, logs, rev
 Can the user prepare manual execution with full local context?
 ```
 
+## Features
+
+```text
+Aggregate V1.9–V2.7 data for one action
+Readiness indicator (indicative, not repo-verified)
+Safety checklist with local toggle
+Copy workspace / checklist / Cursor context
+Notes utilisateur
+Key gigi-os-v28-safe-action-workspaces
+Still no command execution
+```
+
+## Module
+
+`modules/safeActionWorkspace/` — store, service, engine, formatter, summary
+
+## UI
+
+SafeActionWorkspacePanel on `/actions`, recent list on `/history`, conversation intent `safe_action_workspace`
+
+V2.8 is complete when:
+
+- workspace creates from queue action;
+- readiness and sections aggregate local data;
+- checklist toggles locally;
+- npm run build passes.
+
+See [SAFE_ACTION_WORKSPACE.md](./SAFE_ACTION_WORKSPACE.md). Links forward to V2.9 Manual Execution Handoff.
+
 ---
 
-# 31. Later — SaaS Version (planned)
+# 31. V2.9 — Manual Execution Handoff (planned)
+
+## Goal
+
+Generate a manual handoff package for Cursor or a human: full context, precise instructions, theoretical commands, checklist, success criteria, expected report — still no real execution.
+
+## Core Question
+
+```text
+Can Gigi prepare a complete handoff without executing anything?
+```
+
+---
+
+# 32. Later — SaaS Version (planned)
 
 ## Goal
 

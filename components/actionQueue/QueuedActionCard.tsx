@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Check, ChevronDown, Copy, Play, RotateCcw, X } from "lucide-react";
+import { Check, ChevronDown, Copy, LayoutDashboard, Play, RotateCcw, X } from "lucide-react";
 import type { QueuedAction } from "@/modules/actionQueue";
 import { QUEUED_STATUS_LABELS, VALIDATION_CENTER_NOTE } from "@/modules/actionQueue";
 import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions";
@@ -27,6 +27,7 @@ import {
 } from "@/modules/executionReviews";
 import type { ExecutionLog } from "@/modules/executionLogs";
 import { MISSION_PLAN_BRIDGE_ID_PREFIX } from "@/modules/missionPlanBridge";
+import { SafeActionWorkspacePanel } from "@/components/safeActionWorkspace/SafeActionWorkspacePanel";
 import { cn } from "@/lib/utils";
 
 const STATUS_STYLE: Record<QueuedAction["status"], string> = {
@@ -58,6 +59,7 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
   const { setStatus } = useActionQueue();
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showWorkspace, setShowWorkspace] = useState(false);
   const [executionPlan, setExecutionPlan] = useState<ExecutionPlan | null>(() =>
     getCachedExecutionPlan(action.id) ?? null
   );
@@ -76,6 +78,8 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
   const fromMissionBridge = Boolean(
     action.sourceActionId?.startsWith(MISSION_PLAN_BRIDGE_ID_PREFIX)
   );
+
+  const canOpenWorkspace = ["pending_review", "approved", "copied"].includes(action.status);
 
   const canPrepareExecution = action.status === "approved";
   const executionBlockedMessage = useMemo(() => {
@@ -178,6 +182,16 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
           {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
           Copier
         </button>
+        {canOpenWorkspace && (
+          <button
+            type="button"
+            onClick={() => setShowWorkspace((v) => !v)}
+            className="gigi-btn gigi-focus inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-[12.5px]"
+          >
+            <LayoutDashboard className="h-3.5 w-3.5" />
+            {showWorkspace ? "Masquer workspace" : "Ouvrir workspace"}
+          </button>
+        )}
         {action.status === "pending_review" && (
           <>
             <button
@@ -229,6 +243,15 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
       </div>
 
       <p className="mt-2 text-[11px] text-text-muted">{VALIDATION_CENTER_NOTE}</p>
+
+      {showWorkspace && canOpenWorkspace && (
+        <div className="mt-4">
+          <SafeActionWorkspacePanel
+            action={action}
+            onClose={() => setShowWorkspace(false)}
+          />
+        </div>
+      )}
 
       {executionBlockedMessage && (
         <p className="mt-2 rounded-lg border border-border bg-surface-2/40 px-3 py-2 text-[12px] text-text-muted">

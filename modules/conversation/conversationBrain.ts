@@ -78,6 +78,17 @@ import {
   generateGlobalBridgeSummary,
   getAcceptedCandidateFromDecision,
 } from "@/modules/missionPlanBridge";
+import {
+  SAFE_ACTION_WORKSPACE_DISCLAIMER,
+  SAFE_ACTION_WORKSPACE_READINESS_LABELS,
+  buildSafeActionWorkspaceGuidanceHints,
+  detectSafeActionWorkspaceIntent,
+  generateGlobalWorkspaceSummary,
+  getSafeActionWorkspaceByActionId,
+  aggregateContextFromQueuedAction,
+  createWorkspaceFromContext,
+} from "@/modules/safeActionWorkspace";
+import { loadActionQueueState } from "@/modules/actionQueue/actionQueueStore";
 import { listHistoryEntries } from "@/modules/historyLearning/historyLearningStore";
 import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions/types";
 import type {
@@ -389,6 +400,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   mission_feedback: "Feedback mission",
   mission_decision: "Décision mission",
   mission_plan_bridge: "Bridge mission → plan",
+  safe_action_workspace: "Safe Action Workspace",
 };
 
 function clarificationResponse(): GigiConversationResponse {
@@ -425,6 +437,49 @@ function allDoneResponse(
 }
 
 // ---------------------------------------------------------------- main
+
+function buildSafeActionWorkspaceResponse(
+  objective: string,
+  projectId: string | null
+): GigiConversationResponse {
+  const hints = buildSafeActionWorkspaceGuidanceHints(objective);
+  const summary = generateGlobalWorkspaceSummary();
+  const actions = loadActionQueueState().actions.filter(
+    (a) =>
+      ["pending_review", "approved", "copied"].includes(a.status) &&
+      (!projectId || a.projectId === projectId)
+  );
+  const target = actions.find((a) => a.status === "approved") ?? actions[0];
+  let actionTitle: string | undefined;
+  let readinessLabel: string | undefined;
+
+  if (target) {
+    const existing = getSafeActionWorkspaceByActionId(target.id);
+    const ctx = aggregateContextFromQueuedAction(target);
+    const workspace = createWorkspaceFromContext(ctx, existing);
+    actionTitle = workspace.title.replace(/^Workspace · /, "");
+    readinessLabel = SAFE_ACTION_WORKSPACE_READINESS_LABELS[workspace.readiness];
+  }
+
+  return {
+    intent: "safe_action_workspace",
+    intentLabel: `${INTENT_LABELS.safe_action_workspace}${actionTitle ? ` · ${actionTitle.slice(0, 36)}` : ""}`,
+    listen:
+      "Le Safe Action Workspace agrège plan, log, review et checklist — Gigi ne lance aucune commande et ne vérifie pas le repo.",
+    needsClarification: false,
+    priorityProjectName: projectId
+      ? PROJECT_NAMES[projectId as keyof typeof PROJECT_NAMES]
+      : target?.projectName,
+    safeActionWorkspaceSummaryText: summary.summaryText,
+    safeActionWorkspaceActionTitle: actionTitle,
+    safeActionWorkspaceReadinessLabel: readinessLabel,
+    safeActionWorkspaceGuidance: hints,
+    safeActionWorkspaceBlockedMessage: SAFE_ACTION_WORKSPACE_DISCLAIMER,
+    finalMessage: target
+      ? "Ouvre /actions et clique « Ouvrir workspace » — exécution manuelle uniquement après checklist."
+      : "Ajoute d'abord une action à la file sur /actions, puis ouvre le workspace depuis la carte.",
+  };
+}
 
 function buildMissionPlanBridgeResponse(
   objective: string,
@@ -823,6 +878,15 @@ export function askGigi(
   _projects: unknown,
   context: ConversationContext = {}
 ): GigiConversationResponse {
+  const safeActionWorkspaceIntent = detectSafeActionWorkspaceIntent(objective);
+  if (safeActionWorkspaceIntent.isSafeActionWorkspace) {
+    const projectId =
+      safeActionWorkspaceIntent.projectId ??
+      context.currentProjectId ??
+      detectProject(normalize(objective));
+    return buildSafeActionWorkspaceResponse(objective, projectId);
+  }
+
   const missionPlanBridgeIntent = detectMissionPlanBridgeIntent(objective);
   if (missionPlanBridgeIntent.isMissionPlanBridge) {
     const projectId =
@@ -1070,6 +1134,7 @@ export function askGigi(
     mission_feedback: "Recommandations basées sur l'historique V2.4 — ouvre / ou /projects pour le détail.",
     mission_decision: "Décision locale — ouvre / pour comparer et valider manuellement.",
     mission_plan_bridge: "Bridge local — transforme une mission acceptée en plan sans exécution auto.",
+    safe_action_workspace: "Workspace local — ouvre /actions pour préparer l'exécution manuelle.",
   };
 
   return {
