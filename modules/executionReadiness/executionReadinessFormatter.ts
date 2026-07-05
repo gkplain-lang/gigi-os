@@ -47,6 +47,7 @@ export const EXECUTION_PERMISSION_STATUS_LABELS: Record<ExecutionPermissionStatu
   simulated_only: "Simulation seule",
   blocked: "Bloquée",
   archived: "Archivée",
+  revoked: "Révoquée localement",
 };
 
 export const EXECUTION_DECISION_LABELS: Record<ExecutionReadinessDecisionType, string> = {
@@ -55,6 +56,7 @@ export const EXECUTION_DECISION_LABELS: Record<ExecutionReadinessDecisionType, s
   request_more_context: "Demander plus de contexte",
   mark_simulated_only: "Simulation seulement",
   archive: "Archiver",
+  revoke: "Révoquer localement",
 };
 
 export function formatCapabilitiesList(capabilities: ExecutionCapability[]): string {

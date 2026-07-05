@@ -27,6 +27,7 @@ const DECISION_REASONS: Record<ExecutionReadinessDecisionType, string> = {
   request_more_context: "Plus de contexte demandé avant validation.",
   mark_simulated_only: "Marquée simulation seule — V4.0.",
   archive: "Demande archivée localement.",
+  revoke: "Permission dry-run révoquée localement — aucune exécution réelle.",
 };
 
 export function ExecutionPermissionActions({

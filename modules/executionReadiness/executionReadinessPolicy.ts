@@ -86,6 +86,8 @@ export function statusAfterDecision(
       return "simulated_only";
     case "archive":
       return "archived";
+    case "revoke":
+      return "revoked";
     default:
       return "needs_review";
   }

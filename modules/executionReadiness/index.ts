@@ -11,6 +11,8 @@ export type {
   ExecutionReadinessGlobalSummary,
   ExecutionReadinessIntent,
   ExecutionReadinessAuditEntry,
+  PermissionCenterFilterId,
+  PermissionCenterViewModel,
 } from "./types";
 
 export {
@@ -18,6 +20,8 @@ export {
   EXECUTION_READINESS_VERSION,
   EXECUTION_READINESS_DISCLAIMER,
   EXECUTION_READINESS_V4_TAGLINE,
+  EXECUTION_READINESS_V41_DISCLAIMER,
+  DRY_RUN_APPROVAL_TTL_HOURS,
 } from "./types";
 
 export {
@@ -72,3 +76,45 @@ export {
   detectExecutionReadinessIntent,
   buildExecutionReadinessConversationResponse,
 } from "./executionReadinessConversation";
+
+export {
+  PERMISSION_CENTER_V41_RULES,
+  permissionCenterPolicyNotes,
+  isCapabilityBlockedInV41,
+  isSensitiveCapability,
+} from "./permissionCenterPolicy";
+
+export {
+  computeDryRunExpiresAt,
+  isDryRunExpired,
+  getEffectivePermissionStatus,
+  syncExpiredDryRunPermissions,
+  applyDryRunApprovalTimestamps,
+  formatExpirationLabel,
+  getRequestByIdWithEffectiveStatus,
+} from "./permissionCenterExpiration";
+
+export { revokeLocalPermission } from "./permissionCenterRevocation";
+
+export {
+  PERMISSION_CENTER_FILTER_LABELS,
+  filterPermissionRequests,
+  countByPermissionFilter,
+} from "./permissionCenterFilters";
+
+export {
+  buildPermissionAuditExport,
+  serializePermissionAuditExport,
+  downloadPermissionAuditExport,
+} from "./permissionCenterAuditExport";
+
+export {
+  PERMISSION_AUDIT_EVENT_LABELS,
+  listRecentPermissionAuditEvents,
+} from "./permissionCenterRecentAudit";
+
+export type { PermissionAuditHistoryItem } from "./permissionCenterRecentAudit";
+
+export type { PermissionAuditExportPayload } from "./permissionCenterAuditExport";
+
+export { buildPermissionCenterViewModel } from "./permissionCenterViewModel";

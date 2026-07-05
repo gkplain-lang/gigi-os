@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import {
-  EXECUTION_READINESS_DISCLAIMER,
   EXECUTION_READINESS_EMPTY_SUMMARY,
   EXECUTION_READINESS_V4_TAGLINE,
+  EXECUTION_READINESS_V41_DISCLAIMER,
   generateGlobalExecutionReadinessSummary,
   loadExecutionReadinessState,
 } from "@/modules/executionReadiness";
@@ -32,10 +32,10 @@ export function SettingsExecutionReadinessSection() {
   return (
     <section className="gigi-panel mb-6 rounded-xl border border-violet-500/25 p-5">
       <p className="text-[10px] font-semibold uppercase tracking-wider text-violet-200/90">
-        Préparation V4 — exécution contrôlée
+        Préparation V4 — centre de permissions (V4.1)
       </p>
       <p className="mt-2 text-[13px] leading-relaxed text-text-secondary">
-        En V4.0, Gigi ne lance aucune action réelle. Les demandes restent sur cet appareil ; les
+        Gigi ne déclenche aucune action réelle. Les demandes restent sur cet appareil ; les
         approbations autorisent uniquement un dry-run local (simulation). Les capacités sensibles
         restent bloquées — la validation humaine finale t&apos;appartient toujours.
       </p>
@@ -64,7 +64,8 @@ export function SettingsExecutionReadinessSection() {
             {summary.activeRequests > 0 && (
               <p className="mt-2 text-[11.5px] text-text-muted">
                 {summary.activeRequests} active(s) · {summary.awaitingApproval} en attente ·{" "}
-                {summary.approvedDryRun} dry-run approuvé(s) (simulation uniquement)
+                {summary.approvedDryRun} dry-run approuvé(s) · {summary.expiredCount} expirée(s) ·{" "}
+                {summary.revokedCount} révoquée(s)
               </p>
             )}
           </>
@@ -74,15 +75,23 @@ export function SettingsExecutionReadinessSection() {
       </div>
 
       <p className="mt-3 text-[11.5px] leading-relaxed text-amber-200/85">
-        {EXECUTION_READINESS_DISCLAIMER}
+        {EXECUTION_READINESS_V41_DISCLAIMER}
       </p>
 
-      <Link
-        href="/actions"
-        className="gigi-focus mt-4 inline-flex text-[13px] font-medium text-accent-soft underline-offset-2 hover:underline"
-      >
-        Voir les demandes d&apos;exécution →
-      </Link>
+      <div className="mt-4 flex flex-wrap gap-4">
+        <Link
+          href="/permissions"
+          className="gigi-focus inline-flex text-[13px] font-medium text-accent-soft underline-offset-2 hover:underline"
+        >
+          Ouvrir le centre de permissions →
+        </Link>
+        <Link
+          href="/actions"
+          className="gigi-focus inline-flex text-[13px] font-medium text-text-muted underline-offset-2 hover:text-text-secondary hover:underline"
+        >
+          Voir le flux d&apos;action →
+        </Link>
+      </div>
     </section>
   );
 }

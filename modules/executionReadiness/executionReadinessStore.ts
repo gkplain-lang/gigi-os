@@ -89,7 +89,7 @@ export function listExecutionReadinessRequests(limit?: number): ExecutionReadine
 
 export function listActiveExecutionReadinessRequests(limit?: number): ExecutionReadinessRequest[] {
   const active = listExecutionReadinessRequests().filter(
-    (r) => !["archived", "rejected", "expired"].includes(r.permissionStatus)
+    (r) => !["archived", "rejected", "expired", "revoked"].includes(r.permissionStatus)
   );
   return limit ? active.slice(0, limit) : active;
 }

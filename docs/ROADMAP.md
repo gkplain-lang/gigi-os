@@ -126,7 +126,8 @@ V3.5 — Public Landing & Onboarding (delivered)
 V3.6 — Projects Command Center (delivered — v3.6.0)
 V3.7 — Settings & Local Data Control (delivered — v3.7.0)
 V4.0 — Controlled Real Execution Readiness (delivered — v4.0.0)
-V4.1 — Execution Permission Center (planned)
+V4.1 — Execution Permission Center (implemented)
+V4.2 — Real Connector Sandbox / Manual Bridge (planned)
 ```
 
 ---
@@ -2000,15 +2001,47 @@ See [V4_EXECUTION_POLICY.md](./V4_EXECUTION_POLICY.md).
 
 ---
 
-# 40.1 V4.1 — Execution Permission Center (planned)
+# 40.1 V4.1 — Execution Permission Center (implemented)
 
 ## Goal
 
-Richer permission UX — history, expiration, strong confirmation, reusable scopes, local journal.
+Centralize local permission requests — filters, detail view, dry-run expiration, local revocation, audit journal export — **still no real execution**.
 
-## Not coded in V4.0
+## Core Question
+
+```text
+Can the user review, expire, and revoke local dry-run permissions in one place without breaking V4.0 trust?
+```
+
+## Implemented
+
+- Route `/permissions` — Execution Permission Center UI
+- Embed intégré sur `/actions` (`ExecutionPermissionCenterEmbed`)
+- Module extensions `modules/executionReadiness/` (expiration, revocation, filters, audit export, recent audit)
+- Integrations `/actions`, `/history`, `/settings`, `/conversation`, SideNav
+- Docs : [V4_1_EXECUTION_PERMISSION_CENTER.md](./V4_1_EXECUTION_PERMISSION_CENTER.md)
+
+## Not in V4.1
+
+- Real shell / GitHub / n8n / API execution
+- Connectors, sync, auth/provider changes
+- Permanent permissions or auto-approval
+- Background execution
+
+See [V4_EXECUTION_POLICY.md](./V4_EXECUTION_POLICY.md).
+
+---
+
+# 40.2 V4.2 — Real Connector Sandbox / Manual Bridge (planned)
+
+## Goal
+
+Controlled sandbox for future real connectors — manual bridge only, explicit human validation, still no unattended execution.
+
+## Not coded in V4.1
 
 - No real connector without explicit product validation
+- No automatic bridge to external services
 
 ---
 
