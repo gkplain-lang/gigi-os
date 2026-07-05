@@ -112,6 +112,10 @@ import {
   generateGlobalLifecycleSummary,
 } from "@/modules/closedLoopLifecycle";
 import {
+  buildMissionOSConversationResponse,
+  detectMissionOSIntent,
+} from "@/modules/missionOS/missionOSConversation";
+import {
   buildAggregateContextFromAction,
   buildLifecycleRecord,
 } from "@/modules/closedLoopLifecycle/closedLoopLifecycleEngine";
@@ -430,6 +434,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   manual_execution_handoff: "Passation manuelle",
   execution_report_intake: "Rapport d'exécution",
   closed_loop_lifecycle: "Cycle d'action",
+  mission_os: "Pilotage mission V3",
 };
 
 function clarificationResponse(): GigiConversationResponse {
@@ -1035,6 +1040,18 @@ export function askGigi(
   _projects: unknown,
   context: ConversationContext = {}
 ): GigiConversationResponse {
+  const missionOSIntent = detectMissionOSIntent(objective);
+  if (missionOSIntent.isMissionOS) {
+    const mission = context.currentMission;
+    return buildMissionOSConversationResponse(objective, {
+      missionTitle: mission?.title ?? "Mission du jour",
+      missionSummary: mission?.reason,
+      missionId: mission?.id ?? context.currentMissionId,
+      projectId: mission?.projectId ?? context.currentProjectId,
+      missionStatus: mission?.status,
+    });
+  }
+
   const closedLoopLifecycleIntent = detectClosedLoopLifecycleIntent(objective);
   if (closedLoopLifecycleIntent.isClosedLoopLifecycle) {
     const projectId =
@@ -1322,6 +1339,7 @@ export function askGigi(
     manual_execution_handoff: "Handoff local — copie toi-même le paquet vers Cursor ou un humain.",
     execution_report_intake: "Intake local — colle le rapport toi-même, Gigi ne vérifie pas le repo.",
     closed_loop_lifecycle: "Cycle local — agrégation déclarative, fermeture manuelle uniquement.",
+    mission_os: "Pilotage V3 — une mission, une prochaine action, tout reste manuel.",
   };
 
   return {

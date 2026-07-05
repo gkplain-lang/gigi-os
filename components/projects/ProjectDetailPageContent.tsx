@@ -11,6 +11,7 @@ import { ProjectMissionCard } from "@/components/projects/ProjectMissionCard";
 import { ActionPlanPanel } from "@/components/actionPlans/ActionPlanPanel";
 import { MissionFeedbackPanel } from "@/components/missionFeedback/MissionFeedbackPanel";
 import { MissionPlanBridgePanel } from "@/components/missionPlanBridge/MissionPlanBridgePanel";
+import { ClosedLoopMissionOS } from "@/components/missionOS/ClosedLoopMissionOS";
 import { getTodayMissionDecision } from "@/modules/missionDecision";
 import { getAcceptedCandidateFromDecision } from "@/modules/missionPlanBridge";
 import {
@@ -163,6 +164,25 @@ export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContent
             </span>
           </div>
         </div>
+
+        <div className="mb-6">
+          <ClosedLoopMissionOS
+            input={{
+              missionTitle: recommendedMission?.title ?? `Mission · ${project.name}`,
+              missionSummary: summary.recommendedAction.whyNow,
+              projectId: project.id,
+            }}
+            compact
+          />
+        </div>
+        <p className="mb-5 text-[12.5px] text-text-muted">
+          <span className="font-medium text-text-secondary">Prochaine étape projet :</span> choisir
+          une mission → préparer le plan → ajouter à la file{" "}
+          <Link href="/actions" className="text-accent-soft underline-offset-2 hover:underline">
+            /actions
+          </Link>
+          .
+        </p>
 
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
           <div className="space-y-5">

@@ -147,6 +147,55 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
               ))}
             </div>
           </div>
+        ) : response.intent === "mission_os" ? (
+          <div className="mt-3 space-y-3">
+            {response.missionOSBlockedMessage && (
+              <p className="text-[12.5px] leading-relaxed text-amber-200/90">
+                {response.missionOSBlockedMessage}
+              </p>
+            )}
+            <div className="gigi-panel rounded-xl p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                Gigi V3 · Closed Loop Mission OS
+              </p>
+              {response.missionOSPhaseLabel && (
+                <p className="mt-1.5 text-[13px] text-accent-soft">
+                  Phase : {response.missionOSPhaseLabel}
+                  {response.missionOSReadinessLabel && ` · ${response.missionOSReadinessLabel}`}
+                </p>
+              )}
+              {response.missionOSStepLabel && (
+                <p className="mt-2 text-[15px] font-medium text-text-primary">
+                  {response.missionOSStepLabel}
+                </p>
+              )}
+              {response.missionOSNextActionLabel && response.missionOSNextActionRoute && (
+                <a
+                  href={response.missionOSNextActionRoute}
+                  className="gigi-btn-primary gigi-focus mt-3 inline-flex rounded-lg px-3.5 py-2 text-[13px] font-medium"
+                >
+                  {response.missionOSNextActionLabel}
+                </a>
+              )}
+              {response.missionOSSummaryText && (
+                <pre className="mt-3 max-h-48 overflow-auto whitespace-pre-wrap rounded-lg bg-surface-2/60 p-3 text-[12px] text-text-secondary">
+                  {response.missionOSSummaryText}
+                </pre>
+              )}
+            </div>
+            {response.missionOSGuidance && response.missionOSGuidance.length > 0 && (
+              <div className="gigi-panel rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                  Guidance
+                </p>
+                <ul className="mt-2 list-inside list-disc space-y-1 text-[13px] text-text-secondary">
+                  {response.missionOSGuidance.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         ) : response.intent === "closed_loop_lifecycle" ? (
           <div className="mt-3 space-y-3">
             {response.closedLoopLifecycleBlockedMessage && (

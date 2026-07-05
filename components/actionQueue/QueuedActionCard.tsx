@@ -157,7 +157,7 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
             )}
             {fromMissionBridge && (
               <span className="rounded-full border border-violet-500/35 bg-violet-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-violet-200/90">
-                Origine · Bridge V2.7
+                Origine · Passage mission → plan
               </span>
             )}
             <span className="text-[11px] text-text-muted">{action.projectName}</span>
@@ -196,7 +196,7 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
             className="gigi-btn gigi-focus inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-[12.5px]"
           >
             <LayoutDashboard className="h-3.5 w-3.5" />
-            {showWorkspace ? "Masquer workspace" : "Ouvrir workspace"}
+            {showWorkspace ? "Masquer espace" : "Espace d'action sécurisé"}
           </button>
         )}
         {canOpenWorkspace && (hasPlan || showWorkspace) && (
@@ -206,7 +206,7 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
             className="gigi-btn gigi-focus inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-[12.5px]"
           >
             <Package className="h-3.5 w-3.5" />
-            {showHandoff ? "Masquer handoff" : "Créer handoff"}
+            {showHandoff ? "Masquer passation" : "Passation Cursor / humain"}
           </button>
         )}
         {canOpenWorkspace && (hasPlan || showWorkspace || showHandoff) && (

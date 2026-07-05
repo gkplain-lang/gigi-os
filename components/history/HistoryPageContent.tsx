@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { MissionDecisionHistoryPanel } from "@/components/missionDecision/MissionDecisionHistoryPanel";
 import { generateGlobalDecisionSummary, listMissionDecisions } from "@/modules/missionDecision";
@@ -43,6 +43,7 @@ import {
 } from "@/modules/missionFeedback";
 import { useGigi } from "@/components/providers/GigiProvider";
 import { REFINED_PAGE_META } from "@/modules/dailyUseRefinement";
+import { ClosedLoopMissionOS } from "@/components/missionOS/ClosedLoopMissionOS";
 
 export function HistoryPageContent() {
   const { state, isHydrated } = useGigi();
@@ -76,6 +77,15 @@ export function HistoryPageContent() {
   const lifecycleSummary = generateGlobalLifecycleSummary();
   const recentLifecycles = listClosedLoopLifecycles(4);
 
+  const historyOSInput = useMemo(
+    () => ({
+      missionTitle: "Apprentissage & suite",
+      missionSummary:
+        "Archive ce que tu as appris, puis laisse Gigi recommander la prochaine mission.",
+    }),
+    []
+  );
+
   if (!isHydrated) return null;
 
   return (
@@ -83,6 +93,17 @@ export function HistoryPageContent() {
       <div className="gigi-page-spotlight" aria-hidden />
       <div className="gigi-page-content">
         <PageHeader title="Historique" meta={REFINED_PAGE_META.history} />
+        <div className="mb-6">
+          <ClosedLoopMissionOS input={historyOSInput} compact />
+        </div>
+        <p className="mb-4 text-[12.5px] leading-relaxed text-text-muted">
+          <span className="font-medium text-text-secondary">Prochaine étape :</span> archiver
+          l&apos;apprentissage → régénérer le feedback mission → choisir la suite sur{" "}
+          <Link href="/" className="text-accent-soft underline-offset-2 hover:underline">
+            /
+          </Link>
+          .
+        </p>
         <div className="gigi-panel-raised rounded-xl p-5 md:p-6">
           <HistoryTimeline events={state.history} />
         </div>
