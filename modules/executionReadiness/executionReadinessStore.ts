@@ -9,7 +9,13 @@ import {
 } from "./types";
 
 export function createEmptyExecutionReadinessState(): ExecutionReadinessState {
-  return { requests: [], decisions: [], manualBridgePackets: [], version: EXECUTION_READINESS_VERSION };
+  return {
+    requests: [],
+    decisions: [],
+    manualBridgePackets: [],
+    commandPacks: [],
+    version: EXECUTION_READINESS_VERSION,
+  };
 }
 
 export function loadExecutionReadinessState(): ExecutionReadinessState {
@@ -28,6 +34,7 @@ export function loadExecutionReadinessState(): ExecutionReadinessState {
       manualBridgePackets: Array.isArray(parsed.manualBridgePackets)
         ? parsed.manualBridgePackets
         : [],
+      commandPacks: Array.isArray(parsed.commandPacks) ? parsed.commandPacks : [],
       version: EXECUTION_READINESS_VERSION,
     };
   } catch {

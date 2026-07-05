@@ -56,4 +56,8 @@ export const PAGE_META = {
     title: "Pont manuel d'exécution",
     subtitle: "Paquets d'exécution manuelle — sandbox connecteurs, validation humaine. Aucune exécution réelle.",
   },
+  "/command-packs": {
+    title: "Packs de commandes",
+    subtitle: "Commandes structurées à copier — lancement humain, validation locale. Aucune exécution réelle.",
+  },
 } as const;

@@ -191,3 +191,73 @@ export {
 } from "./manualBridgeConversation";
 
 export type { ManualBridgeIntent } from "./manualBridgeConversation";
+
+export type {
+  CommandPackCategory,
+  CommandPackStatus,
+  CommandPackAuditEventType,
+  CommandPackAuditEntry,
+  CommandPackCommand,
+  CommandPack,
+  CommandPackGlobalSummary,
+  CommandPackTemplateDefinition,
+} from "./commandPackTypes";
+
+export {
+  COMMAND_PACK_TTL_DAYS,
+  COMMAND_PACK_STATUS_LABELS,
+  EXECUTION_READINESS_V43_DISCLAIMER,
+} from "./commandPackTypes";
+
+export {
+  COMMAND_PACK_TEMPLATES,
+  getCommandPackTemplate,
+  listCommandPackTemplates,
+} from "./commandPackTemplates";
+
+export {
+  COMMAND_PACK_V43_RULES,
+  isCommandPackExecutionBlocked,
+  getCommandPackDisclaimer,
+  commandPackPolicyNotes,
+  validateCommandPackSafety,
+} from "./commandPackPolicy";
+
+export {
+  listCommandPacks,
+  getCommandPackById,
+  getEffectiveCommandPackStatus,
+  syncExpiredCommandPacks,
+  createCommandPackFromTemplate,
+  createCommandPackFromManualPacket,
+  updateCommandPackStatus,
+  recordCommandCopied,
+} from "./commandPackBuilder";
+
+export {
+  exportCommandPackAsJson,
+  exportCommandPackAsMarkdown,
+  exportAllCommandPacks,
+  downloadCommandPackJson,
+  downloadCommandPackMarkdown,
+  downloadAllCommandPacks,
+} from "./commandPackExport";
+
+export {
+  generateCommandPackSummary,
+  COMMAND_PACK_EMPTY_SUMMARY,
+} from "./commandPackSummary";
+
+export {
+  COMMAND_PACK_AUDIT_EVENT_LABELS,
+  getRecentCommandPackAudit,
+} from "./commandPackRecentAudit";
+
+export type { CommandPackHistoryItem } from "./commandPackRecentAudit";
+
+export {
+  detectCommandPackIntent,
+  buildCommandPackConversationResponse,
+} from "./commandPackConversation";
+
+export type { CommandPackIntent } from "./commandPackConversation";

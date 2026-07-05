@@ -132,6 +132,12 @@ export function SideNav() {
           </Link>
         )}
         <Link
+          href="/command-packs"
+          className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
+        >
+          Packs commandes
+        </Link>
+        <Link
           href="/manual-bridge"
           className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
         >
