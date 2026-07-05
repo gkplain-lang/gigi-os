@@ -21,7 +21,8 @@ export type ConversationIntent =
   | "follow_up_action"
   | "history_learning"
   | "mission_feedback"
-  | "mission_decision";
+  | "mission_decision"
+  | "mission_plan_bridge";
 
 export interface NotNowItem {
   projectName: string;
@@ -130,6 +131,14 @@ export interface GigiConversationResponse {
   missionDecisionComparisonText?: string;
   /** V2.6 — disclaimer */
   missionDecisionBlockedMessage?: string;
+  /** V2.7 — guidance for mission-to-plan bridge */
+  missionPlanBridgeGuidance?: string[];
+  /** V2.7 — bridge summary */
+  missionPlanBridgeSummaryText?: string;
+  /** V2.7 — accepted mission title for bridge */
+  missionPlanBridgeMissionTitle?: string;
+  /** V2.7 — disclaimer */
+  missionPlanBridgeBlockedMessage?: string;
 }
 
 export interface ConversationContext {

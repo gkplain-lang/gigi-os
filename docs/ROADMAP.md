@@ -111,7 +111,8 @@ V2.3 — Follow-up Action Generator
 V2.4 — History & Learning Loop
 V2.5 — Mission Recommendation Feedback Loop
 V2.6 — Mission Decision Center
-V2.7 — Mission-to-Plan Decision Bridge (planned)
+V2.7 — Mission-to-Plan Decision Bridge
+V2.8 — Safe Action Workspace (planned)
 ```
 
 ---
@@ -1474,7 +1475,7 @@ See [MISSION_DECISION_CENTER.md](./MISSION_DECISION_CENTER.md). Links forward to
 
 ---
 
-# 29. V2.7 — Mission-to-Plan Decision Bridge (planned)
+# 29. V2.7 — Mission-to-Plan Decision Bridge
 
 ## Goal
 
@@ -1486,18 +1487,51 @@ Fluent flow from V2.6 accepted mission to V1.7 action plan and V1.8 prepared act
 Can an accepted mission become a concrete plan without automatic execution?
 ```
 
-## Features (planned)
+## Features
 
 ```text
 Accepted mission → action plan proposal
 Prepared action shortcut
 Manual pending_review queue add only
+Conversation deep-link with contextual prompt
+Local bridge record (gigi-os-v27-mission-plan-bridge)
 Still no real execution
+```
+
+## Module
+
+`modules/missionPlanBridge/` — store, service, engine, formatter, summary
+
+## UI
+
+MissionPlanBridgePanel on `/` (accepted decision), `/projects/[id]`, bridge list on `/history`, origin badge on `/actions`
+
+V2.7 is complete when:
+
+- bridge creates from accepted V2.6 decision;
+- plan and prepared action generate locally;
+- queue add remains pending_review only;
+- npm run build passes.
+
+See [MISSION_TO_PLAN_DECISION_BRIDGE.md](./MISSION_TO_PLAN_DECISION_BRIDGE.md). Links forward to V2.8 Safe Action Workspace.
+
+---
+
+# 30. V2.8 — Safe Action Workspace (planned)
+
+## Goal
+
+Secure workspace around a validated action: full context, plan, risks, logs, review, follow-ups, history, pre-execution checklist — still no real execution.
+
+## Core Question
+
+```text
+Can the user prepare manual execution with full local context?
 ```
 
 ---
 
-# 30. Later — SaaS Version (planned)
+# 31. Later — SaaS Version (planned)
 
 ## Goal
 

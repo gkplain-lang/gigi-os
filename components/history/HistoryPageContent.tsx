@@ -4,6 +4,11 @@ import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { MissionDecisionHistoryPanel } from "@/components/missionDecision/MissionDecisionHistoryPanel";
 import { generateGlobalDecisionSummary, listMissionDecisions } from "@/modules/missionDecision";
+import {
+  generateGlobalBridgeSummary,
+  listMissionPlanBridges,
+  MISSION_PLAN_BRIDGE_STATUS_LABELS,
+} from "@/modules/missionPlanBridge";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { HistoryTimeline } from "@/components/history/HistoryTimeline";
 import { HistoryLearningPanel } from "@/components/historyLearning/HistoryLearningPanel";
@@ -40,6 +45,8 @@ export function HistoryPageContent() {
 
   const decisionSummary = generateGlobalDecisionSummary();
   const recentDecisions = listMissionDecisions(4);
+  const bridgeSummary = generateGlobalBridgeSummary();
+  const recentBridges = listMissionPlanBridges(4);
 
   if (!isHydrated) return null;
 
@@ -85,6 +92,33 @@ export function HistoryPageContent() {
             </Link>
             .
           </p>
+        </div>
+        <div className="gigi-panel-raised mt-6 rounded-xl p-5 md:p-6">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+            Bridges mission → plan · V2.7
+          </p>
+          <p className="mt-2 text-[13.5px] text-text-secondary">{bridgeSummary.summaryText}</p>
+          {recentBridges.length > 0 ? (
+            <ul className="mt-3 space-y-2">
+              {recentBridges.map((b) => (
+                <li key={b.id} className="text-[12.5px] text-text-secondary">
+                  <span className="font-medium text-text-primary">{b.missionTitle}</span>
+                  <span className="text-text-muted">
+                    {" "}
+                    — {MISSION_PLAN_BRIDGE_STATUS_LABELS[b.status]} · {b.updatedAt.slice(0, 10)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 text-[12px] text-text-muted">
+              Aucun bridge — accepte une mission sur{" "}
+              <Link href="/#mission-plan-bridge" className="text-accent-soft underline">
+                la mission du jour
+              </Link>
+              .
+            </p>
+          )}
         </div>
       </div>
     </div>

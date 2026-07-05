@@ -26,6 +26,7 @@ import {
   getExecutionReviewByLogId,
 } from "@/modules/executionReviews";
 import type { ExecutionLog } from "@/modules/executionLogs";
+import { MISSION_PLAN_BRIDGE_ID_PREFIX } from "@/modules/missionPlanBridge";
 import { cn } from "@/lib/utils";
 
 const STATUS_STYLE: Record<QueuedAction["status"], string> = {
@@ -71,6 +72,10 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
     if (!executionLog) return null;
     return getExecutionReviewByLogId(executionLog.id) ?? null;
   }, [executionLog]);
+
+  const fromMissionBridge = Boolean(
+    action.sourceActionId?.startsWith(MISSION_PLAN_BRIDGE_ID_PREFIX)
+  );
 
   const canPrepareExecution = action.status === "approved";
   const executionBlockedMessage = useMemo(() => {
@@ -137,6 +142,11 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
             {executionReview && (
               <span className="rounded-full border border-[rgba(124,140,255,0.35)] bg-[rgba(124,140,255,0.1)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent-soft">
                 Review · {EXECUTION_REVIEW_DECISION_LABELS[executionReview.decision]}
+              </span>
+            )}
+            {fromMissionBridge && (
+              <span className="rounded-full border border-violet-500/35 bg-violet-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-violet-200/90">
+                Origine · Bridge V2.7
               </span>
             )}
             <span className="text-[11px] text-text-muted">{action.projectName}</span>

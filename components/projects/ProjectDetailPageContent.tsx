@@ -10,6 +10,9 @@ import { ProgressBar } from "@/components/ui/ProgressBar";
 import { ProjectMissionCard } from "@/components/projects/ProjectMissionCard";
 import { ActionPlanPanel } from "@/components/actionPlans/ActionPlanPanel";
 import { MissionFeedbackPanel } from "@/components/missionFeedback/MissionFeedbackPanel";
+import { MissionPlanBridgePanel } from "@/components/missionPlanBridge/MissionPlanBridgePanel";
+import { getTodayMissionDecision } from "@/modules/missionDecision";
+import { getAcceptedCandidateFromDecision } from "@/modules/missionPlanBridge";
 import {
   buildProjectDetailContext,
   getProjectAskGigiHref,
@@ -100,6 +103,14 @@ export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContent
     : null;
   const showUnknownPlanMission =
     planParam && planParam !== "recommended" && !missions.some((m) => m.id === planParam);
+
+  const todayDecision = getTodayMissionDecision();
+  const acceptedCandidateForProject =
+    todayDecision && ["accepted", "converted_to_plan"].includes(todayDecision.status)
+      ? getAcceptedCandidateFromDecision(todayDecision)
+      : undefined;
+  const showProjectBridge =
+    acceptedCandidateForProject?.projectId === project.id ? todayDecision : undefined;
 
   return (
     <div className="gigi-page-shell animate-fade-in">
@@ -203,6 +214,14 @@ export function ProjectDetailPageContent({ projectId }: ProjectDetailPageContent
                   <ProjectMissionCard key={mission.id} project={project} mission={mission} />
                 ))}
               </div>
+              {showProjectBridge && (
+                <MissionPlanBridgePanel
+                  decision={showProjectBridge}
+                  projectId={project.id}
+                  missionTitle={acceptedCandidateForProject?.title}
+                  className="mt-4"
+                />
+              )}
             </section>
           </div>
 
