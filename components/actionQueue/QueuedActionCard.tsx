@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Check, ChevronDown, Copy, LayoutDashboard, Play, RotateCcw, X } from "lucide-react";
+import { Check, ChevronDown, Copy, LayoutDashboard, Package, Play, RotateCcw, X } from "lucide-react";
 import type { QueuedAction } from "@/modules/actionQueue";
 import { QUEUED_STATUS_LABELS, VALIDATION_CENTER_NOTE } from "@/modules/actionQueue";
 import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions";
@@ -28,6 +28,7 @@ import {
 import type { ExecutionLog } from "@/modules/executionLogs";
 import { MISSION_PLAN_BRIDGE_ID_PREFIX } from "@/modules/missionPlanBridge";
 import { SafeActionWorkspacePanel } from "@/components/safeActionWorkspace/SafeActionWorkspacePanel";
+import { ManualExecutionHandoffPanel } from "@/components/manualExecutionHandoff/ManualExecutionHandoffPanel";
 import { cn } from "@/lib/utils";
 
 const STATUS_STYLE: Record<QueuedAction["status"], string> = {
@@ -60,6 +61,8 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showWorkspace, setShowWorkspace] = useState(false);
+  const [showHandoff, setShowHandoff] = useState(false);
+  const hasPlan = Boolean(getCachedExecutionPlan(action.id));
   const [executionPlan, setExecutionPlan] = useState<ExecutionPlan | null>(() =>
     getCachedExecutionPlan(action.id) ?? null
   );
@@ -192,6 +195,16 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
             {showWorkspace ? "Masquer workspace" : "Ouvrir workspace"}
           </button>
         )}
+        {canOpenWorkspace && (hasPlan || showWorkspace) && (
+          <button
+            type="button"
+            onClick={() => setShowHandoff((v) => !v)}
+            className="gigi-btn gigi-focus inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-[12.5px]"
+          >
+            <Package className="h-3.5 w-3.5" />
+            {showHandoff ? "Masquer handoff" : "Créer handoff"}
+          </button>
+        )}
         {action.status === "pending_review" && (
           <>
             <button
@@ -249,6 +262,15 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
           <SafeActionWorkspacePanel
             action={action}
             onClose={() => setShowWorkspace(false)}
+          />
+        </div>
+      )}
+
+      {showHandoff && canOpenWorkspace && (
+        <div className="mt-4">
+          <ManualExecutionHandoffPanel
+            action={action}
+            onClose={() => setShowHandoff(false)}
           />
         </div>
       )}

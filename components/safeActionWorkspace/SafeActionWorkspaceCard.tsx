@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { Archive, Check, Copy, RefreshCw } from "lucide-react";
+import { Archive, Check, Copy, Package, RefreshCw } from "lucide-react";
 import type { SafeActionWorkspace } from "@/modules/safeActionWorkspace";
 import {
   addUserNote,
@@ -16,6 +16,7 @@ import { SafeActionWorkspaceSummaryCard } from "./SafeActionWorkspaceSummaryCard
 import { SafeActionWorkspaceChecklist } from "./SafeActionWorkspaceChecklist";
 import { SafeActionWorkspaceTimeline } from "./SafeActionWorkspaceTimeline";
 import { cn } from "@/lib/utils";
+import { ManualExecutionHandoffPanelFromWorkspace } from "@/components/manualExecutionHandoff/ManualExecutionHandoffCard";
 
 interface SafeActionWorkspaceCardProps {
   workspace: SafeActionWorkspace;
@@ -32,6 +33,7 @@ export function SafeActionWorkspaceCard({
 }: SafeActionWorkspaceCardProps) {
   const [note, setNote] = useState("");
   const [copied, setCopied] = useState<"all" | "checklist" | "cursor" | null>(null);
+  const [showHandoff, setShowHandoff] = useState(false);
 
   const handleRefresh = useCallback(() => {
     const next = refreshWorkspace(workspace.id);
@@ -221,6 +223,14 @@ export function SafeActionWorkspaceCard({
           {copied === "cursor" ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
           Contexte Cursor
         </button>
+        <button
+          type="button"
+          onClick={() => setShowHandoff((v) => !v)}
+          className="gigi-btn gigi-focus inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-[12.5px]"
+        >
+          <Package className="h-3.5 w-3.5" />
+          {showHandoff ? "Masquer handoff" : "Créer handoff"}
+        </button>
         {onArchive && (
           <button
             type="button"
@@ -232,6 +242,14 @@ export function SafeActionWorkspaceCard({
           </button>
         )}
       </div>
+
+      {showHandoff && (
+        <ManualExecutionHandoffPanelFromWorkspace
+          workspace={workspace}
+          onClose={() => setShowHandoff(false)}
+          className="mt-4"
+        />
+      )}
     </article>
   );
 }

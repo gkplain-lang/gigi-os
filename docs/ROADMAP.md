@@ -113,7 +113,8 @@ V2.5 — Mission Recommendation Feedback Loop
 V2.6 — Mission Decision Center
 V2.7 — Mission-to-Plan Decision Bridge
 V2.8 — Safe Action Workspace
-V2.9 — Manual Execution Handoff (planned)
+V2.9 — Manual Execution Handoff
+V2.10 — Execution Report Intake (planned)
 ```
 
 ---
@@ -1561,21 +1562,55 @@ See [SAFE_ACTION_WORKSPACE.md](./SAFE_ACTION_WORKSPACE.md). Links forward to V2.
 
 ---
 
-# 31. V2.9 — Manual Execution Handoff (planned)
+# 31. V2.9 — Manual Execution Handoff
 
 ## Goal
 
-Generate a manual handoff package for Cursor or a human: full context, precise instructions, theoretical commands, checklist, success criteria, expected report — still no real execution.
+Generate a complete, copyable manual handoff package from workspace or queue action for Cursor/human execution — never auto-sent.
 
 ## Core Question
 
 ```text
-Can Gigi prepare a complete handoff without executing anything?
+Can Gigi prepare a handoff without executing or sending anything?
+```
+
+## Features
+
+```text
+Handoff from V2.8 workspace or V1.9 action
+Target: Cursor / human / self / generic
+Full sections: context, plan, commands, tests, rollback, report template
+Copy handoff / Cursor prompt / checklist / report template
+Status tracking: copied, handed_off, waiting_for_report
+Key gigi-os-v29-manual-execution-handoffs
+Still no execution or external send
+```
+
+V2.9 is complete when:
+
+- handoff creates from workspace and queue action;
+- Cursor prompt and report template copy correctly;
+- npm run build passes.
+
+See [MANUAL_EXECUTION_HANDOFF.md](./MANUAL_EXECUTION_HANDOFF.md). Links forward to V2.10 Execution Report Intake.
+
+---
+
+# 32. V2.10 — Execution Report Intake (planned)
+
+## Goal
+
+Allow user to paste execution report from Cursor/human into Gigi and propose V2.1 log + V2.2 review entries locally — no external verification.
+
+## Core Question
+
+```text
+Can pasted reports become structured local learning without repo checks?
 ```
 
 ---
 
-# 32. Later — SaaS Version (planned)
+# 33. Later — SaaS Version (planned)
 
 ## Goal
 

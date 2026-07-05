@@ -89,6 +89,14 @@ import {
   createWorkspaceFromContext,
 } from "@/modules/safeActionWorkspace";
 import { loadActionQueueState } from "@/modules/actionQueue/actionQueueStore";
+import {
+  MANUAL_EXECUTION_HANDOFF_DISCLAIMER,
+  MANUAL_EXECUTION_HANDOFF_TARGET_LABELS,
+  buildManualExecutionHandoffGuidanceHints,
+  detectManualExecutionHandoffIntent,
+  generateGlobalHandoffSummary,
+} from "@/modules/manualExecutionHandoff";
+import { createHandoffFromQueuedActionRecord } from "@/modules/manualExecutionHandoff/manualExecutionHandoffEngine";
 import { listHistoryEntries } from "@/modules/historyLearning/historyLearningStore";
 import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions/types";
 import type {
@@ -401,6 +409,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   mission_decision: "Décision mission",
   mission_plan_bridge: "Bridge mission → plan",
   safe_action_workspace: "Safe Action Workspace",
+  manual_execution_handoff: "Passation manuelle",
 };
 
 function clarificationResponse(): GigiConversationResponse {
@@ -437,6 +446,47 @@ function allDoneResponse(
 }
 
 // ---------------------------------------------------------------- main
+
+function buildManualExecutionHandoffResponse(
+  objective: string,
+  projectId: string | null
+): GigiConversationResponse {
+  const hints = buildManualExecutionHandoffGuidanceHints(objective);
+  const summary = generateGlobalHandoffSummary();
+  const actions = loadActionQueueState().actions.filter(
+    (a) =>
+      ["pending_review", "approved", "copied"].includes(a.status) &&
+      (!projectId || a.projectId === projectId)
+  );
+  const target = actions.find((a) => a.status === "approved") ?? actions[0];
+  let actionTitle: string | undefined;
+  let targetLabel: string | undefined;
+
+  if (target) {
+    const preview = createHandoffFromQueuedActionRecord(target, "cursor");
+    actionTitle = preview.title.replace(/^Handoff · /, "");
+    targetLabel = MANUAL_EXECUTION_HANDOFF_TARGET_LABELS[preview.target];
+  }
+
+  return {
+    intent: "manual_execution_handoff",
+    intentLabel: `${INTENT_LABELS.manual_execution_handoff}${actionTitle ? ` · ${actionTitle.slice(0, 36)}` : ""}`,
+    listen:
+      "Le handoff prépare un paquet copiable pour Cursor ou un humain — Gigi n'envoie rien et n'exécute rien.",
+    needsClarification: false,
+    priorityProjectName: projectId
+      ? PROJECT_NAMES[projectId as keyof typeof PROJECT_NAMES]
+      : target?.projectName,
+    manualExecutionHandoffSummaryText: summary.summaryText,
+    manualExecutionHandoffActionTitle: actionTitle,
+    manualExecutionHandoffTargetLabel: targetLabel,
+    manualExecutionHandoffGuidance: hints,
+    manualExecutionHandoffBlockedMessage: MANUAL_EXECUTION_HANDOFF_DISCLAIMER,
+    finalMessage: target
+      ? "Ouvre /actions, crée le handoff depuis le workspace ou la carte action, puis copie toi-même le prompt."
+      : "Ajoute une action à la file sur /actions avant de créer un handoff.",
+  };
+}
 
 function buildSafeActionWorkspaceResponse(
   objective: string,
@@ -878,6 +928,15 @@ export function askGigi(
   _projects: unknown,
   context: ConversationContext = {}
 ): GigiConversationResponse {
+  const manualExecutionHandoffIntent = detectManualExecutionHandoffIntent(objective);
+  if (manualExecutionHandoffIntent.isManualExecutionHandoff) {
+    const projectId =
+      manualExecutionHandoffIntent.projectId ??
+      context.currentProjectId ??
+      detectProject(normalize(objective));
+    return buildManualExecutionHandoffResponse(objective, projectId);
+  }
+
   const safeActionWorkspaceIntent = detectSafeActionWorkspaceIntent(objective);
   if (safeActionWorkspaceIntent.isSafeActionWorkspace) {
     const projectId =
@@ -1135,6 +1194,7 @@ export function askGigi(
     mission_decision: "Décision locale — ouvre / pour comparer et valider manuellement.",
     mission_plan_bridge: "Bridge local — transforme une mission acceptée en plan sans exécution auto.",
     safe_action_workspace: "Workspace local — ouvre /actions pour préparer l'exécution manuelle.",
+    manual_execution_handoff: "Handoff local — copie toi-même le paquet vers Cursor ou un humain.",
   };
 
   return {
