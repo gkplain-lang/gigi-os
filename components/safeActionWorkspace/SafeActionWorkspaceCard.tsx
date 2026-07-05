@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { Archive, Check, Copy, Package, RefreshCw } from "lucide-react";
+import { Archive, Check, ClipboardList, Copy, Package, RefreshCw } from "lucide-react";
 import type { SafeActionWorkspace } from "@/modules/safeActionWorkspace";
 import {
   addUserNote,
@@ -17,6 +17,7 @@ import { SafeActionWorkspaceChecklist } from "./SafeActionWorkspaceChecklist";
 import { SafeActionWorkspaceTimeline } from "./SafeActionWorkspaceTimeline";
 import { cn } from "@/lib/utils";
 import { ManualExecutionHandoffPanelFromWorkspace } from "@/components/manualExecutionHandoff/ManualExecutionHandoffCard";
+import { ExecutionReportIntakePanel } from "@/components/executionReportIntake/ExecutionReportIntakePanel";
 
 interface SafeActionWorkspaceCardProps {
   workspace: SafeActionWorkspace;
@@ -34,6 +35,7 @@ export function SafeActionWorkspaceCard({
   const [note, setNote] = useState("");
   const [copied, setCopied] = useState<"all" | "checklist" | "cursor" | null>(null);
   const [showHandoff, setShowHandoff] = useState(false);
+  const [showIntake, setShowIntake] = useState(false);
 
   const handleRefresh = useCallback(() => {
     const next = refreshWorkspace(workspace.id);
@@ -231,6 +233,14 @@ export function SafeActionWorkspaceCard({
           <Package className="h-3.5 w-3.5" />
           {showHandoff ? "Masquer handoff" : "Créer handoff"}
         </button>
+        <button
+          type="button"
+          onClick={() => setShowIntake((v) => !v)}
+          className="gigi-btn gigi-focus inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-[12.5px]"
+        >
+          <ClipboardList className="h-3.5 w-3.5" />
+          {showIntake ? "Masquer rapport" : "Coller rapport"}
+        </button>
         {onArchive && (
           <button
             type="button"
@@ -247,6 +257,14 @@ export function SafeActionWorkspaceCard({
         <ManualExecutionHandoffPanelFromWorkspace
           workspace={workspace}
           onClose={() => setShowHandoff(false)}
+          className="mt-4"
+        />
+      )}
+
+      {showIntake && (
+        <ExecutionReportIntakePanel
+          workspace={workspace}
+          onClose={() => setShowIntake(false)}
           className="mt-4"
         />
       )}

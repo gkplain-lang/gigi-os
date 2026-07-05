@@ -114,7 +114,8 @@ V2.6 — Mission Decision Center
 V2.7 — Mission-to-Plan Decision Bridge
 V2.8 — Safe Action Workspace
 V2.9 — Manual Execution Handoff
-V2.10 — Execution Report Intake (planned)
+V2.10 — Execution Report Intake
+V2.11 — Closed Loop Action Lifecycle (planned)
 ```
 
 ---
@@ -1596,11 +1597,11 @@ See [MANUAL_EXECUTION_HANDOFF.md](./MANUAL_EXECUTION_HANDOFF.md). Links forward 
 
 ---
 
-# 32. V2.10 — Execution Report Intake (planned)
+# 32. V2.10 — Execution Report Intake
 
 ## Goal
 
-Allow user to paste execution report from Cursor/human into Gigi and propose V2.1 log + V2.2 review entries locally — no external verification.
+Allow user to paste execution report from Cursor/human into Gigi, parse locally, and propose V2.1 log + V2.2 review entries — no external verification.
 
 ## Core Question
 
@@ -1608,9 +1609,43 @@ Allow user to paste execution report from Cursor/human into Gigi and propose V2.
 Can pasted reports become structured local learning without repo checks?
 ```
 
+## Features
+
+```text
+Paste raw report from handoff/workspace/action
+Local parser for V2.9 template + unstructured text
+Proposed log entries V2.1 — apply on user click only
+Proposed review V2.2 — generate on user click only
+Mark handoff report_received on user click only
+Key gigi-os-v210-execution-report-intake
+Still no repo/Git/GitHub verification
+```
+
+V2.10 is complete when:
+
+- intake parses pasted reports and proposes log entries;
+- apply-to-log and review generation require explicit user clicks;
+- npm run build passes.
+
+See [EXECUTION_REPORT_INTAKE.md](./EXECUTION_REPORT_INTAKE.md). Links forward to V2.11 Closed Loop Action Lifecycle.
+
 ---
 
-# 33. Later — SaaS Version (planned)
+# 33. V2.11 — Closed Loop Action Lifecycle (planned)
+
+## Goal
+
+Relate the full chain: handoff → report intake → log → review → follow-up → history → mission feedback in one local action lifecycle view — still no real execution.
+
+## Core Question
+
+```text
+Can the user see one complete action cycle without external verification?
+```
+
+---
+
+# 34. Later — SaaS Version (planned)
 
 ## Goal
 

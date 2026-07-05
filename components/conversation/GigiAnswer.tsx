@@ -147,6 +147,47 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
               ))}
             </div>
           </div>
+        ) : response.intent === "execution_report_intake" ? (
+          <div className="mt-3 space-y-3">
+            {response.executionReportIntakeBlockedMessage && (
+              <p className="text-[12.5px] leading-relaxed text-amber-200/90">
+                {response.executionReportIntakeBlockedMessage}
+              </p>
+            )}
+            {response.executionReportIntakeActionTitle && (
+              <div className="gigi-panel rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                  Execution Report Intake · V2.10
+                </p>
+                <p className="mt-1.5 text-[15px] font-medium text-text-primary">
+                  {response.executionReportIntakeActionTitle}
+                </p>
+                {response.executionReportIntakeSummaryText && (
+                  <p className="mt-2 text-[13.5px] leading-relaxed text-text-secondary">
+                    {response.executionReportIntakeSummaryText}
+                  </p>
+                )}
+              </div>
+            )}
+            {response.executionReportIntakeGuidance && response.executionReportIntakeGuidance.length > 0 && (
+              <div className="gigi-panel rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                  Rapport d&apos;exécution
+                </p>
+                <ol className="mt-2.5 space-y-2">
+                  {response.executionReportIntakeGuidance.map((hint, i) => (
+                    <li key={i} className="flex gap-2.5 text-[13.5px] leading-relaxed text-text-secondary">
+                      <span className="mt-0.5 font-medium tabular-nums text-accent-soft">{i + 1}.</span>
+                      {hint}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+            {response.finalMessage && (
+              <p className="text-[14px] font-medium text-text-primary">{response.finalMessage}</p>
+            )}
+          </div>
         ) : response.intent === "manual_execution_handoff" ? (
           <div className="mt-3 space-y-3">
             {response.manualExecutionHandoffBlockedMessage && (
