@@ -2,10 +2,9 @@ import type { GigiConversationResponse } from "@/modules/conversation/conversati
 import { buildMissionOSGuidanceHints, buildMissionOSViewModel } from "./missionOSViewModel";
 import {
   formatMissionOSForCopy,
-  formatMissionOSShortSummary,
   formatReadinessLabel,
 } from "./missionOSFormatter";
-import { MISSION_OS_SAFETY_NOTE, MISSION_OS_PHASE_LABELS } from "./types";
+import { MISSION_OS_SAFETY_NOTE_V31, MISSION_OS_PHASE_LABELS } from "./types";
 
 function normalize(text: string): string {
   return text
@@ -17,7 +16,9 @@ function normalize(text: string): string {
 const MISSION_OS_KEYWORDS = [
   "qu est ce que je fais maintenant",
   "qu'est-ce que je fais maintenant",
+  "je fais quoi",
   "quelle est ma prochaine action",
+  "prochaine action",
   "ou j en suis",
   "où j'en suis",
   "pilote la mission",
@@ -26,10 +27,13 @@ const MISSION_OS_KEYWORDS = [
   "je suis perdu",
   "resume le flow",
   "résume le flow",
+  "resume mon cycle",
+  "résume mon cycle",
   "closed loop mission",
   "pilotage mission",
   "prochaine etape",
   "prochaine étape",
+  "command center",
 ];
 
 export interface MissionOSIntent {
@@ -47,7 +51,10 @@ export interface MissionOSConversationInput {
   missionSummary?: string;
   missionId?: string;
   projectId?: string;
+  projectName?: string;
   missionStatus?: string;
+  missionConfidence?: number;
+  missionImpact?: string;
 }
 
 export function buildMissionOSConversationResponse(
@@ -58,21 +65,21 @@ export function buildMissionOSConversationResponse(
 
   return {
     intent: "mission_os",
-    intentLabel: `Pilotage mission · ${MISSION_OS_PHASE_LABELS[vm.currentPhase]}`,
-    listen: formatMissionOSShortSummary(vm),
+    intentLabel: `Command Center · ${MISSION_OS_PHASE_LABELS[vm.currentPhase]}`,
+    listen: `Mission : ${vm.currentMissionTitle}. Étape : ${vm.currentStepLabel}. Action : ${vm.primaryCtaLabel}.`,
     needsClarification: false,
     missionTitle: vm.currentMissionTitle,
-    why: vm.reasons[0],
-    nextStep: vm.nextActionLabel,
+    why: vm.primaryReason,
+    nextStep: vm.primaryCtaLabel,
     finalMessage: "Une action. Aucun bruit. Tout reste manuel.",
     missionOSGuidance: buildMissionOSGuidanceHints(),
     missionOSSummaryText: formatMissionOSForCopy(vm),
     missionOSPhaseLabel: MISSION_OS_PHASE_LABELS[vm.currentPhase],
     missionOSStepLabel: vm.currentStepLabel,
-    missionOSNextActionLabel: vm.nextActionLabel,
-    missionOSNextActionRoute: vm.nextActionRoute,
+    missionOSNextActionLabel: vm.primaryCtaLabel,
+    missionOSNextActionRoute: vm.primaryCtaRoute,
     missionOSReadinessLabel: formatReadinessLabel(vm),
-    missionOSBlockedMessage: MISSION_OS_SAFETY_NOTE,
+    missionOSBlockedMessage: MISSION_OS_SAFETY_NOTE_V31,
     priorityProjectName: input.projectId,
   };
 }

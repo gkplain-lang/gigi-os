@@ -4,10 +4,12 @@ export type {
   MissionOSNextActionKind,
   MissionOSViewModel,
   MissionOSBuildInput,
+  MissionOSTimelineItem,
 } from "./types";
 
 export {
   MISSION_OS_SAFETY_NOTE,
+  MISSION_OS_SAFETY_NOTE_V31,
   MISSION_OS_PHASE_LABELS,
   MISSION_OS_READINESS_LABELS,
 } from "./types";
@@ -35,6 +37,11 @@ export {
   buildMissionOSViewModelForAction,
   buildMissionOSGuidanceHints,
 } from "./missionOSViewModel";
+
+export { enrichMissionOSCommandCenter } from "./missionOSCommandCenter";
+
+export { mapViewModelToActionFlowStep } from "./missionOSActionFlow";
+export type { ActionFlowStepId } from "./missionOSActionFlow";
 
 export {
   detectMissionOSIntent,

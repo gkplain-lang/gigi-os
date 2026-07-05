@@ -31,6 +31,12 @@ export type MissionOSNextActionKind =
   | "choose_next_mission"
   | "clarify";
 
+export interface MissionOSTimelineItem {
+  phase: MissionOSPhase;
+  label: string;
+  status: "done" | "current" | "upcoming";
+}
+
 export interface MissionOSViewModel {
   currentMissionTitle: string;
   currentMissionSummary: string;
@@ -50,6 +56,23 @@ export interface MissionOSViewModel {
   reasons: string[];
   risks: string[];
   updatedAt: string;
+  /** V3.1 — Command Center */
+  primaryReason: string;
+  confidenceLabel?: string;
+  priorityLabel?: string;
+  blockerLabel?: string;
+  commandTitle: string;
+  commandSubtitle: string;
+  primaryCtaLabel: string;
+  primaryCtaRoute: string;
+  secondaryCtaLabel?: string;
+  secondaryCtaRoute?: string;
+  timelineItems: MissionOSTimelineItem[];
+  hasActiveCycle: boolean;
+  activeActionTitle?: string;
+  nextMissionHint?: string;
+  emptyStateTitle?: string;
+  emptyStateDescription?: string;
 }
 
 export interface MissionOSBuildInput {
@@ -57,11 +80,17 @@ export interface MissionOSBuildInput {
   missionSummary?: string;
   missionId?: string;
   projectId?: string;
+  projectName?: string;
   missionStatus?: string;
+  missionConfidence?: number;
+  missionImpact?: string;
 }
 
 export const MISSION_OS_SAFETY_NOTE =
   "Gigi ne vérifie pas le repo et n'exécute rien. Tu restes maître de chaque validation.";
+
+export const MISSION_OS_SAFETY_NOTE_V31 =
+  "Gigi prépare et guide. Il n'exécute rien sans toi.";
 
 export const MISSION_OS_PHASE_LABELS: Record<MissionOSPhase, string> = {
   mission: "Mission",

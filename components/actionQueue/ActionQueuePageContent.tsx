@@ -1,6 +1,6 @@
 "use client";
 
-import { MissionOSActionsBanner } from "@/components/missionOS/MissionOSActionsBanner";
+import { MissionOSActionFlowStepper } from "@/components/missionOS/MissionOSActionFlowStepper";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -43,7 +43,7 @@ export function ActionQueuePageContent() {
           meta="Actions préparées par Gigi — aucune exécution automatique."
         />
 
-        <MissionOSActionsBanner />
+        <MissionOSActionFlowStepper />
 
         <p className="mb-3 rounded-lg border border-amber-500/25 bg-amber-500/5 px-4 py-3 text-[13px] leading-relaxed text-text-secondary">
           {QUEUE_DRY_RUN_NOTE}

@@ -10,10 +10,11 @@ import type { ClosedLoopLifecycle } from "@/modules/closedLoopLifecycle/types";
 import { generateGlobalSummary } from "@/modules/historyLearning";
 import { listHistoryEntries } from "@/modules/historyLearning/historyLearningStore";
 import { getTodayMissionDecision } from "@/modules/missionDecision/missionDecisionStore";
+import { enrichMissionOSCommandCenter } from "./missionOSCommandCenter";
 import { mapNextStepTypeToKind, readinessFromLifecycleStatus } from "./missionOSNextStep";
 import { computeProgressPercent, phaseFromNextStepType } from "./missionOSProgress";
 import type { MissionOSBuildInput, MissionOSViewModel } from "./types";
-import { MISSION_OS_SAFETY_NOTE } from "./types";
+import { MISSION_OS_SAFETY_NOTE_V31 } from "./types";
 
 const STATUS_PRIORITY: Record<QueuedAction["status"], number> = {
   approved: 0,
@@ -80,33 +81,35 @@ function defaultMissionView(input: MissionOSBuildInput): MissionOSViewModel {
   const decision = getTodayMissionDecision();
   const hasDecision = Boolean(decision?.status === "accepted");
 
-  return {
+  const base = {
     currentMissionTitle: input.missionTitle,
     currentMissionSummary:
       input.missionSummary ??
       "Choisis ta mission du jour pour lancer la boucle fermée.",
-    currentPhase: hasDecision ? "preparation" : "mission",
-    readiness: hasDecision ? "needs_preparation" : "needs_user_decision",
+    currentPhase: (hasDecision ? "preparation" : "mission") as MissionOSViewModel["currentPhase"],
+    readiness: (hasDecision ? "needs_preparation" : "needs_user_decision") as MissionOSViewModel["readiness"],
     progressPercent: hasDecision ? 15 : 5,
     currentStepLabel: hasDecision ? "Préparer l'action" : "Choisir la mission",
     currentStepDescription: hasDecision
       ? "Ta mission est choisie — prépare une action concrète."
       : "Compare les missions et accepte celle qui compte aujourd'hui.",
-    nextActionLabel: hasDecision ? "Préparer le plan" : "Choisir la mission",
+    nextActionLabel: hasDecision ? "Préparer le plan" : "Décider la mission",
     nextActionRoute: hasDecision
       ? input.projectId
         ? `/projects/${input.projectId}`
         : "/projects"
-      : "/",
-    nextActionKind: hasDecision ? "prepare_plan" : "decide_mission",
+      : "/#mission-decision",
+    nextActionKind: (hasDecision ? "prepare_plan" : "decide_mission") as MissionOSViewModel["nextActionKind"],
     activeProjectId: input.projectId,
-    safetyNote: MISSION_OS_SAFETY_NOTE,
+    learningSummary: undefined as string | undefined,
     reasons: hasDecision
       ? ["Mission acceptée localement.", "Prochaine étape : plan et action préparée."]
-      : ["Aucune mission validée pour aujourd'hui.", "Le centre de décision t'aide à trancher."],
-    risks: [],
+      : ["Aucune mission validée pour aujourd'hui.", "Compare les candidats puis accepte manuellement."],
+    risks: [] as string[],
     updatedAt: nowIso(),
   };
+
+  return enrichMissionOSCommandCenter(base, input);
 }
 
 export function buildMissionOSViewModel(input: MissionOSBuildInput): MissionOSViewModel {
@@ -119,10 +122,8 @@ export function buildMissionOSViewModel(input: MissionOSBuildInput): MissionOSVi
       : undefined;
 
   if (!lifecycle) {
-    return {
-      ...defaultMissionView(input),
-      learningSummary: learningSnippet,
-    };
+    const enriched = defaultMissionView(input);
+    return { ...enriched, learningSummary: learningSnippet };
   }
 
   const next = lifecycle.nextSteps[0];
@@ -150,7 +151,7 @@ export function buildMissionOSViewModel(input: MissionOSBuildInput): MissionOSVi
     reasons.push(`Action active : ${action.preparedAction.title}.`);
   }
 
-  return {
+  const base = {
     currentMissionTitle: input.missionTitle || lifecycle.title,
     currentMissionSummary:
       input.missionSummary ?? lifecycle.summary.slice(0, 220),
@@ -165,12 +166,13 @@ export function buildMissionOSViewModel(input: MissionOSBuildInput): MissionOSVi
     activeLifecycleId: lifecycle.id,
     activeActionId: action?.id ?? lifecycle.actionId,
     activeProjectId: input.projectId ?? action?.projectId ?? lifecycle.projectId,
-    safetyNote: MISSION_OS_SAFETY_NOTE,
     learningSummary: learningSnippet,
     reasons,
     risks: lifecycle.risks.slice(0, 3).map((r) => r.label),
     updatedAt: lifecycle.updatedAt ?? nowIso(),
   };
+
+  return enrichMissionOSCommandCenter(base, input);
 }
 
 export function buildMissionOSViewModelForAction(actionId: string): MissionOSViewModel | undefined {
@@ -185,9 +187,9 @@ export function buildMissionOSViewModelForAction(actionId: string): MissionOSVie
 
 export function buildMissionOSGuidanceHints(): string[] {
   return [
-    "Gigi V3.0 synthétise la boucle fermée sans exécuter.",
+    "Gigi V3.1 — Mission Command Center : une mission, une action, tout manuel.",
     "Une seule prochaine action à la fois.",
     "Toutes les étapes restent manuelles et locales.",
-    MISSION_OS_SAFETY_NOTE,
+    MISSION_OS_SAFETY_NOTE_V31,
   ];
 }
