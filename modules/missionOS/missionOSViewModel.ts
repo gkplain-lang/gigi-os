@@ -11,39 +11,27 @@ import { generateGlobalSummary } from "@/modules/historyLearning";
 import { listHistoryEntries } from "@/modules/historyLearning/historyLearningStore";
 import { getTodayMissionDecision } from "@/modules/missionDecision/missionDecisionStore";
 import { enrichMissionOSCommandCenter } from "./missionOSCommandCenter";
+import { pickPrimaryActionForFlow } from "./missionOSActionFlowViewModel";
 import { mapNextStepTypeToKind, readinessFromLifecycleStatus } from "./missionOSNextStep";
 import { computeProgressPercent, phaseFromNextStepType } from "./missionOSProgress";
 import type { MissionOSBuildInput, MissionOSViewModel } from "./types";
 import { MISSION_OS_SAFETY_NOTE_V31 } from "./types";
-
-const STATUS_PRIORITY: Record<QueuedAction["status"], number> = {
-  approved: 0,
-  copied: 1,
-  pending_review: 2,
-  needs_revision: 3,
-  rejected: 4,
-};
 
 function nowIso(): string {
   return new Date().toISOString();
 }
 
 function pickPrimaryAction(projectId?: string): QueuedAction | undefined {
-  const actions = loadActionQueueState().actions;
-  if (!actions.length) return undefined;
-
-  const pool = projectId
-    ? actions.filter((a) => a.projectId === projectId)
-    : actions;
-
-  const sorted = [...(pool.length ? pool : actions)].sort((a, b) => {
-    const sa = STATUS_PRIORITY[a.status] ?? 9;
-    const sb = STATUS_PRIORITY[b.status] ?? 9;
-    if (sa !== sb) return sa - sb;
-    return b.updatedAt.localeCompare(a.updatedAt);
-  });
-
-  return sorted[0];
+  const primary = pickPrimaryActionForFlow();
+  if (!primary) return undefined;
+  if (projectId && primary.projectId !== projectId) {
+    const actions = loadActionQueueState().actions.filter((a) => a.projectId === projectId);
+    if (!actions.length) return primary;
+    const inProject = actions.find((a) => a.id === primary.id);
+    if (inProject) return inProject;
+    return actions.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))[0];
+  }
+  return primary;
 }
 
 function pickActiveLifecycle(actionId?: string): ClosedLoopLifecycle | undefined {
@@ -187,7 +175,7 @@ export function buildMissionOSViewModelForAction(actionId: string): MissionOSVie
 
 export function buildMissionOSGuidanceHints(): string[] {
   return [
-    "Gigi V3.1 — Mission Command Center : une mission, une action, tout manuel.",
+    "Gigi V3.2 — Flux d'action : une action dominante, détails en replié.",
     "Une seule prochaine action à la fois.",
     "Toutes les étapes restent manuelles et locales.",
     MISSION_OS_SAFETY_NOTE_V31,

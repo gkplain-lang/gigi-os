@@ -40,8 +40,27 @@ export {
 
 export { enrichMissionOSCommandCenter } from "./missionOSCommandCenter";
 
-export { mapViewModelToActionFlowStep } from "./missionOSActionFlow";
-export type { ActionFlowStepId } from "./missionOSActionFlow";
+export { mapViewModelToActionFlowStep, mapStageToFlowStepId } from "./missionOSActionFlow";
+export type {
+  ActionFlowStepId,
+  ActionFlowStage,
+  ActionFlowItemStatus,
+} from "./missionOSActionFlow";
+export {
+  ACTION_FLOW_STAGES,
+  ACTION_FLOW_STAGE_LABELS,
+  ACTION_FLOW_STATUS_LABELS,
+} from "./missionOSActionFlow";
+
+export {
+  buildActionFlowViewModel,
+  pickPrimaryActionForFlow,
+} from "./missionOSActionFlowViewModel";
+export type {
+  ActionFlowViewModel,
+  ActionFlowStageItem,
+  ActionFlowGroupedAction,
+} from "./missionOSActionFlowViewModel";
 
 export {
   detectMissionOSIntent,

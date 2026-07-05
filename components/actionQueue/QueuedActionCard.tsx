@@ -56,9 +56,10 @@ function formatDate(iso: string): string {
 
 interface QueuedActionCardProps {
   action: QueuedAction;
+  highlight?: boolean;
 }
 
-export function QueuedActionCard({ action }: QueuedActionCardProps) {
+export function QueuedActionCard({ action, highlight = false }: QueuedActionCardProps) {
   const { setStatus } = useActionQueue();
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -125,7 +126,13 @@ export function QueuedActionCard({ action }: QueuedActionCardProps) {
   }, [action, setStatus]);
 
   return (
-    <article className="gigi-project-card rounded-xl p-4">
+    <article
+      id={`action-${action.id}`}
+      className={cn(
+        "gigi-project-card scroll-mt-24 rounded-xl p-4",
+        highlight && "ring-2 ring-indigo-400/40 ring-offset-2 ring-offset-background"
+      )}
+    >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">

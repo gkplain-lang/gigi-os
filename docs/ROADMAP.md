@@ -119,7 +119,8 @@ V2.11 — Closed Loop Action Lifecycle
 V2.12 — V3 Readiness Audit & Stabilisation
 V3.0 — Closed Loop Mission OS
 V3.1 — Mission Command Center UX
-V3.2 — Action Flow Simplification (planned)
+V3.2 — Action Flow Simplification (delivered)
+V3.3 — Learning & Next Mission Loop (planned)
 ```
 
 ---
@@ -1811,11 +1812,11 @@ See [V3_1_MISSION_COMMAND_CENTER_UX.md](./V3_1_MISSION_COMMAND_CENTER_UX.md). Li
 
 ---
 
-# 37. V3.2 — Action Flow Simplification (planned)
+# 37. V3.2 — Action Flow Simplification (delivered)
 
 ## Goal
 
-Progressive disclosure on /actions: state-based views, dominant active action, guided report/cycle.
+Progressive disclosure on `/actions`: dominant active action, stage tabs, advanced modules collapsed.
 
 ## Core Question
 
@@ -1823,9 +1824,38 @@ Progressive disclosure on /actions: state-based views, dominant active action, g
 Can the user focus on one action without six panels open?
 ```
 
+## Delivered
+
+- `ActionFlowView` + primary card + stage tabs + collapsible details on `/actions`;
+- `buildActionFlowViewModel` / `pickPrimaryActionForFlow` — read-only synthesis;
+- Harmonized CTA with Mission Command Center on `/`;
+- Conversation `mission_os` routes to `/actions` when relevant;
+- All V2 cards/panels preserved under « Modules avancés ».
+
+## Acceptance
+
+- `/actions` shows one dominant action + next button + collapsed queue;
+- build passes; no new localStorage keys.
+
+See [V3_2_ACTION_FLOW_SIMPLIFICATION.md](./V3_2_ACTION_FLOW_SIMPLIFICATION.md). Links forward to V3.3 Learning & Next Mission Loop.
+
 ---
 
-# 38. Later — SaaS Version (planned)
+# 38. V3.3 — Learning & Next Mission Loop (planned)
+
+## Goal
+
+Make post-report learning useful: what Gigi learned, impact on next mission, tighter history/missionFeedback/missionOS loop.
+
+## Core Question
+
+```text
+After a cycle closes, does the user know what to do next — without auto-accepting anything?
+```
+
+---
+
+# 39. Later — SaaS Version (planned)
 
 ## Goal
 

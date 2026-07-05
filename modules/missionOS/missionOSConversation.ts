@@ -1,5 +1,6 @@
 import type { GigiConversationResponse } from "@/modules/conversation/conversationTypes";
 import { buildMissionOSGuidanceHints, buildMissionOSViewModel } from "./missionOSViewModel";
+import { buildActionFlowViewModel } from "./missionOSActionFlowViewModel";
 import {
   formatMissionOSForCopy,
   formatReadinessLabel,
@@ -34,6 +35,17 @@ const MISSION_OS_KEYWORDS = [
   "prochaine etape",
   "prochaine étape",
   "command center",
+  "ou est l action",
+  "où est l'action",
+  "je dois cliquer ou",
+  "je dois cliquer où",
+  "je suis dans les actions",
+  "valider quoi",
+  "rapport ou",
+  "rapport où",
+  "cycle ou",
+  "cycle où",
+  "passation cursor",
 ];
 
 export interface MissionOSIntent {
@@ -62,22 +74,43 @@ export function buildMissionOSConversationResponse(
   input: MissionOSConversationInput
 ): GigiConversationResponse {
   const vm = buildMissionOSViewModel(input);
+  const flow = buildActionFlowViewModel();
+  const norm = normalize(objective);
+  const actionOriented = [
+    "ou est l action",
+    "je dois cliquer",
+    "je suis dans les actions",
+    "valider quoi",
+    "rapport ou",
+    "rapport où",
+    "cycle ou",
+    "cycle où",
+    "passation cursor",
+  ].some((k) => norm.includes(normalize(k)));
+
+  const nextLabel = actionOriented && flow.primaryActionId ? flow.primaryCtaLabel : vm.primaryCtaLabel;
+  const listenExtra = actionOriented
+    ? ` Va sur /actions — ${flow.activeStageLabel} : ${flow.primaryCtaLabel}.`
+    : "";
 
   return {
     intent: "mission_os",
     intentLabel: `Command Center · ${MISSION_OS_PHASE_LABELS[vm.currentPhase]}`,
-    listen: `Mission : ${vm.currentMissionTitle}. Étape : ${vm.currentStepLabel}. Action : ${vm.primaryCtaLabel}.`,
+    listen: `Mission : ${vm.currentMissionTitle}. Étape : ${flow.activeStageLabel}. Action : ${nextLabel}.${listenExtra}`,
     needsClarification: false,
     missionTitle: vm.currentMissionTitle,
-    why: vm.primaryReason,
-    nextStep: vm.primaryCtaLabel,
+    why: actionOriented ? flow.whyThisAction : vm.primaryReason,
+    nextStep: nextLabel,
     finalMessage: "Une action. Aucun bruit. Tout reste manuel.",
-    missionOSGuidance: buildMissionOSGuidanceHints(),
+    missionOSGuidance: [
+      ...buildMissionOSGuidanceHints(),
+      actionOriented ? "Ouvre /actions pour le bouton principal et les détails avancés." : "",
+    ].filter(Boolean),
     missionOSSummaryText: formatMissionOSForCopy(vm),
-    missionOSPhaseLabel: MISSION_OS_PHASE_LABELS[vm.currentPhase],
-    missionOSStepLabel: vm.currentStepLabel,
-    missionOSNextActionLabel: vm.primaryCtaLabel,
-    missionOSNextActionRoute: vm.primaryCtaRoute,
+    missionOSPhaseLabel: flow.activeStageLabel,
+    missionOSStepLabel: flow.activeStatusLabel,
+    missionOSNextActionLabel: nextLabel,
+    missionOSNextActionRoute: actionOriented ? flow.primaryCtaRoute : vm.primaryCtaRoute,
     missionOSReadinessLabel: formatReadinessLabel(vm),
     missionOSBlockedMessage: MISSION_OS_SAFETY_NOTE_V31,
     priorityProjectName: input.projectId,

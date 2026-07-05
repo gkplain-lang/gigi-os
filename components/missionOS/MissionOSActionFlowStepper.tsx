@@ -3,7 +3,8 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { buildMissionOSViewModel, mapViewModelToActionFlowStep } from "@/modules/missionOS";
+import { buildActionFlowViewModel } from "@/modules/missionOS";
+import { useActionQueue } from "@/components/providers/ActionQueueProvider";
 import { cn } from "@/lib/utils";
 
 const FLOW_STEPS = [
@@ -19,17 +20,15 @@ interface MissionOSActionFlowStepperProps {
   className?: string;
 }
 
+/** Bannière compacte — préférer ActionFlowView sur /actions (V3.2). */
 export function MissionOSActionFlowStepper({ className }: MissionOSActionFlowStepperProps) {
+  const { state } = useActionQueue();
   const viewModel = useMemo(
-    () =>
-      buildMissionOSViewModel({
-        missionTitle: "Actions en cours",
-        missionSummary: "Flux d'action V3.1 — tout reste manuel.",
-      }),
-    []
+    () => buildActionFlowViewModel(state.actions),
+    [state.actions]
   );
 
-  const activeStepId = mapViewModelToActionFlowStep(viewModel);
+  const activeStepId = viewModel.flowStepId;
 
   return (
     <section
@@ -39,7 +38,7 @@ export function MissionOSActionFlowStepper({ className }: MissionOSActionFlowSte
       )}
     >
       <p className="text-[10px] font-semibold uppercase tracking-wider text-indigo-200/90">
-        Flux d&apos;action · V3.1
+        Flux d&apos;action
       </p>
       <ol className="mt-3 flex flex-wrap gap-2">
         {FLOW_STEPS.map((step) => {
@@ -64,9 +63,11 @@ export function MissionOSActionFlowStepper({ className }: MissionOSActionFlowSte
       </ol>
       <div className="mt-4 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-[14px] font-semibold text-text-primary">{viewModel.currentStepLabel}</p>
+          <p className="text-[14px] font-semibold text-text-primary">
+            {viewModel.primaryActionTitle}
+          </p>
           <p className="mt-1 text-[12.5px] text-text-muted">
-            Action prioritaire · {viewModel.progressPercent}% du cycle
+            {viewModel.activeStageLabel} · {viewModel.activeStatusLabel}
           </p>
         </div>
         <Link
