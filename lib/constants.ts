@@ -44,4 +44,8 @@ export const PAGE_META = {
     title: "Historique",
     subtitle: "Gigi garde en mémoire les décisions importantes.",
   },
+  "/settings": {
+    title: "Réglages",
+    subtitle: "Données locales, export, import et préférences — sous ton contrôle.",
+  },
 } as const;

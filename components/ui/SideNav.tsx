@@ -132,6 +132,12 @@ export function SideNav() {
           </Link>
         )}
         <Link
+          href="/settings"
+          className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
+        >
+          Réglages
+        </Link>
+        <Link
           href="/feedback"
           className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
         >

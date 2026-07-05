@@ -123,9 +123,9 @@ V3.2 — Action Flow Simplification (delivered)
 V3.3 — Learning & Next Mission Loop (delivered)
 V3.4 — Stabilisation & Public Beta Readiness (delivered)
 V3.5 — Public Landing & Onboarding (delivered)
-V3.6 — Projects Command Center (in progress — branch v3.6-projects-command-center)
-V3.7 — Settings & Local Data Control (planned)
-V4.0 — Controlled Real Execution Readiness (planned)
+V3.6 — Projects Command Center (delivered — v3.6.0)
+V3.7 — Settings & Local Data Control (in progress — branch v3.7-settings-local-data-control)
+V4.0 — Controlled Real Execution Readiness (planned — stash WIP)
 ```
 
 ---
@@ -1924,13 +1924,13 @@ Can a new visitor understand Gigi, start testing, and find the mission-first flo
 
 ---
 
-# 39.2 V3.6 — Projects Command Center (in progress)
+# 39.2 V3.6 — Projects Command Center (delivered)
 
 ## Goal
 
 Strategic `/projects` hub — priority project, next mission, active action, blockers, learning per project.
 
-## Delivered (branch — pending commit)
+## Delivered (v3.6.0)
 
 - Module `modules/projectsCommand/`
 - UI command center on `/projects`, enriched `/projects/[projectId]`
@@ -1944,17 +1944,29 @@ Strategic `/projects` hub — priority project, next mission, active action, blo
 
 ---
 
-# 39.3 V3.7 — Settings & Local Data Control (planned)
+# 39.3 V3.7 — Settings & Local Data Control (in progress)
 
 ## Goal
 
-Local data control center — export/import, controlled reset, mission preferences, prudence mode, build info.
+Local data control center — export/import, controlled reset, UI preferences, prudence mode, build info.
 
-**Not coded in V3.6.**
+## Delivered (branch — pending commit)
+
+- Route `/settings` + module `modules/localDataControl/`
+- Export JSON manuel, import preview + apply confirmé
+- Reset ciblé avec confirmations
+- Préférences `gigi-os-v37-local-settings`
+- Docs: [V3_7_SETTINGS_LOCAL_DATA_CONTROL.md](./V3_7_SETTINGS_LOCAL_DATA_CONTROL.md), [LOCAL_DATA_CONTROL.md](./LOCAL_DATA_CONTROL.md)
+
+## Not in V3.7
+
+- No cloud sync/restore, no real execution, no external connectors
+- No auth/provider changes
+- V4.0 remains in stash until explicit validation
 
 ---
 
-# 40. V4.0 — Controlled Real Execution Readiness (planned)
+# 39.4 V4.0 — Controlled Real Execution Readiness (planned)
 
 ## Goal
 

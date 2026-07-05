@@ -85,7 +85,12 @@ export function BetaTesterPageContent() {
             Retour testeur bêta (local)
           </p>
           <p className="mt-2 text-[13px] text-text-secondary">
-            Aucun envoi externe — stockage local uniquement (gigi-os-v09-beta-feedback).
+            Aucun envoi externe — stockage local uniquement (gigi-os-v09-beta-feedback). Avant un
+            test important, exporte tes données depuis{" "}
+            <Link href="/settings" className="gigi-focus font-medium text-accent-soft hover:underline">
+              Réglages
+            </Link>
+            .
           </p>
           <ul className="mt-3 space-y-1 text-[12.5px] text-text-muted">
             {BETA_FEEDBACK_PROMPTS.map((prompt) => (
@@ -107,6 +112,9 @@ export function BetaTesterPageContent() {
           </Link>
           <Link href="/feedback" className="gigi-focus text-text-muted hover:text-text-secondary">
             Feedback détaillé
+          </Link>
+          <Link href="/settings" className="gigi-focus text-text-muted hover:text-text-secondary">
+            Réglages &amp; export local
           </Link>
         </div>
       </div>

@@ -40,6 +40,12 @@ export function FeedbackPageContent() {
           >
             Checklist bêta complète →
           </Link>
+          <Link
+            href="/settings"
+            className="gigi-focus mt-2 inline-flex text-[12.5px] text-text-muted hover:text-text-secondary"
+          >
+            Export &amp; données locales →
+          </Link>
         </div>
 
         <div className="gigi-form-card rounded-xl p-5">
