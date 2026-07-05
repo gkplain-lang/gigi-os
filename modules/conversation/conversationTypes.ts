@@ -28,7 +28,8 @@ export type ConversationIntent =
   | "execution_report_intake"
   | "closed_loop_lifecycle"
   | "mission_os"
-  | "projects_command";
+  | "projects_command"
+  | "execution_readiness";
 
 export interface NotNowItem {
   projectName: string;
@@ -219,6 +220,22 @@ export interface GigiConversationResponse {
   projectsCommandPrimaryRoute?: string;
   /** V3.6 — disclaimer */
   projectsCommandBlockedMessage?: string;
+  /** V4.0 — guidance for controlled execution readiness */
+  executionReadinessGuidance?: string[];
+  /** V4.0 — global summary */
+  executionReadinessSummaryText?: string;
+  /** V4.0 — request title */
+  executionReadinessRequestTitle?: string;
+  /** V4.0 — risk label */
+  executionReadinessRiskLabel?: string;
+  /** V4.0 — permission status label */
+  executionReadinessStatusLabel?: string;
+  /** V4.0 — capabilities text */
+  executionReadinessCapabilitiesText?: string;
+  /** V4.0 — copyable request detail */
+  executionReadinessCopyText?: string;
+  /** V4.0 — disclaimer */
+  executionReadinessBlockedMessage?: string;
 }
 
 export interface ConversationContext {

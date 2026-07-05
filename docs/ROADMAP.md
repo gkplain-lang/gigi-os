@@ -124,8 +124,9 @@ V3.3 — Learning & Next Mission Loop (delivered)
 V3.4 — Stabilisation & Public Beta Readiness (delivered)
 V3.5 — Public Landing & Onboarding (delivered)
 V3.6 — Projects Command Center (delivered — v3.6.0)
-V3.7 — Settings & Local Data Control (in progress — branch v3.7-settings-local-data-control)
-V4.0 — Controlled Real Execution Readiness (planned — stash WIP)
+V3.7 — Settings & Local Data Control (delivered — v3.7.0)
+V4.0 — Controlled Real Execution Readiness (in progress — branch v4.0-controlled-real-execution-readiness-from-v3.7)
+V4.1 — Execution Permission Center (planned)
 ```
 
 ---
@@ -1896,7 +1897,7 @@ See [V3_4_PUBLIC_BETA_READINESS.md](./V3_4_PUBLIC_BETA_READINESS.md). Links forw
 
 ---
 
-# 39.1 V3.5 — Public Landing & Onboarding (in progress)
+# 39.1 V3.5 — Public Landing & Onboarding (delivered)
 
 ## Goal
 
@@ -1908,7 +1909,7 @@ Make Gigi understandable and testable for external users — landing, discovery 
 Can a new visitor understand Gigi, start testing, and find the mission-first flow without confusion?
 ```
 
-## Delivered (branch — pending commit)
+## Delivered (v3.5.0)
 
 - `/landing` — product presentation
 - `/onboarding` — 5-step discovery guide
@@ -1944,13 +1945,13 @@ Strategic `/projects` hub — priority project, next mission, active action, blo
 
 ---
 
-# 39.3 V3.7 — Settings & Local Data Control (in progress)
+# 39.3 V3.7 — Settings & Local Data Control (delivered)
 
 ## Goal
 
 Local data control center — export/import, controlled reset, UI preferences, prudence mode, build info.
 
-## Delivered (branch — pending commit)
+## Delivered (v3.7.0)
 
 - Route `/settings` + module `modules/localDataControl/`
 - Export JSON manuel, import preview + apply confirmé
@@ -1962,23 +1963,52 @@ Local data control center — export/import, controlled reset, UI preferences, p
 
 - No cloud sync/restore, no real execution, no external connectors
 - No auth/provider changes
-- V4.0 remains in stash until explicit validation
 
 ---
 
-# 39.4 V4.0 — Controlled Real Execution Readiness (planned)
+# 39.4 V4.0 — Controlled Real Execution Readiness (in progress)
 
 ## Goal
 
-Prepare guarded real execution — permissions, sandbox, audit trail — never full autonomy first.
+Prepare guarded real execution — permissions, scopes, risk, rollback, audit trail — **without real execution in V4.0**.
 
 ## Core Question
 
 ```text
-Can Gigi act on the user's behalf with explicit scopes and rollback — without breaking V3 manual trust?
+Can Gigi request the right to act — with explicit scopes and rollback — without breaking V3 manual trust?
 ```
 
-**Not coded in V3.4.**
+## Phrase produit
+
+« Gigi ne fait pas encore tout. Mais il devient capable de demander le droit d'agir. »
+
+## Delivered (branch — pending commit)
+
+- Module `modules/executionReadiness/` (policy, risk, store, service, conversation)
+- UI `components/executionReadiness/` (panel, cards, permission actions)
+- Integrations `/`, `/actions`, `/history`, conversation
+- Clé localStorage autorisée : `gigi-os-v40-execution-readiness`
+- Docs : [V4_0_CONTROLLED_REAL_EXECUTION_READINESS.md](./V4_0_CONTROLLED_REAL_EXECUTION_READINESS.md), [V4_EXECUTION_POLICY.md](./V4_EXECUTION_POLICY.md)
+
+## Not in V4.0
+
+- Real shell / GitHub / n8n / API execution
+- Connectors, sync, auth/provider changes
+- Automatic approval or action completion
+
+See [V4_EXECUTION_POLICY.md](./V4_EXECUTION_POLICY.md).
+
+---
+
+# 40.1 V4.1 — Execution Permission Center (planned)
+
+## Goal
+
+Richer permission UX — history, expiration, strong confirmation, reusable scopes, local journal.
+
+## Not coded in V4.0
+
+- No real connector without explicit product validation
 
 ---
 

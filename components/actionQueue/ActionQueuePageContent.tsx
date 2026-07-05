@@ -18,6 +18,7 @@ import {
   uniqueProjectIds,
 } from "@/modules/actionQueue";
 import { buildActionFlowViewModel } from "@/modules/missionOS";
+import { ExecutionReadinessPanel } from "@/components/executionReadiness/ExecutionReadinessPanel";
 
 export function ActionQueuePageContent() {
   const { state, isHydrated } = useActionQueue();
@@ -26,6 +27,11 @@ export function ActionQueuePageContent() {
   const flowViewModel = useMemo(
     () => buildActionFlowViewModel(state.actions),
     [state.actions]
+  );
+
+  const primaryAction = useMemo(
+    () => state.actions.find((a) => a.id === flowViewModel.primaryActionId),
+    [state.actions, flowViewModel.primaryActionId]
   );
 
   const counts = useMemo(() => countByStatus(state.actions), [state.actions]);
@@ -89,6 +95,8 @@ export function ActionQueuePageContent() {
         />
 
         <ActionFlowView />
+
+        <ExecutionReadinessPanel primaryAction={primaryAction} className="mb-6" />
 
         <ActionFlowDetails
           groupedActions={flowViewModel.groupedActions}
