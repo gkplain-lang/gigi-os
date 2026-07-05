@@ -132,6 +132,12 @@ export function SideNav() {
           </Link>
         )}
         <Link
+          href="/mission-composer"
+          className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
+        >
+          Mission du jour
+        </Link>
+        <Link
           href="/guided-actions"
           className="gigi-focus block text-[12px] text-text-muted hover:text-text-secondary"
         >

@@ -20,6 +20,7 @@ import { GigiExecutionVisibilityPanel } from "@/components/executionExperience/G
 import { V4ExecutionJourney } from "@/components/executionExperience/V4ExecutionJourney";
 import { GigiCapabilityDemoStrip } from "@/components/executionExperience/GigiCapabilityDemoStrip";
 import { GuidedActionHomeStrip } from "@/components/guidedActionFlow/GuidedActionHomeStrip";
+import { MissionComposerHomePanel } from "@/components/missionComposer/MissionComposerHomePanel";
 import { buildMissionLearningViewModel } from "@/modules/missionOS";
 import { useMemo } from "react";
 
@@ -120,6 +121,10 @@ export function MissionPageContent() {
           />
           {!isOnboardingComplete && <OnboardingBanner />}
           <DailyUseStrip />
+          <MissionComposerHomePanel
+            className="mb-6"
+            projects={state.projects.map((p) => ({ id: p.id, name: p.name }))}
+          />
           <GigiExecutionVisibilityPanel className="mb-6" />
           <V4ExecutionJourney className="mb-6" />
           <GigiCapabilityDemoStrip className="mb-6" />
@@ -152,6 +157,10 @@ export function MissionPageContent() {
           />
           {!isOnboardingComplete && <OnboardingBanner />}
           <DailyUseStrip />
+          <MissionComposerHomePanel
+            className="mb-6"
+            projects={state.projects.map((p) => ({ id: p.id, name: p.name }))}
+          />
           <GigiExecutionVisibilityPanel className="mb-6" />
           <V4ExecutionJourney className="mb-6" />
           <GigiCapabilityDemoStrip className="mb-6" />
@@ -199,6 +208,10 @@ export function MissionPageContent() {
 
         {!isOnboardingComplete && <OnboardingBanner />}
         <DailyUseStrip />
+        <MissionComposerHomePanel
+          className="mb-6"
+          projects={state.projects.map((p) => ({ id: p.id, name: p.name }))}
+        />
         <GigiExecutionVisibilityPanel className="mb-6" />
         <V4ExecutionJourney className="mb-6" />
         <GigiCapabilityDemoStrip className="mb-6" />
