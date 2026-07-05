@@ -9,7 +9,7 @@ import {
 } from "./types";
 
 export function createEmptyExecutionReadinessState(): ExecutionReadinessState {
-  return { requests: [], decisions: [], version: EXECUTION_READINESS_VERSION };
+  return { requests: [], decisions: [], manualBridgePackets: [], version: EXECUTION_READINESS_VERSION };
 }
 
 export function loadExecutionReadinessState(): ExecutionReadinessState {
@@ -25,6 +25,9 @@ export function loadExecutionReadinessState(): ExecutionReadinessState {
       ...createEmptyExecutionReadinessState(),
       ...parsed,
       decisions: Array.isArray(parsed.decisions) ? parsed.decisions : [],
+      manualBridgePackets: Array.isArray(parsed.manualBridgePackets)
+        ? parsed.manualBridgePackets
+        : [],
       version: EXECUTION_READINESS_VERSION,
     };
   } catch {

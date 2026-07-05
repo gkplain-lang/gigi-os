@@ -118,3 +118,76 @@ export type { PermissionAuditHistoryItem } from "./permissionCenterRecentAudit";
 export type { PermissionAuditExportPayload } from "./permissionCenterAuditExport";
 
 export { buildPermissionCenterViewModel } from "./permissionCenterViewModel";
+
+export type {
+  SandboxConnectorId,
+  SandboxConnectorStatus,
+  SandboxConnectorDefinition,
+  ManualExecutionPacketStatus,
+  ManualExecutionPacket,
+  ManualBridgeAuditEntry,
+  ManualBridgeGlobalSummary,
+} from "./manualBridgeTypes";
+
+export {
+  MANUAL_BRIDGE_PACKET_TTL_DAYS,
+  MANUAL_PACKET_STATUS_LABELS,
+  EXECUTION_READINESS_V42_DISCLAIMER,
+} from "./manualBridgeTypes";
+
+export {
+  getSandboxConnectorRegistry,
+  getSandboxConnectorById,
+  getBlockedConnectorIds,
+  connectorIdForCapability,
+  primaryConnectorForCapabilities,
+} from "./manualBridgeRegistry";
+
+export {
+  MANUAL_BRIDGE_V42_RULES,
+  isManualBridgeExecutionBlocked,
+  isManualBridgeConnectorActive,
+  getManualBridgeDisclaimer,
+  manualBridgePolicyNotes,
+  assertManualBridgeSafe,
+} from "./manualBridgePolicy";
+
+export {
+  listManualExecutionPackets,
+  getManualExecutionPacketById,
+  getEffectivePacketStatus,
+  syncExpiredManualBridgePackets,
+  createManualExecutionPacket,
+  createManualPacketFromRequest,
+  updateManualExecutionPacketStatus,
+} from "./manualBridgePackets";
+
+export {
+  buildManualBridgeExport,
+  serializeManualBridgeExport,
+  exportManualBridgeState,
+  exportManualBridgePacket,
+  downloadManualBridgeExport,
+  downloadManualBridgePacketExport,
+} from "./manualBridgeExport";
+
+export type { ManualBridgeExportPayload } from "./manualBridgeExport";
+
+export {
+  generateManualBridgeSummary,
+  MANUAL_BRIDGE_EMPTY_SUMMARY,
+} from "./manualBridgeSummary";
+
+export {
+  MANUAL_BRIDGE_AUDIT_EVENT_LABELS,
+  listRecentManualBridgeAuditEvents,
+} from "./manualBridgeRecentAudit";
+
+export type { ManualBridgeHistoryItem } from "./manualBridgeRecentAudit";
+
+export {
+  detectManualBridgeIntent,
+  buildManualBridgeConversationResponse,
+} from "./manualBridgeConversation";
+
+export type { ManualBridgeIntent } from "./manualBridgeConversation";

@@ -15,6 +15,7 @@ import { ExecutionRollbackPlan } from "@/components/executionReadiness/Execution
 import { ExecutionRiskBadge } from "@/components/executionReadiness/ExecutionRiskBadge";
 import { ExecutionPermissionActions } from "@/components/executionReadiness/ExecutionPermissionActions";
 import { PermissionAuditJournal } from "./PermissionAuditJournal";
+import { ManualBridgePermissionSection } from "@/components/manualBridge/ManualBridgePermissionSection";
 
 interface PermissionRequestDetailProps {
   request: ExecutionReadinessRequest;
@@ -81,6 +82,8 @@ export function PermissionRequestDetail({ request, onUpdated }: PermissionReques
       <ExecutionSafetyChecklist items={request.evidenceRequired} title="Preuve attendue" />
 
       <PermissionAuditJournal entries={request.auditTrail} />
+
+      <ManualBridgePermissionSection request={request} onUpdated={onUpdated} />
 
       <ExecutionPermissionActions request={request} onUpdated={onUpdated} />
 

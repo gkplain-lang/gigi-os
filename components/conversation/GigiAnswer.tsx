@@ -259,6 +259,12 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
               )}
               <div className="mt-3 flex flex-wrap gap-2">
                 <Link
+                  href="/manual-bridge"
+                  className="gigi-btn-secondary gigi-focus inline-flex rounded-lg px-3.5 py-2 text-[13px] font-medium"
+                >
+                  Pont manuel
+                </Link>
+                <Link
                   href="/permissions"
                   className="gigi-btn-primary gigi-focus inline-flex rounded-lg px-3.5 py-2 text-[13px] font-medium"
                 >

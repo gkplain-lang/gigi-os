@@ -52,4 +52,8 @@ export const PAGE_META = {
     title: "Centre de permissions d'exécution",
     subtitle: "Permissions locales et simulées — dry-run, validation humaine. Aucune exécution réelle.",
   },
+  "/manual-bridge": {
+    title: "Pont manuel d'exécution",
+    subtitle: "Paquets d'exécution manuelle — sandbox connecteurs, validation humaine. Aucune exécution réelle.",
+  },
 } as const;
