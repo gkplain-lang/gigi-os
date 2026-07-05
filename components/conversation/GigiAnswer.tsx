@@ -147,6 +147,52 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
               ))}
             </div>
           </div>
+        ) : response.intent === "safe_action_workspace" ? (
+          <div className="mt-3 space-y-3">
+            {response.safeActionWorkspaceBlockedMessage && (
+              <p className="text-[12.5px] leading-relaxed text-amber-200/90">
+                {response.safeActionWorkspaceBlockedMessage}
+              </p>
+            )}
+            {response.safeActionWorkspaceActionTitle && (
+              <div className="gigi-panel rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                  Action (workspace V2.8)
+                </p>
+                <p className="mt-1.5 text-[15px] font-medium text-text-primary">
+                  {response.safeActionWorkspaceActionTitle}
+                </p>
+                {response.safeActionWorkspaceReadinessLabel && (
+                  <p className="mt-1 text-[13px] text-accent-soft">
+                    Readiness : {response.safeActionWorkspaceReadinessLabel}
+                  </p>
+                )}
+                {response.safeActionWorkspaceSummaryText && (
+                  <p className="mt-2 text-[13.5px] leading-relaxed text-text-secondary">
+                    {response.safeActionWorkspaceSummaryText}
+                  </p>
+                )}
+              </div>
+            )}
+            {response.safeActionWorkspaceGuidance && response.safeActionWorkspaceGuidance.length > 0 && (
+              <div className="gigi-panel rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                  Préparer l&apos;exécution manuelle
+                </p>
+                <ol className="mt-2.5 space-y-2">
+                  {response.safeActionWorkspaceGuidance.map((hint, i) => (
+                    <li key={i} className="flex gap-2.5 text-[13.5px] leading-relaxed text-text-secondary">
+                      <span className="mt-0.5 font-medium tabular-nums text-accent-soft">{i + 1}.</span>
+                      {hint}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+            {response.finalMessage && (
+              <p className="text-[14px] font-medium text-text-primary">{response.finalMessage}</p>
+            )}
+          </div>
         ) : response.intent === "mission_plan_bridge" ? (
           <div className="mt-3 space-y-3">
             {response.missionPlanBridgeBlockedMessage && (

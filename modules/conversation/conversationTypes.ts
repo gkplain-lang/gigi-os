@@ -22,7 +22,8 @@ export type ConversationIntent =
   | "history_learning"
   | "mission_feedback"
   | "mission_decision"
-  | "mission_plan_bridge";
+  | "mission_plan_bridge"
+  | "safe_action_workspace";
 
 export interface NotNowItem {
   projectName: string;
@@ -139,6 +140,16 @@ export interface GigiConversationResponse {
   missionPlanBridgeMissionTitle?: string;
   /** V2.7 — disclaimer */
   missionPlanBridgeBlockedMessage?: string;
+  /** V2.8 — guidance for safe action workspace */
+  safeActionWorkspaceGuidance?: string[];
+  /** V2.8 — workspace summary */
+  safeActionWorkspaceSummaryText?: string;
+  /** V2.8 — action title in workspace */
+  safeActionWorkspaceActionTitle?: string;
+  /** V2.8 — readiness label */
+  safeActionWorkspaceReadinessLabel?: string;
+  /** V2.8 — disclaimer */
+  safeActionWorkspaceBlockedMessage?: string;
 }
 
 export interface ConversationContext {
