@@ -10,6 +10,7 @@ import {
   MISSION_OS_SAFETY_NOTE_V31,
 } from "./types";
 import { MISSION_OS_PHASE_ORDER, phaseIndex } from "./missionOSProgress";
+import { buildActionFlowViewModel } from "./missionOSActionFlowViewModel";
 
 const IMPACT_PRIORITY: Record<string, string> = {
   Élevé: "Priorité haute",
@@ -63,6 +64,16 @@ export function enrichMissionOSCommandCenter(
   const needsEmpty =
     !hasActiveCycle && base.readiness === "needs_user_decision";
 
+  let primaryCtaLabel = base.nextActionLabel;
+  let primaryCtaRoute = base.nextActionRoute;
+  if (base.activeActionId) {
+    const flow = buildActionFlowViewModel();
+    if (flow.primaryActionId === base.activeActionId) {
+      primaryCtaLabel = flow.primaryCtaLabel;
+      primaryCtaRoute = flow.primaryCtaRoute;
+    }
+  }
+
   return {
     ...base,
     primaryReason: base.reasons[0] ?? "Gigi recommande de trancher une mission aujourd'hui.",
@@ -75,8 +86,8 @@ export function enrichMissionOSCommandCenter(
     blockerLabel: base.risks[0] ?? (base.readiness === "unclear" ? "Statut à clarifier" : undefined),
     commandTitle: "Mission du jour",
     commandSubtitle: `${MISSION_OS_READINESS_LABELS[base.readiness]} · ${MISSION_OS_PHASE_LABELS[base.currentPhase]}`,
-    primaryCtaLabel: base.nextActionLabel,
-    primaryCtaRoute: base.nextActionRoute,
+    primaryCtaLabel,
+    primaryCtaRoute,
     secondaryCtaLabel: secondary.label,
     secondaryCtaRoute: secondary.route,
     timelineItems: buildTimelineItems(base.currentPhase),

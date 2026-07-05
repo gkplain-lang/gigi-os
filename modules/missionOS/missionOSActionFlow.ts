@@ -9,6 +9,78 @@ export type ActionFlowStepId =
   | "report"
   | "cycle";
 
+export type ActionFlowStage =
+  | "decide"
+  | "validate"
+  | "prepare"
+  | "handoff"
+  | "report"
+  | "cycle"
+  | "done";
+
+export type ActionFlowItemStatus =
+  | "waiting_decision"
+  | "waiting_validation"
+  | "ready_to_prepare"
+  | "ready_for_handoff"
+  | "waiting_report"
+  | "report_to_review"
+  | "cycle_to_close"
+  | "completed"
+  | "unclear";
+
+export const ACTION_FLOW_STAGES: ActionFlowStage[] = [
+  "decide",
+  "validate",
+  "prepare",
+  "handoff",
+  "report",
+  "cycle",
+  "done",
+];
+
+export const ACTION_FLOW_STAGE_LABELS: Record<ActionFlowStage, string> = {
+  decide: "Décision",
+  validate: "Validation",
+  prepare: "Préparation",
+  handoff: "Passation",
+  report: "Rapport",
+  cycle: "Cycle",
+  done: "Terminé",
+};
+
+export const ACTION_FLOW_STATUS_LABELS: Record<ActionFlowItemStatus, string> = {
+  waiting_decision: "À décider",
+  waiting_validation: "À valider",
+  ready_to_prepare: "À préparer",
+  ready_for_handoff: "En passation",
+  waiting_report: "Rapport attendu",
+  report_to_review: "Rapport à traiter",
+  cycle_to_close: "Cycle à finaliser",
+  completed: "Terminé",
+  unclear: "Statut à clarifier",
+};
+
+export function mapStageToFlowStepId(stage: ActionFlowStage): ActionFlowStepId {
+  switch (stage) {
+    case "decide":
+      return "decision";
+    case "validate":
+      return "validation";
+    case "prepare":
+      return "preparation";
+    case "handoff":
+      return "handoff";
+    case "report":
+      return "report";
+    case "cycle":
+    case "done":
+      return "cycle";
+    default:
+      return "decision";
+  }
+}
+
 export function mapViewModelToActionFlowStep(viewModel: MissionOSViewModel): ActionFlowStepId {
   const kind: MissionOSNextActionKind = viewModel.nextActionKind;
 

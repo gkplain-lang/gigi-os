@@ -156,7 +156,7 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
             )}
             <div className="gigi-panel rounded-xl p-4">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
-                Mission Command Center · V3.1
+                Flux d&apos;action · V3.2
               </p>
               {response.missionTitle && (
                 <p className="mt-2 text-[16px] font-semibold text-text-primary">
@@ -176,12 +176,22 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
                 </p>
               )}
               {response.missionOSNextActionLabel && response.missionOSNextActionRoute && (
-                <a
-                  href={response.missionOSNextActionRoute}
-                  className="gigi-btn-primary gigi-focus mt-3 inline-flex rounded-lg px-3.5 py-2 text-[13px] font-medium"
-                >
-                  {response.missionOSNextActionLabel}
-                </a>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <a
+                    href={response.missionOSNextActionRoute}
+                    className="gigi-btn-primary gigi-focus inline-flex rounded-lg px-3.5 py-2 text-[13px] font-medium"
+                  >
+                    {response.missionOSNextActionLabel}
+                  </a>
+                  {!response.missionOSNextActionRoute.startsWith("/actions") && (
+                    <a
+                      href="/actions"
+                      className="gigi-btn-secondary gigi-focus inline-flex rounded-lg px-3.5 py-2 text-[13px] font-medium"
+                    >
+                      Ouvrir le flux d&apos;action
+                    </a>
+                  )}
+                </div>
               )}
               {response.missionOSSummaryText && (
                 <pre className="mt-3 max-h-48 overflow-auto whitespace-pre-wrap rounded-lg bg-surface-2/60 p-3 text-[12px] text-text-secondary">
