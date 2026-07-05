@@ -21,6 +21,7 @@ import { buildActionFlowViewModel } from "@/modules/missionOS";
 import { ExecutionReadinessPanel } from "@/components/executionReadiness/ExecutionReadinessPanel";
 import { ExecutionPermissionCenterEmbed } from "@/components/executionPermissionCenter/ExecutionPermissionCenterEmbed";
 import { ManualBridgeEmbed } from "@/components/manualBridge/ManualBridgeEmbed";
+import { CommandPacksEmbed } from "@/components/commandPacks/CommandPacksEmbed";
 
 export function ActionQueuePageContent() {
   const { state, isHydrated } = useActionQueue();
@@ -103,6 +104,8 @@ export function ActionQueuePageContent() {
         <ExecutionPermissionCenterEmbed />
 
         <ManualBridgeEmbed />
+
+        <CommandPacksEmbed />
 
         <ActionFlowDetails
           groupedActions={flowViewModel.groupedActions}

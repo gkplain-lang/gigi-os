@@ -5,8 +5,10 @@ import {
   EXECUTION_READINESS_EMPTY_SUMMARY,
   EXECUTION_READINESS_V4_TAGLINE,
   EXECUTION_READINESS_V42_DISCLAIMER,
+  EXECUTION_READINESS_V43_DISCLAIMER,
   generateGlobalExecutionReadinessSummary,
   generateManualBridgeSummary,
+  generateCommandPackSummary,
   getSandboxConnectorRegistry,
   loadExecutionReadinessState,
 } from "@/modules/executionReadiness";
@@ -26,6 +28,7 @@ export function SettingsExecutionReadinessSection() {
 
   const summary = generateGlobalExecutionReadinessSummary();
   const bridgeSummary = generateManualBridgeSummary();
+  const commandPackSummary = generateCommandPackSummary();
   const connectorCount = getSandboxConnectorRegistry().length;
   const state = loadExecutionReadinessState();
   const preparedCount = state.requests.length;
@@ -91,7 +94,24 @@ export function SettingsExecutionReadinessSection() {
         </p>
       </div>
 
+      <div className="mt-4 rounded-lg border border-violet-500/20 bg-violet-500/5 px-4 py-3">
+        <p className="text-[12px] font-medium text-text-primary">Packs de commandes V4.3</p>
+        <p className="mt-1 text-[12.5px] text-text-secondary">{commandPackSummary.summaryText}</p>
+        <p className="mt-2 text-[11.5px] text-text-muted">
+          {commandPackSummary.totalPacks} pack(s) · {commandPackSummary.readyForReview} prêt(s) à
+          relire · {commandPackSummary.markedRun} lancé(s) (déclaratif) · commandes copiables
+          uniquement · secrets jamais stockés
+        </p>
+        <p className="mt-2 text-[11px] italic text-amber-200/85">{EXECUTION_READINESS_V43_DISCLAIMER}</p>
+      </div>
+
       <div className="mt-4 flex flex-wrap gap-4">
+        <Link
+          href="/command-packs"
+          className="gigi-focus inline-flex text-[13px] font-medium text-accent-soft underline-offset-2 hover:underline"
+        >
+          Packs de commandes →
+        </Link>
         <Link
           href="/manual-bridge"
           className="gigi-focus inline-flex text-[13px] font-medium text-accent-soft underline-offset-2 hover:underline"

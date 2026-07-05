@@ -63,6 +63,15 @@ export function PermissionCenterPageContent() {
             ))}
           </ul>
           <Link
+            href="/command-packs"
+            className="gigi-focus mt-4 inline-flex text-[12.5px] font-medium text-accent-soft hover:underline"
+          >
+            Packs de commandes →
+          </Link>
+          <p className="mt-2 text-[11.5px] text-text-muted">
+            Parcours : permission locale → pont manuel → pack de commandes — aucune action réelle.
+          </p>
+          <Link
             href="/manual-bridge"
             className="gigi-focus mt-4 inline-flex text-[12.5px] font-medium text-accent-soft hover:underline"
           >

@@ -127,8 +127,9 @@ V3.6 — Projects Command Center (delivered — v3.6.0)
 V3.7 — Settings & Local Data Control (delivered — v3.7.0)
 V4.0 — Controlled Real Execution Readiness (delivered — v4.0.0)
 V4.1 — Execution Permission Center (delivered — v4.1.0)
-V4.2 — Real Connector Sandbox / Manual Bridge (implemented)
-V4.3 — First Controlled Local Adapter / Human-Launched Command Packs (planned)
+V4.2 — Real Connector Sandbox / Manual Bridge (delivered — v4.2.0)
+V4.3 — Human-Launched Command Packs (implemented)
+V4.4 — Local Review Runner / Read-Only Verification Layer (planned)
 ```
 
 ---
@@ -2031,13 +2032,37 @@ Sandbox registry for future connectors + manual execution packets — copyable s
 
 ---
 
-# 40.3 V4.3 — First Controlled Local Adapter / Human-Launched Command Packs (planned)
+# 40.3 V4.3 — Human-Launched Command Packs (implemented)
 
 ## Goal
 
-Strictly controlled local adapters — human-launched command packs only, no unattended execution.
+Structured command packs Gigi prepares for human copy/paste — no execution, declarative status only.
 
-## Not coded in V4.2
+## Implemented
+
+- Route `/command-packs` — Command Packs panel
+- Module extensions `commandPack*.ts` in `modules/executionReadiness/`
+- 6 safe templates (git, GitHub PR, n8n, browser, file edit, email)
+- Generation from V4.2 manual bridge packets
+- Export JSON + Markdown
+- localStorage schema v3 — `commandPacks[]`
+- Integrations `/manual-bridge`, `/actions`, `/permissions`, `/settings`, `/history`, conversation
+- Docs : [V4_3_HUMAN_LAUNCHED_COMMAND_PACKS.md](./V4_3_HUMAN_LAUNCHED_COMMAND_PACKS.md)
+
+## Not in V4.3
+
+- Real execution, active connectors, fetch/API calls
+- Secrets storage, permanent permissions, background jobs
+
+---
+
+# 40.4 V4.4 — Local Review Runner / Read-Only Verification Layer (planned)
+
+## Goal
+
+Read-only local verification layer — help human confirm outcomes without destructive execution.
+
+## Not coded in V4.3
 
 - No real adapter without explicit product validation
 

@@ -46,6 +46,7 @@ import { RecentLearningSection } from "@/components/history/RecentLearningSectio
 import { ExecutionReadinessSummaryCard } from "@/components/executionReadiness/ExecutionReadinessSummaryCard";
 import { PermissionAuditHistoryCard } from "@/components/executionPermissionCenter/PermissionAuditHistoryCard";
 import { ManualBridgeHistoryCard } from "@/components/manualBridge/ManualBridgeHistoryCard";
+import { CommandPackHistoryCard } from "@/components/commandPacks/CommandPackHistoryCard";
 import { generateGlobalExecutionReadinessSummary } from "@/modules/executionReadiness";
 
 export function HistoryPageContent() {
@@ -100,6 +101,9 @@ export function HistoryPageContent() {
         </div>
         <div className="gigi-panel-raised mb-4 rounded-xl p-5 md:p-6">
           <ManualBridgeHistoryCard />
+        </div>
+        <div className="gigi-panel-raised mb-4 rounded-xl p-5 md:p-6">
+          <CommandPackHistoryCard />
         </div>
         <p className="mb-4 text-[12.5px] leading-relaxed text-text-muted">
           <span className="font-medium text-text-secondary">Parcours bêta :</span> rapport →

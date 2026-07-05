@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { ManualExecutionPacket } from "@/modules/executionReadiness";
 import {
   downloadManualBridgePacketExport,
   getEffectivePacketStatus,
   updateManualExecutionPacketStatus,
+  createCommandPackFromManualPacket,
 } from "@/modules/executionReadiness";
 
 interface ManualBridgePacketActionsProps {
@@ -17,7 +20,9 @@ export function ManualBridgePacketActions({
   packet,
   onUpdated,
 }: ManualBridgePacketActionsProps) {
+  const router = useRouter();
   const [exportMsg, setExportMsg] = useState<string | null>(null);
+  const [packMsg, setPackMsg] = useState<string | null>(null);
   const status = getEffectivePacketStatus(packet);
   const active = !["cancelled", "expired", "marked_done_by_human"].includes(status);
 
@@ -34,6 +39,16 @@ export function ManualBridgePacketActions({
     setExportMsg(result.ok ? `Exporté : ${result.filename}` : result.error ?? "Erreur");
   }
 
+  function handleCreateCommandPack() {
+    const pack = createCommandPackFromManualPacket(packet.id);
+    if (pack) {
+      setPackMsg(`Pack préparé : ${pack.title}`);
+      router.push(`/command-packs?pack=${pack.id}`);
+    } else {
+      setPackMsg("Impossible de préparer le pack.");
+    }
+  }
+
   if (!active) {
     return (
       <p className="text-[12px] text-text-muted">
@@ -48,6 +63,13 @@ export function ManualBridgePacketActions({
         Actions locales — pont manuel
       </p>
       <div className="flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={handleCreateCommandPack}
+          className="gigi-btn-primary gigi-focus rounded-lg px-3 py-1.5 text-[12px] font-medium"
+        >
+          Préparer un pack de commandes
+        </button>
         <button
           type="button"
           onClick={() =>
@@ -85,6 +107,14 @@ export function ManualBridgePacketActions({
         </button>
       </div>
       {exportMsg && <p className="text-[11px] text-text-muted">{exportMsg}</p>}
+      {packMsg && (
+        <p className="text-[11px] text-text-muted">
+          {packMsg}{" "}
+          <Link href="/command-packs" className="text-accent-soft hover:underline">
+            Voir /command-packs
+          </Link>
+        </p>
+      )}
     </div>
   );
 }
