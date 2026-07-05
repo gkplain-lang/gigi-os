@@ -175,9 +175,8 @@ export function buildMissionOSViewModelForAction(actionId: string): MissionOSVie
 
 export function buildMissionOSGuidanceHints(): string[] {
   return [
-    "Gigi V3.2 — Flux d'action : une action dominante, détails en replié.",
-    "Une seule prochaine action à la fois.",
-    "Toutes les étapes restent manuelles et locales.",
+    "Gigi V3 — une mission, une action, tout manuel.",
+    "Ouvre / pour la mission · /actions pour exécuter · /history pour apprendre.",
     MISSION_OS_SAFETY_NOTE_V31,
   ];
 }

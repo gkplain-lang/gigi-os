@@ -121,7 +121,8 @@ V3.0 — Closed Loop Mission OS
 V3.1 — Mission Command Center UX
 V3.2 — Action Flow Simplification (delivered)
 V3.3 — Learning & Next Mission Loop (delivered)
-V3.4 — V3 Stabilisation & Public Beta Readiness (planned)
+V3.4 — Stabilisation & Public Beta Readiness (delivered)
+V4.0 — Controlled Real Execution Readiness (planned)
 ```
 
 ---
@@ -1865,11 +1866,11 @@ See [V3_3_LEARNING_NEXT_MISSION_LOOP.md](./V3_3_LEARNING_NEXT_MISSION_LOOP.md). 
 
 ---
 
-# 39. V3.4 — V3 Stabilisation & Public Beta Readiness (planned)
+# 39. V3.4 — Stabilisation & Public Beta Readiness (delivered)
 
 ## Goal
 
-Stabilize build, lint, full journey, docs, localStorage audit for public beta readiness.
+Stabilize V3 journey, UX labels, beta docs, and document remaining lint debt for public beta.
 
 ## Core Question
 
@@ -1877,9 +1878,38 @@ Stabilize build, lint, full journey, docs, localStorage audit for public beta re
 Can a new user complete one full manual cycle without confusion or broken routes?
 ```
 
+## Delivered
+
+- V3 label harmonization (`/`, `/actions`, `/history`, conversation);
+- Collapsible learning on `/`; technical modules collapsed on `/history`;
+- `docs/V3_4_PUBLIC_BETA_READINESS.md` + `docs/V3_RELEASE_NOTES.md`;
+- Targeted lint fix (supabase unused directive); provider lint debt documented.
+
+## Beta decision
+
+`almost_beta_ready` — external tester pass recommended before public beta.
+
+See [V3_4_PUBLIC_BETA_READINESS.md](./V3_4_PUBLIC_BETA_READINESS.md). Links forward to V4.0.
+
 ---
 
-# 40. Later — SaaS Version (planned)
+# 40. V4.0 — Controlled Real Execution Readiness (planned)
+
+## Goal
+
+Prepare guarded real execution — permissions, sandbox, audit trail — never full autonomy first.
+
+## Core Question
+
+```text
+Can Gigi act on the user's behalf with explicit scopes and rollback — without breaking V3 manual trust?
+```
+
+**Not coded in V3.4.**
+
+---
+
+# 41. Later — SaaS Version (planned)
 
 ## Goal
 

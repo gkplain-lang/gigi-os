@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import Link from "next/link";
 import type { MissionOSBuildInput } from "@/modules/missionOS";
 import { buildMissionOSViewModel } from "@/modules/missionOS";
 import { MissionCommandCTA } from "./MissionCommandCTA";
@@ -34,7 +33,7 @@ export function MissionCommandCenter({
       <div className="border-b border-indigo-500/20 bg-indigo-500/10 px-5 py-4 md:px-6">
         <div className="flex flex-wrap items-center gap-2">
           <span className="rounded-full border border-indigo-400/40 bg-indigo-500/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-indigo-100">
-            Gigi V3.1 · Mission Command Center
+            Mission du jour · Gigi V3
           </span>
           {viewModel.priorityLabel && (
             <span className="text-[11px] text-text-muted">{viewModel.priorityLabel}</span>
@@ -92,16 +91,6 @@ export function MissionCommandCenter({
         </div>
 
         <MissionCommandTimeline viewModel={viewModel} />
-
-        {viewModel.learningSummary && (
-          <p className="text-[12.5px] text-text-muted">
-            <span className="font-medium text-text-secondary">Apprentissage : </span>
-            {viewModel.learningSummary}{" "}
-            <Link href="/history" className="text-accent-soft underline-offset-2 hover:underline">
-              Voir l&apos;historique
-            </Link>
-          </p>
-        )}
 
         <MissionOSSafetyNoteFromVM viewModel={viewModel} />
 

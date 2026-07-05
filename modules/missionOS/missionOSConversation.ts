@@ -5,7 +5,7 @@ import {
   formatMissionOSForCopy,
   formatReadinessLabel,
 } from "./missionOSFormatter";
-import { MISSION_OS_SAFETY_NOTE_V31, MISSION_OS_PHASE_LABELS } from "./types";
+import { MISSION_OS_SAFETY_NOTE_V31 } from "./types";
 
 function normalize(text: string): string {
   return text
@@ -39,6 +39,8 @@ const MISSION_OS_KEYWORDS = [
   "où est l'action",
   "je dois cliquer ou",
   "je dois cliquer où",
+  "ou cliquer",
+  "où cliquer",
   "je suis dans les actions",
   "valider quoi",
   "rapport ou",
@@ -95,7 +97,7 @@ export function buildMissionOSConversationResponse(
 
   return {
     intent: "mission_os",
-    intentLabel: `Command Center · ${MISSION_OS_PHASE_LABELS[vm.currentPhase]}`,
+    intentLabel: "Pilotage · Gigi V3",
     listen: `Mission : ${vm.currentMissionTitle}. Étape : ${flow.activeStageLabel}. Action : ${nextLabel}.${listenExtra}`,
     needsClarification: false,
     missionTitle: vm.currentMissionTitle,

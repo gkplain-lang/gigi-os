@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import Link from "next/link";
 import { MissionDecisionHistoryPanel } from "@/components/missionDecision/MissionDecisionHistoryPanel";
 import { generateGlobalDecisionSummary, listMissionDecisions } from "@/modules/missionDecision";
@@ -42,9 +42,7 @@ import {
   regenerateMissionFeedbackFromHistory,
 } from "@/modules/missionFeedback";
 import { useGigi } from "@/components/providers/GigiProvider";
-import { REFINED_PAGE_META } from "@/modules/dailyUseRefinement";
 import { RecentLearningSection } from "@/components/history/RecentLearningSection";
-import { ClosedLoopMissionOS } from "@/components/missionOS/ClosedLoopMissionOS";
 
 export function HistoryPageContent() {
   const { state, isHydrated } = useGigi();
@@ -78,31 +76,26 @@ export function HistoryPageContent() {
   const lifecycleSummary = generateGlobalLifecycleSummary();
   const recentLifecycles = listClosedLoopLifecycles(4);
 
-  const historyOSInput = useMemo(
-    () => ({
-      missionTitle: "Apprentissage & suite",
-      missionSummary:
-        "Archive ce que tu as appris, puis laisse Gigi recommander la prochaine mission.",
-    }),
-    []
-  );
-
   if (!isHydrated) return null;
 
   return (
     <div className="gigi-page-shell animate-fade-in mx-auto max-w-[760px]">
       <div className="gigi-page-spotlight" aria-hidden />
       <div className="gigi-page-content">
-        <PageHeader title="Historique" meta={REFINED_PAGE_META.history} />
+        <PageHeader
+          title="Historique"
+          meta="Ce que tu as fait, ce que Gigi en tire, et la suite recommandée — tout reste local et manuel."
+        />
         <RecentLearningSection />
-        <div className="mb-6">
-          <ClosedLoopMissionOS input={historyOSInput} compact />
-        </div>
         <p className="mb-4 text-[12.5px] leading-relaxed text-text-muted">
-          <span className="font-medium text-text-secondary">Prochaine étape :</span> archiver
-          l&apos;apprentissage → régénérer le feedback mission → choisir la suite sur{" "}
+          <span className="font-medium text-text-secondary">Parcours bêta :</span> rapport →
+          apprentissage ici → mission sur{" "}
           <Link href="/" className="text-accent-soft underline-offset-2 hover:underline">
             /
+          </Link>{" "}
+          ou action sur{" "}
+          <Link href="/actions" className="text-accent-soft underline-offset-2 hover:underline">
+            /actions
           </Link>
           .
         </p>
@@ -130,23 +123,28 @@ export function HistoryPageContent() {
             .
           </p>
         </div>
-        <div className="gigi-panel-raised mt-6 rounded-xl p-5 md:p-6">
+        <details className="gigi-panel-raised mt-6 rounded-xl">
+          <summary className="cursor-pointer list-none px-5 py-4 text-[13px] font-medium text-text-secondary md:px-6 [&::-webkit-details-marker]:hidden">
+            Modules techniques · cycles et traces détaillées
+          </summary>
+          <div className="space-y-6 border-t border-border/40 px-5 py-5 md:px-6">
+        <div>
           <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
-            Décisions mission · V2.6
+            Décisions mission
           </p>
           <p className="mt-2 text-[13.5px] text-text-secondary">{decisionSummary.summaryText}</p>
           <MissionDecisionHistoryPanel decisions={recentDecisions} className="mt-3" />
           <p className="mt-3 text-[12px] text-text-muted">
             Centre complet sur{" "}
-            <Link href="/#mission-decision-center" className="text-accent-soft underline">
+            <Link href="/#mission-decision" className="text-accent-soft underline">
               la mission du jour
             </Link>
             .
           </p>
         </div>
-        <div className="gigi-panel-raised mt-6 rounded-xl p-5 md:p-6">
+        <div>
           <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
-            Bridges mission → plan · V2.7
+            Passage mission → plan
           </p>
           <p className="mt-2 text-[13.5px] text-text-secondary">{bridgeSummary.summaryText}</p>
           {recentBridges.length > 0 ? (
@@ -163,17 +161,17 @@ export function HistoryPageContent() {
             </ul>
           ) : (
             <p className="mt-2 text-[12px] text-text-muted">
-              Aucun bridge — accepte une mission sur{" "}
-              <Link href="/#mission-plan-bridge" className="text-accent-soft underline">
+              Aucun passage — accepte une mission sur{" "}
+              <Link href="/#mission-decision" className="text-accent-soft underline">
                 la mission du jour
               </Link>
               .
             </p>
           )}
         </div>
-        <div className="gigi-panel-raised mt-6 rounded-xl p-5 md:p-6">
+        <div>
           <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
-            Safe Action Workspaces · V2.8
+            Espaces d&apos;action sécurisés
           </p>
           <p className="mt-2 text-[13.5px] text-text-secondary">{workspaceSummary.summaryText}</p>
           {recentWorkspaces.length > 0 ? (
@@ -193,7 +191,7 @@ export function HistoryPageContent() {
             </ul>
           ) : (
             <p className="mt-2 text-[12px] text-text-muted">
-              Aucun workspace — ouvre une action sur{" "}
+              Aucun espace — ouvre une action sur{" "}
               <Link href="/actions" className="text-accent-soft underline">
                 /actions
               </Link>
@@ -201,9 +199,9 @@ export function HistoryPageContent() {
             </p>
           )}
         </div>
-        <div className="gigi-panel-raised mt-6 rounded-xl p-5 md:p-6">
+        <div>
           <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
-            Manual Execution Handoffs · V2.9
+            Passations manuelles
           </p>
           <p className="mt-2 text-[13.5px] text-text-secondary">{handoffSummary.summaryText}</p>
           {recentHandoffs.length > 0 ? (
@@ -224,7 +222,7 @@ export function HistoryPageContent() {
             </ul>
           ) : (
             <p className="mt-2 text-[12px] text-text-muted">
-              Aucun handoff — crée-en un depuis{" "}
+              Aucune passation — crée-en une depuis{" "}
               <Link href="/actions" className="text-accent-soft underline">
                 /actions
               </Link>
@@ -232,9 +230,9 @@ export function HistoryPageContent() {
             </p>
           )}
         </div>
-        <div className="gigi-panel-raised mt-6 rounded-xl p-5 md:p-6">
+        <div>
           <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
-            Execution Report Intake · V2.10
+            Rapports d&apos;exécution
           </p>
           <p className="mt-2 text-[13.5px] text-text-secondary">{intakeSummary.summaryText}</p>
           {recentIntakes.length > 0 ? (
@@ -263,9 +261,9 @@ export function HistoryPageContent() {
             </p>
           )}
         </div>
-        <div className="gigi-panel-raised mt-6 rounded-xl p-5 md:p-6">
+        <div>
           <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
-            Closed Loop Action Lifecycles · V2.11
+            Cycles complets
           </p>
           <p className="mt-2 text-[13.5px] text-text-secondary">{lifecycleSummary.summaryText}</p>
           {recentLifecycles.length > 0 ? (
@@ -294,6 +292,8 @@ export function HistoryPageContent() {
             </p>
           )}
         </div>
+          </div>
+        </details>
       </div>
     </div>
   );

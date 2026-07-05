@@ -31,6 +31,8 @@ const LEARNING_KEYWORDS = [
   "gigi a appris",
   "la suite",
   "mission suivante",
+  "ou cliquer",
+  "où cliquer",
 ];
 
 export interface MissionLearningIntent {
@@ -55,7 +57,7 @@ export function buildMissionLearningConversationResponse(
 
   return {
     intent: "mission_os",
-    intentLabel: "Apprentissage & suite · V3.3",
+    intentLabel: "Apprentissage & suite · Gigi V3",
     listen: `Résultat : ${vm.whatHappened} Apprentissage : ${vm.whatGigiLearned.slice(0, 120)}`,
     needsClarification: false,
     missionTitle: vm.recommendedNextMissionTitle ?? "Suite à définir",

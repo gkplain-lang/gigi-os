@@ -15,7 +15,7 @@ export function RecentLearningSection() {
   return (
     <section className="gigi-panel-raised mb-6 rounded-xl p-5 md:p-6" aria-label="Apprentissage récent">
       <p className="text-[10px] font-semibold uppercase tracking-wider text-emerald-200/90">
-        Apprentissage récent · V3.3
+        Apprentissage récent
       </p>
       <p className="mt-2 text-[15px] font-semibold text-text-primary">{viewModel.whatGigiLearned}</p>
       <p className="mt-2 text-[13px] leading-relaxed text-text-secondary">{viewModel.whatChanged}</p>

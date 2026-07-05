@@ -85,7 +85,7 @@ export function ActionQueuePageContent() {
       <div className="gigi-page-content">
         <PageHeader
           title="Flux d'action"
-          meta="Une action à la fois. Prépare, exécute manuellement, colle le rapport."
+          meta="Une action à la fois — prépare, exécute hors de Gigi, colle le rapport. Rien n'est automatique."
         />
 
         <ActionFlowView />
