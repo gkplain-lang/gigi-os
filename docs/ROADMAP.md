@@ -125,7 +125,7 @@ V3.4 — Stabilisation & Public Beta Readiness (delivered)
 V3.5 — Public Landing & Onboarding (delivered)
 V3.6 — Projects Command Center (delivered — v3.6.0)
 V3.7 — Settings & Local Data Control (delivered — v3.7.0)
-V4.0 — Controlled Real Execution Readiness (in progress — branch v4.0-controlled-real-execution-readiness-from-v3.7)
+V4.0 — Controlled Real Execution Readiness (delivered — v4.0.0)
 V4.1 — Execution Permission Center (planned)
 ```
 
@@ -1966,7 +1966,7 @@ Local data control center — export/import, controlled reset, UI preferences, p
 
 ---
 
-# 39.4 V4.0 — Controlled Real Execution Readiness (in progress)
+# 39.4 V4.0 — Controlled Real Execution Readiness (delivered)
 
 ## Goal
 
@@ -1982,11 +1982,11 @@ Can Gigi request the right to act — with explicit scopes and rollback — with
 
 « Gigi ne fait pas encore tout. Mais il devient capable de demander le droit d'agir. »
 
-## Delivered (branch — pending commit)
+## Delivered (v4.0.0)
 
 - Module `modules/executionReadiness/` (policy, risk, store, service, conversation)
 - UI `components/executionReadiness/` (panel, cards, permission actions)
-- Integrations `/`, `/actions`, `/history`, conversation
+- Integrations `/`, `/actions`, `/history`, `/settings`, conversation
 - Clé localStorage autorisée : `gigi-os-v40-execution-readiness`
 - Docs : [V4_0_CONTROLLED_REAL_EXECUTION_READINESS.md](./V4_0_CONTROLLED_REAL_EXECUTION_READINESS.md), [V4_EXECUTION_POLICY.md](./V4_EXECUTION_POLICY.md)
 
