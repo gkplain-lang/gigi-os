@@ -90,10 +90,10 @@ export function ClosedLoopLifecyclePanel({
       )}
     >
       <p className="text-[10px] font-semibold uppercase tracking-wider text-indigo-200/90">
-        Closed Loop Action Lifecycle · V2.11
+        Cycle complet · V3
       </p>
       <p className="mt-1 text-[13px] text-text-secondary">
-        Vue cycle complet — agrégation locale sans vérification repo.
+        Vue cycle — agrégation locale sans vérification repo.
       </p>
 
       {!lifecycle ? (

@@ -117,7 +117,8 @@ V2.9 — Manual Execution Handoff
 V2.10 — Execution Report Intake
 V2.11 — Closed Loop Action Lifecycle
 V2.12 — V3 Readiness Audit & Stabilisation
-V3.0 — Closed Loop Mission OS (planned)
+V3.0 — Closed Loop Mission OS
+V3.1 — Mission Command Center UX (planned)
 ```
 
 ---
@@ -1715,7 +1716,7 @@ See [V3_READINESS_AUDIT.md](./V3_READINESS_AUDIT.md) and [V3_SCOPE.md](./V3_SCOP
 
 ---
 
-# 35. V3.0 — Closed Loop Mission OS (planned)
+# 35. V3.0 — Closed Loop Mission OS
 
 ## Goal
 
@@ -1724,44 +1725,61 @@ Unify the V2.x closed loop behind a mission-first UX: one mission, one action in
 ## Core Question
 
 ```text
-Can the user complete one full action cycle without confusion or false sense of auto-execution?
+Can the user open Gigi and immediately know what to do now in the closed loop?
 ```
 
 ## Features
 
 ```text
-Mission hub with active cycle summary
-Guided action flow (progressive disclosure on /actions)
-Consistent "next step" on all main screens
-Reuse V1.6–V2.11 modules without removal
-Preserve all localStorage keys v03–v211
-Optional lint provider cleanup
-User-facing "How Gigi works" one-pager
+modules/missionOS/ — read-only view model from V2.x stores
+components/missionOS/ — ClosedLoopMissionOS hub
+/ — full mission OS block
+/actions — MissionOSActionsBanner + simplified labels
+/history, /projects/[id] — compact blocks + next-step hints
+/conversation — intent mission_os
+docs/V3_CLOSED_LOOP_MISSION_OS.md
+No new localStorage keys
 ```
 
 ## Not in V3.0
 
 ```text
 Real execution, GitHub verification, auto-sync
-New localStorage keys without explicit version bump
-Payment, public landing, SaaS multi-tenant
-Cloud memory or automatic data migration
+Replacing V2.x modules
+New localStorage persistence layer
+Payment, landing, SaaS
+Mass refactor QueuedActionCard panels
 ```
 
 ## Acceptance Criteria
 
 V3.0 is complete when:
 
-- criteria in V3_SCOPE.md are met;
-- existing v19–v211 data survives upgrade;
-- dry-run guardrails V0.6–V2.11 preserved;
+- user sees mission + phase + next action on /;
+- /actions shows V3 priority banner;
+- conversation answers « qu'est-ce que je fais maintenant ? »;
+- all v19–v211 keys unchanged;
 - npm run build passes.
 
-See [V3_SCOPE.md](./V3_SCOPE.md).
+See [V3_CLOSED_LOOP_MISSION_OS.md](./V3_CLOSED_LOOP_MISSION_OS.md). Links forward to V3.1 Mission Command Center UX.
 
 ---
 
-# 36. Later — SaaS Version (planned)
+# 36. V3.1 — Mission Command Center UX (planned)
+
+## Goal
+
+Further simplify the home mission hub: single dominant CTA, less visual noise, Decision Center + MissionOS fusion.
+
+## Core Question
+
+```text
+Can the user decide and act in one glance without scrolling?
+```
+
+---
+
+# 37. Later — SaaS Version (planned)
 
 ## Goal
 

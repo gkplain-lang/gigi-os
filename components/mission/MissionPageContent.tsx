@@ -12,6 +12,8 @@ import { askGigi } from "@/modules/conversation/conversationBrain";
 import { getRefinedMissionPageMeta } from "@/modules/dailyUseRefinement";
 import { MissionFeedbackPanel } from "@/components/missionFeedback/MissionFeedbackPanel";
 import { MissionDecisionCenter } from "@/components/missionDecision/MissionDecisionCenter";
+import { ClosedLoopMissionOS } from "@/components/missionOS/ClosedLoopMissionOS";
+import { useMemo } from "react";
 
 const STATUS_BADGE: Record<string, string> = {
   recommended: "Recommandée",
@@ -35,11 +37,34 @@ export function MissionPageContent() {
     getDecision,
   } = useGigi();
 
+  const missionOSInput = useMemo(
+    () => ({
+      missionTitle: state.mission.title,
+      missionSummary: state.mission.reason,
+      missionId: state.mission.id,
+      projectId: state.mission.projectId,
+      missionStatus: state.mission.status,
+    }),
+    [
+      state.mission.id,
+      state.mission.title,
+      state.mission.reason,
+      state.mission.projectId,
+      state.mission.status,
+    ]
+  );
+
   if (!isHydrated) return null;
 
   const { mission } = state;
   const tasks = execution.tasks;
   const active = mission.status === "recommended" || mission.status === "in_progress";
+
+  const missionOSBlock = (
+    <div className="mb-6">
+      <ClosedLoopMissionOS input={missionOSInput} />
+    </div>
+  );
 
   const badge = (
     <span className="rounded-full border border-[rgba(124,140,255,0.45)] bg-[rgba(124,140,255,0.18)] px-3 py-1 text-[12px] font-semibold text-accent-soft shadow-[0_0_16px_-4px_rgba(124,140,255,0.6)]">
@@ -61,6 +86,7 @@ export function MissionPageContent() {
           />
           {!isOnboardingComplete && <OnboardingBanner />}
           <DailyUseStrip />
+          {missionOSBlock}
           <div className="mb-6">
             <MissionDecisionCenter
               completedMissionIds={state.completedMissionIds}
@@ -89,6 +115,7 @@ export function MissionPageContent() {
           />
           {!isOnboardingComplete && <OnboardingBanner />}
           <DailyUseStrip />
+          {missionOSBlock}
           <div className="mb-6">
             <MissionDecisionCenter
               completedMissionIds={state.completedMissionIds}
@@ -132,6 +159,7 @@ export function MissionPageContent() {
 
         {!isOnboardingComplete && <OnboardingBanner />}
         <DailyUseStrip />
+        {missionOSBlock}
 
         <div className="mb-6">
           <MissionDecisionCenter
