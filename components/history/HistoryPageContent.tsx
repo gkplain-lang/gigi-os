@@ -20,6 +20,12 @@ import {
   MANUAL_EXECUTION_HANDOFF_STATUS_LABELS,
   MANUAL_EXECUTION_HANDOFF_TARGET_LABELS,
 } from "@/modules/manualExecutionHandoff";
+import {
+  generateGlobalIntakeSummary,
+  listExecutionReportIntakes,
+  EXECUTION_REPORT_INTAKE_DECISION_LABELS,
+  EXECUTION_REPORT_INTAKE_STATUS_LABELS,
+} from "@/modules/executionReportIntake";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { HistoryTimeline } from "@/components/history/HistoryTimeline";
 import { HistoryLearningPanel } from "@/components/historyLearning/HistoryLearningPanel";
@@ -62,6 +68,8 @@ export function HistoryPageContent() {
   const recentWorkspaces = listSafeActionWorkspaces(4);
   const handoffSummary = generateGlobalHandoffSummary();
   const recentHandoffs = listManualExecutionHandoffs(4);
+  const intakeSummary = generateGlobalIntakeSummary();
+  const recentIntakes = listExecutionReportIntakes(4);
 
   if (!isHydrated) return null;
 
@@ -189,6 +197,37 @@ export function HistoryPageContent() {
           ) : (
             <p className="mt-2 text-[12px] text-text-muted">
               Aucun handoff — crée-en un depuis{" "}
+              <Link href="/actions" className="text-accent-soft underline">
+                /actions
+              </Link>
+              .
+            </p>
+          )}
+        </div>
+        <div className="gigi-panel-raised mt-6 rounded-xl p-5 md:p-6">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+            Execution Report Intake · V2.10
+          </p>
+          <p className="mt-2 text-[13.5px] text-text-secondary">{intakeSummary.summaryText}</p>
+          {recentIntakes.length > 0 ? (
+            <ul className="mt-3 space-y-2">
+              {recentIntakes.map((i) => (
+                <li key={i.id} className="text-[12.5px] text-text-secondary">
+                  <span className="font-medium text-text-primary">
+                    {i.title.replace(/^Intake · /, "")}
+                  </span>
+                  <span className="text-text-muted">
+                    {" "}
+                    — {EXECUTION_REPORT_INTAKE_DECISION_LABELS[i.decision]} ·{" "}
+                    {EXECUTION_REPORT_INTAKE_STATUS_LABELS[i.status]} ·{" "}
+                    {i.updatedAt.slice(0, 10)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 text-[12px] text-text-muted">
+              Aucun rapport reçu — colle un rapport depuis{" "}
               <Link href="/actions" className="text-accent-soft underline">
                 /actions
               </Link>

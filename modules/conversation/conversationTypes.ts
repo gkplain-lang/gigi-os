@@ -24,7 +24,8 @@ export type ConversationIntent =
   | "mission_decision"
   | "mission_plan_bridge"
   | "safe_action_workspace"
-  | "manual_execution_handoff";
+  | "manual_execution_handoff"
+  | "execution_report_intake";
 
 export interface NotNowItem {
   projectName: string;
@@ -161,6 +162,16 @@ export interface GigiConversationResponse {
   manualExecutionHandoffTargetLabel?: string;
   /** V2.9 — disclaimer */
   manualExecutionHandoffBlockedMessage?: string;
+  /** V2.10 — guidance for execution report intake */
+  executionReportIntakeGuidance?: string[];
+  /** V2.10 — intake summary */
+  executionReportIntakeSummaryText?: string;
+  /** V2.10 — action title */
+  executionReportIntakeActionTitle?: string;
+  /** V2.10 — decision label */
+  executionReportIntakeDecisionLabel?: string;
+  /** V2.10 — disclaimer */
+  executionReportIntakeBlockedMessage?: string;
 }
 
 export interface ConversationContext {

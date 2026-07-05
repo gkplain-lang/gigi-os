@@ -10,6 +10,7 @@ import {
   updateHandoffTarget,
 } from "@/modules/manualExecutionHandoff";
 import type { SafeActionWorkspace } from "@/modules/safeActionWorkspace";
+import { ExecutionReportIntakePanel } from "@/components/executionReportIntake/ExecutionReportIntakePanel";
 import { ManualExecutionHandoffSummaryCard } from "./ManualExecutionHandoffSummaryCard";
 import { ManualExecutionHandoffPreview } from "./ManualExecutionHandoffPreview";
 import { ManualExecutionHandoffActions } from "./ManualExecutionHandoffActions";
@@ -33,6 +34,7 @@ export function ManualExecutionHandoffCard({
   className,
 }: ManualExecutionHandoffCardProps) {
   const [note, setNote] = useState("");
+  const [showIntake, setShowIntake] = useState(false);
 
   const handleTarget = (target: ManualExecutionHandoffTarget) => {
     onTargetChange?.(target);
@@ -77,6 +79,18 @@ export function ManualExecutionHandoffCard({
         onHandoffChange={onHandoffChange}
         onArchive={onArchive}
       />
+
+      <button
+        type="button"
+        onClick={() => setShowIntake((v) => !v)}
+        className="gigi-btn gigi-focus rounded-lg px-3 py-1.5 text-[12.5px] ring-1 ring-sky-400/30"
+      >
+        {showIntake ? "Masquer rapport" : "Coller rapport V2.10"}
+      </button>
+
+      {showIntake && (
+        <ExecutionReportIntakePanel handoff={handoff} onHandoffChange={onHandoffChange} />
+      )}
 
       {handoff.userNotes.length > 0 && (
         <ul className="space-y-1 text-[12.5px] text-text-secondary">

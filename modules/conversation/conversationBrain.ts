@@ -97,6 +97,12 @@ import {
   generateGlobalHandoffSummary,
 } from "@/modules/manualExecutionHandoff";
 import { createHandoffFromQueuedActionRecord } from "@/modules/manualExecutionHandoff/manualExecutionHandoffEngine";
+import {
+  EXECUTION_REPORT_INTAKE_DISCLAIMER,
+  buildExecutionReportIntakeGuidanceHints,
+  detectExecutionReportIntakeIntent,
+  generateGlobalIntakeSummary,
+} from "@/modules/executionReportIntake";
 import { listHistoryEntries } from "@/modules/historyLearning/historyLearningStore";
 import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions/types";
 import type {
@@ -410,6 +416,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   mission_plan_bridge: "Bridge mission → plan",
   safe_action_workspace: "Safe Action Workspace",
   manual_execution_handoff: "Passation manuelle",
+  execution_report_intake: "Rapport d'exécution",
 };
 
 function clarificationResponse(): GigiConversationResponse {
@@ -446,6 +453,44 @@ function allDoneResponse(
 }
 
 // ---------------------------------------------------------------- main
+
+function buildExecutionReportIntakeResponse(
+  objective: string,
+  projectId: string | null
+): GigiConversationResponse {
+  const hints = buildExecutionReportIntakeGuidanceHints(objective);
+  const summary = generateGlobalIntakeSummary();
+  const actions = loadActionQueueState().actions.filter(
+    (a) =>
+      ["pending_review", "approved", "copied"].includes(a.status) &&
+      (!projectId || a.projectId === projectId)
+  );
+  const target = actions.find((a) => a.status === "approved") ?? actions[0];
+  let actionTitle: string | undefined;
+
+  if (target) {
+    actionTitle = target.preparedAction.title;
+  }
+
+  return {
+    intent: "execution_report_intake",
+    intentLabel: `${INTENT_LABELS.execution_report_intake}${actionTitle ? ` · ${actionTitle.slice(0, 36)}` : ""}`,
+    listen:
+      "Colle le rapport reçu — Gigi le parse localement sans vérifier Git, GitHub ou le repo.",
+    needsClarification: false,
+    priorityProjectName: projectId
+      ? PROJECT_NAMES[projectId as keyof typeof PROJECT_NAMES]
+      : target?.projectName,
+    executionReportIntakeSummaryText: summary.summaryText,
+    executionReportIntakeActionTitle: actionTitle,
+    executionReportIntakeDecisionLabel: undefined,
+    executionReportIntakeGuidance: hints,
+    executionReportIntakeBlockedMessage: EXECUTION_REPORT_INTAKE_DISCLAIMER,
+    finalMessage: target
+      ? "Ouvre /actions ou le handoff V2.9, colle le rapport, parse-le, puis applique au log manuellement si tu valides."
+      : "Ajoute une action à la file sur /actions avant d'importer un rapport.",
+  };
+}
 
 function buildManualExecutionHandoffResponse(
   objective: string,
@@ -928,6 +973,15 @@ export function askGigi(
   _projects: unknown,
   context: ConversationContext = {}
 ): GigiConversationResponse {
+  const executionReportIntakeIntent = detectExecutionReportIntakeIntent(objective);
+  if (executionReportIntakeIntent.isExecutionReportIntake) {
+    const projectId =
+      executionReportIntakeIntent.projectId ??
+      context.currentProjectId ??
+      detectProject(normalize(objective));
+    return buildExecutionReportIntakeResponse(objective, projectId);
+  }
+
   const manualExecutionHandoffIntent = detectManualExecutionHandoffIntent(objective);
   if (manualExecutionHandoffIntent.isManualExecutionHandoff) {
     const projectId =
@@ -1195,6 +1249,7 @@ export function askGigi(
     mission_plan_bridge: "Bridge local — transforme une mission acceptée en plan sans exécution auto.",
     safe_action_workspace: "Workspace local — ouvre /actions pour préparer l'exécution manuelle.",
     manual_execution_handoff: "Handoff local — copie toi-même le paquet vers Cursor ou un humain.",
+    execution_report_intake: "Intake local — colle le rapport toi-même, Gigi ne vérifie pas le repo.",
   };
 
   return {
