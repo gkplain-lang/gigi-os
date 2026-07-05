@@ -11,6 +11,7 @@ import {
 } from "@/modules/manualExecutionHandoff";
 import type { SafeActionWorkspace } from "@/modules/safeActionWorkspace";
 import { ExecutionReportIntakePanel } from "@/components/executionReportIntake/ExecutionReportIntakePanel";
+import { ClosedLoopLifecyclePanel } from "@/components/closedLoopLifecycle/ClosedLoopLifecyclePanel";
 import { ManualExecutionHandoffSummaryCard } from "./ManualExecutionHandoffSummaryCard";
 import { ManualExecutionHandoffPreview } from "./ManualExecutionHandoffPreview";
 import { ManualExecutionHandoffActions } from "./ManualExecutionHandoffActions";
@@ -35,6 +36,7 @@ export function ManualExecutionHandoffCard({
 }: ManualExecutionHandoffCardProps) {
   const [note, setNote] = useState("");
   const [showIntake, setShowIntake] = useState(false);
+  const [showLifecycle, setShowLifecycle] = useState(false);
 
   const handleTarget = (target: ManualExecutionHandoffTarget) => {
     onTargetChange?.(target);
@@ -88,8 +90,20 @@ export function ManualExecutionHandoffCard({
         {showIntake ? "Masquer rapport" : "Coller rapport V2.10"}
       </button>
 
+      <button
+        type="button"
+        onClick={() => setShowLifecycle((v) => !v)}
+        className="gigi-btn gigi-focus rounded-lg px-3 py-1.5 text-[12.5px] ring-1 ring-indigo-400/30"
+      >
+        {showLifecycle ? "Masquer cycle" : "Cycle complet V2.11"}
+      </button>
+
       {showIntake && (
         <ExecutionReportIntakePanel handoff={handoff} onHandoffChange={onHandoffChange} />
+      )}
+
+      {showLifecycle && (
+        <ClosedLoopLifecyclePanel handoff={handoff} />
       )}
 
       {handoff.userNotes.length > 0 && (

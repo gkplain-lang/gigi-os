@@ -115,7 +115,8 @@ V2.7 — Mission-to-Plan Decision Bridge
 V2.8 — Safe Action Workspace
 V2.9 — Manual Execution Handoff
 V2.10 — Execution Report Intake
-V2.11 — Closed Loop Action Lifecycle (planned)
+V2.11 — Closed Loop Action Lifecycle
+V2.12 — V3 Readiness Audit & Stabilisation (planned)
 ```
 
 ---
@@ -1631,11 +1632,11 @@ See [EXECUTION_REPORT_INTAKE.md](./EXECUTION_REPORT_INTAKE.md). Links forward to
 
 ---
 
-# 33. V2.11 — Closed Loop Action Lifecycle (planned)
+# 33. V2.11 — Closed Loop Action Lifecycle
 
 ## Goal
 
-Relate the full chain: handoff → report intake → log → review → follow-up → history → mission feedback in one local action lifecycle view — still no real execution.
+Relate the full chain: mission → plan → action → workspace → handoff → intake → log → review → follow-up → history → feedback in one local lifecycle view — still no real execution.
 
 ## Core Question
 
@@ -1643,9 +1644,42 @@ Relate the full chain: handoff → report intake → log → review → follow-u
 Can the user see one complete action cycle without external verification?
 ```
 
+## Features
+
+```text
+Aggregate local data from V1.6–V2.10 into one lifecycle record
+Timeline of 15 stages with completed/missing detection
+Status, health, risks, learnings, next steps
+Manual close and archive only
+Key gigi-os-v211-closed-loop-action-lifecycle
+No repo/Git verification
+```
+
+V2.11 is complete when:
+
+- lifecycle creates from action/workspace/handoff/intake;
+- recalculate updates stages from local stores;
+- npm run build passes.
+
+See [CLOSED_LOOP_ACTION_LIFECYCLE.md](./CLOSED_LOOP_ACTION_LIFECYCLE.md). Links forward to V2.12 V3 Readiness Audit.
+
 ---
 
-# 34. Later — SaaS Version (planned)
+# 34. V2.12 — V3 Readiness Audit & Stabilisation (planned)
+
+## Goal
+
+Prepare Gigi V3.0: audit closed loop flow, fix UX inconsistencies, priority lint cleanup, localStorage/routes/security checks — still no real execution.
+
+## Core Question
+
+```text
+Is the local closed loop stable enough to define V3.0 scope?
+```
+
+---
+
+# 35. Later — SaaS Version (planned)
 
 ## Goal
 
