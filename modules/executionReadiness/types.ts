@@ -113,6 +113,10 @@ export interface ExecutionReadinessState {
   projectMissionCandidates?: import("../missionComposer/missionComposerTypes").ProjectMissionCandidate[];
   /** V4.7 — mission prioritaire du jour */
   dailyPriorityMissions?: import("../missionComposer/missionComposerTypes").DailyPriorityMission[];
+  /** V4.8 — revues de mission quotidiennes */
+  dailyMissionReviews?: import("../missionReview/missionReviewTypes").DailyMissionReview[];
+  /** V4.8 — réflexions d'exécution locales */
+  missionExecutionReflections?: import("../missionReview/missionReviewTypes").MissionExecutionReflection[];
   lastUpdatedAt?: string;
   version: number;
 }
@@ -152,7 +156,7 @@ export interface ExecutionReadinessIntent {
 }
 
 export const EXECUTION_READINESS_STORAGE_KEY = "gigi-os-v40-execution-readiness";
-export const EXECUTION_READINESS_VERSION = 6;
+export const EXECUTION_READINESS_VERSION = 7;
 
 export const EXECUTION_READINESS_DISCLAIMER =
   "V4.0 — Gigi ne lance rien. Cette étape prépare seulement les permissions futures : dry-run, périmètre, risques et rollback. Aucune exécution réelle.";

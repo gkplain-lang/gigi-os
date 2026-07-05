@@ -20,6 +20,7 @@ import { EXECUTION_EXPERIENCE_V45_DISCLAIMER } from "@/modules/executionExperien
 import { generateGuidedActionSummary } from "@/modules/executionExperience/guidedActionSummary";
 import { GUIDED_ACTION_V46_DISCLAIMER } from "@/modules/executionExperience/guidedActionPolicy";
 import { MissionComposerSettingsSummary } from "@/components/missionComposer/MissionComposerSettingsSummary";
+import { MissionReviewSettingsSummary } from "@/components/missionReview/MissionReviewSettingsSummary";
 
 function formatLastUpdated(iso: string | undefined): string | null {
   if (!iso) return null;
@@ -146,6 +147,8 @@ export function SettingsExecutionReadinessSection() {
       </div>
 
       <MissionComposerSettingsSummary />
+
+      <MissionReviewSettingsSummary />
 
       <div className="mt-4 flex flex-wrap gap-4">
         <Link

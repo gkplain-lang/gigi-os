@@ -146,6 +146,10 @@ import {
   detectMissionComposerIntent,
 } from "@/modules/missionComposer";
 import {
+  buildMissionReviewConversationResponse,
+  detectMissionReviewIntent,
+} from "@/modules/missionReview";
+import {
   buildAggregateContextFromAction,
   buildLifecycleRecord,
 } from "@/modules/closedLoopLifecycle/closedLoopLifecycleEngine";
@@ -1107,6 +1111,11 @@ export function askGigi(
   const missionComposerIntent = detectMissionComposerIntent(objective);
   if (missionComposerIntent.isMissionComposer) {
     return buildMissionComposerConversationResponse(objective);
+  }
+
+  const missionReviewIntent = detectMissionReviewIntent(objective);
+  if (missionReviewIntent.isMissionReview) {
+    return buildMissionReviewConversationResponse(objective);
   }
 
   const localReviewIntent = detectLocalReviewIntent(objective);

@@ -128,6 +128,23 @@ export function GuidedActionFlowPanel() {
           </section>
         )}
 
+        {(dailyMission || selected?.missionId) && (
+          <section className="mb-6 rounded-xl border border-violet-500/20 bg-violet-500/[0.04] p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-violet-200/90">
+              Revue après action · V4.8
+            </p>
+            <p className="mt-2 text-[13px] text-text-secondary">
+              Parcours ou mission en cours — fais une revue locale pour choisir la décision suivante.
+            </p>
+            <Link
+              href="/mission-review"
+              className="gigi-focus mt-3 inline-flex text-[12.5px] font-medium text-accent-soft hover:underline"
+            >
+              Revue de mission →
+            </Link>
+          </section>
+        )}
+
         <GuidedActionSummaryStats summary={summary} className="mb-6" />
 
         <GuidedActionTemplateGallery
