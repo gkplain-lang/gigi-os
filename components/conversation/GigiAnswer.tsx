@@ -147,6 +147,53 @@ export function GigiAnswer({ response, onChoice }: GigiAnswerProps) {
               ))}
             </div>
           </div>
+        ) : response.intent === "closed_loop_lifecycle" ? (
+          <div className="mt-3 space-y-3">
+            {response.closedLoopLifecycleBlockedMessage && (
+              <p className="text-[12.5px] leading-relaxed text-amber-200/90">
+                {response.closedLoopLifecycleBlockedMessage}
+              </p>
+            )}
+            {response.closedLoopLifecycleActionTitle && (
+              <div className="gigi-panel rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                  Closed Loop Lifecycle · V2.11
+                </p>
+                <p className="mt-1.5 text-[15px] font-medium text-text-primary">
+                  {response.closedLoopLifecycleActionTitle}
+                </p>
+                {(response.closedLoopLifecycleHealthLabel || response.closedLoopLifecycleStatusLabel) && (
+                  <p className="mt-1 text-[13px] text-accent-soft">
+                    {response.closedLoopLifecycleHealthLabel && `Santé : ${response.closedLoopLifecycleHealthLabel}`}
+                    {response.closedLoopLifecycleStatusLabel && ` · ${response.closedLoopLifecycleStatusLabel}`}
+                  </p>
+                )}
+                {response.closedLoopLifecycleSummaryText && (
+                  <p className="mt-2 text-[13.5px] leading-relaxed text-text-secondary">
+                    {response.closedLoopLifecycleSummaryText}
+                  </p>
+                )}
+              </div>
+            )}
+            {response.closedLoopLifecycleGuidance && response.closedLoopLifecycleGuidance.length > 0 && (
+              <div className="gigi-panel rounded-xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+                  Cycle d&apos;action
+                </p>
+                <ol className="mt-2.5 space-y-2">
+                  {response.closedLoopLifecycleGuidance.map((hint, i) => (
+                    <li key={i} className="flex gap-2.5 text-[13.5px] leading-relaxed text-text-secondary">
+                      <span className="mt-0.5 font-medium tabular-nums text-accent-soft">{i + 1}.</span>
+                      {hint}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+            {response.finalMessage && (
+              <p className="text-[14px] font-medium text-text-primary">{response.finalMessage}</p>
+            )}
+          </div>
         ) : response.intent === "execution_report_intake" ? (
           <div className="mt-3 space-y-3">
             {response.executionReportIntakeBlockedMessage && (

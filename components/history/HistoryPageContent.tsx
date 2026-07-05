@@ -26,6 +26,12 @@ import {
   EXECUTION_REPORT_INTAKE_DECISION_LABELS,
   EXECUTION_REPORT_INTAKE_STATUS_LABELS,
 } from "@/modules/executionReportIntake";
+import {
+  generateGlobalLifecycleSummary,
+  listClosedLoopLifecycles,
+  CLOSED_LOOP_LIFECYCLE_HEALTH_LABELS,
+  CLOSED_LOOP_LIFECYCLE_STATUS_LABELS,
+} from "@/modules/closedLoopLifecycle";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { HistoryTimeline } from "@/components/history/HistoryTimeline";
 import { HistoryLearningPanel } from "@/components/historyLearning/HistoryLearningPanel";
@@ -70,6 +76,8 @@ export function HistoryPageContent() {
   const recentHandoffs = listManualExecutionHandoffs(4);
   const intakeSummary = generateGlobalIntakeSummary();
   const recentIntakes = listExecutionReportIntakes(4);
+  const lifecycleSummary = generateGlobalLifecycleSummary();
+  const recentLifecycles = listClosedLoopLifecycles(4);
 
   if (!isHydrated) return null;
 
@@ -228,6 +236,37 @@ export function HistoryPageContent() {
           ) : (
             <p className="mt-2 text-[12px] text-text-muted">
               Aucun rapport reçu — colle un rapport depuis{" "}
+              <Link href="/actions" className="text-accent-soft underline">
+                /actions
+              </Link>
+              .
+            </p>
+          )}
+        </div>
+        <div className="gigi-panel-raised mt-6 rounded-xl p-5 md:p-6">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
+            Closed Loop Action Lifecycles · V2.11
+          </p>
+          <p className="mt-2 text-[13.5px] text-text-secondary">{lifecycleSummary.summaryText}</p>
+          {recentLifecycles.length > 0 ? (
+            <ul className="mt-3 space-y-2">
+              {recentLifecycles.map((l) => (
+                <li key={l.id} className="text-[12.5px] text-text-secondary">
+                  <span className="font-medium text-text-primary">
+                    {l.title.replace(/^Cycle · /, "")}
+                  </span>
+                  <span className="text-text-muted">
+                    {" "}
+                    — {CLOSED_LOOP_LIFECYCLE_HEALTH_LABELS[l.health]} ·{" "}
+                    {CLOSED_LOOP_LIFECYCLE_STATUS_LABELS[l.status]} ·{" "}
+                    {l.updatedAt.slice(0, 10)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 text-[12px] text-text-muted">
+              Aucun cycle — ouvre le cycle complet depuis{" "}
               <Link href="/actions" className="text-accent-soft underline">
                 /actions
               </Link>

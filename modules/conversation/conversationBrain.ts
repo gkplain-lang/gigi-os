@@ -103,6 +103,18 @@ import {
   detectExecutionReportIntakeIntent,
   generateGlobalIntakeSummary,
 } from "@/modules/executionReportIntake";
+import {
+  CLOSED_LOOP_LIFECYCLE_DISCLAIMER,
+  CLOSED_LOOP_LIFECYCLE_HEALTH_LABELS,
+  CLOSED_LOOP_LIFECYCLE_STATUS_LABELS,
+  buildClosedLoopLifecycleGuidanceHints,
+  detectClosedLoopLifecycleIntent,
+  generateGlobalLifecycleSummary,
+} from "@/modules/closedLoopLifecycle";
+import {
+  buildAggregateContextFromAction,
+  buildLifecycleRecord,
+} from "@/modules/closedLoopLifecycle/closedLoopLifecycleEngine";
 import { listHistoryEntries } from "@/modules/historyLearning/historyLearningStore";
 import { PREPARED_ACTION_TYPE_LABELS } from "@/modules/preparedActions/types";
 import type {
@@ -417,6 +429,7 @@ const INTENT_LABELS: Record<ConversationIntent, string> = {
   safe_action_workspace: "Safe Action Workspace",
   manual_execution_handoff: "Passation manuelle",
   execution_report_intake: "Rapport d'exécution",
+  closed_loop_lifecycle: "Cycle d'action",
 };
 
 function clarificationResponse(): GigiConversationResponse {
@@ -453,6 +466,55 @@ function allDoneResponse(
 }
 
 // ---------------------------------------------------------------- main
+
+function buildClosedLoopLifecycleResponse(
+  objective: string,
+  projectId: string | null
+): GigiConversationResponse {
+  const hints = buildClosedLoopLifecycleGuidanceHints(objective);
+  const summary = generateGlobalLifecycleSummary();
+  const actions = loadActionQueueState().actions.filter(
+    (a) =>
+      ["pending_review", "approved", "copied"].includes(a.status) &&
+      (!projectId || a.projectId === projectId)
+  );
+  const target = actions.find((a) => a.status === "approved") ?? actions[0];
+  let actionTitle: string | undefined;
+  let healthLabel: string | undefined;
+  let statusLabel: string | undefined;
+
+  if (target) {
+    const ctx = buildAggregateContextFromAction(target);
+    const preview = buildLifecycleRecord({
+      title: `Cycle · ${target.preparedAction.title}`,
+      source: "action_queue",
+      ctx,
+    });
+    actionTitle = preview.title.replace(/^Cycle · /, "");
+    healthLabel = CLOSED_LOOP_LIFECYCLE_HEALTH_LABELS[preview.health];
+    statusLabel = CLOSED_LOOP_LIFECYCLE_STATUS_LABELS[preview.status];
+  }
+
+  return {
+    intent: "closed_loop_lifecycle",
+    intentLabel: `${INTENT_LABELS.closed_loop_lifecycle}${actionTitle ? ` · ${actionTitle.slice(0, 36)}` : ""}`,
+    listen:
+      "Le cycle relie toutes les étapes localement — Gigi n'exécute rien et ne vérifie pas le repo.",
+    needsClarification: false,
+    priorityProjectName: projectId
+      ? PROJECT_NAMES[projectId as keyof typeof PROJECT_NAMES]
+      : target?.projectName,
+    closedLoopLifecycleSummaryText: summary.summaryText,
+    closedLoopLifecycleActionTitle: actionTitle,
+    closedLoopLifecycleHealthLabel: healthLabel,
+    closedLoopLifecycleStatusLabel: statusLabel,
+    closedLoopLifecycleGuidance: hints,
+    closedLoopLifecycleBlockedMessage: CLOSED_LOOP_LIFECYCLE_DISCLAIMER,
+    finalMessage: target
+      ? "Ouvre /actions → Cycle complet pour voir la timeline, les étapes manquantes et la prochaine recommandation."
+      : "Ajoute une action à la file sur /actions avant d'ouvrir un cycle.",
+  };
+}
 
 function buildExecutionReportIntakeResponse(
   objective: string,
@@ -973,6 +1035,15 @@ export function askGigi(
   _projects: unknown,
   context: ConversationContext = {}
 ): GigiConversationResponse {
+  const closedLoopLifecycleIntent = detectClosedLoopLifecycleIntent(objective);
+  if (closedLoopLifecycleIntent.isClosedLoopLifecycle) {
+    const projectId =
+      closedLoopLifecycleIntent.projectId ??
+      context.currentProjectId ??
+      detectProject(normalize(objective));
+    return buildClosedLoopLifecycleResponse(objective, projectId);
+  }
+
   const executionReportIntakeIntent = detectExecutionReportIntakeIntent(objective);
   if (executionReportIntakeIntent.isExecutionReportIntake) {
     const projectId =
@@ -1250,6 +1321,7 @@ export function askGigi(
     safe_action_workspace: "Workspace local — ouvre /actions pour préparer l'exécution manuelle.",
     manual_execution_handoff: "Handoff local — copie toi-même le paquet vers Cursor ou un humain.",
     execution_report_intake: "Intake local — colle le rapport toi-même, Gigi ne vérifie pas le repo.",
+    closed_loop_lifecycle: "Cycle local — agrégation déclarative, fermeture manuelle uniquement.",
   };
 
   return {

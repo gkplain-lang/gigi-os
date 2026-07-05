@@ -25,7 +25,8 @@ export type ConversationIntent =
   | "mission_plan_bridge"
   | "safe_action_workspace"
   | "manual_execution_handoff"
-  | "execution_report_intake";
+  | "execution_report_intake"
+  | "closed_loop_lifecycle";
 
 export interface NotNowItem {
   projectName: string;
@@ -172,6 +173,18 @@ export interface GigiConversationResponse {
   executionReportIntakeDecisionLabel?: string;
   /** V2.10 — disclaimer */
   executionReportIntakeBlockedMessage?: string;
+  /** V2.11 — guidance for closed loop lifecycle */
+  closedLoopLifecycleGuidance?: string[];
+  /** V2.11 — lifecycle summary */
+  closedLoopLifecycleSummaryText?: string;
+  /** V2.11 — action title */
+  closedLoopLifecycleActionTitle?: string;
+  /** V2.11 — health label */
+  closedLoopLifecycleHealthLabel?: string;
+  /** V2.11 — status label */
+  closedLoopLifecycleStatusLabel?: string;
+  /** V2.11 — disclaimer */
+  closedLoopLifecycleBlockedMessage?: string;
 }
 
 export interface ConversationContext {

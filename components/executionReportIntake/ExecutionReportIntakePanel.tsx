@@ -17,6 +17,7 @@ import {
   parseIntakeRawReport,
 } from "@/modules/executionReportIntake";
 import { getManualExecutionHandoffById } from "@/modules/manualExecutionHandoff/manualExecutionHandoffStore";
+import { ClosedLoopLifecyclePanel } from "@/components/closedLoopLifecycle/ClosedLoopLifecyclePanel";
 import { ExecutionReportIntakeCard } from "./ExecutionReportIntakeCard";
 import { cn } from "@/lib/utils";
 
@@ -50,6 +51,7 @@ export function ExecutionReportIntakePanel({
   const [reporter, setReporter] = useState<ExecutionReportIntakeReporter>(
     existingIntake?.reporter ?? (handoff?.target === "cursor" ? "cursor" : "unknown")
   );
+  const [showLifecycle, setShowLifecycle] = useState(false);
 
   const handleCreate = useCallback(() => {
     let created: ExecutionReportIntake;
@@ -152,18 +154,35 @@ export function ExecutionReportIntakePanel({
           </div>
 
           {intake.rawReport.trim() && (
-            <ExecutionReportIntakeCard
-              intake={intake}
-              onIntakeChange={setIntake}
-              onReporterChange={setReporter}
-              onHandoffMarked={() => {
-                if (handoff?.id) {
-                  const updated = getManualExecutionHandoffById(handoff.id);
-                  if (updated) onHandoffChange?.(updated);
-                }
-              }}
-              onArchive={handleArchive}
-            />
+            <>
+              <ExecutionReportIntakeCard
+                intake={intake}
+                onIntakeChange={setIntake}
+                onReporterChange={setReporter}
+                onHandoffMarked={() => {
+                  if (handoff?.id) {
+                    const updated = getManualExecutionHandoffById(handoff.id);
+                    if (updated) onHandoffChange?.(updated);
+                  }
+                }}
+                onArchive={handleArchive}
+              />
+              <button
+                type="button"
+                onClick={() => setShowLifecycle((v) => !v)}
+                className="gigi-btn gigi-focus rounded-lg px-3 py-1.5 text-[12.5px] ring-1 ring-indigo-400/30"
+              >
+                {showLifecycle ? "Masquer cycle V2.11" : "Voir cycle complet V2.11"}
+              </button>
+              {showLifecycle && (
+                <ClosedLoopLifecyclePanel
+                  intake={intake}
+                  action={action}
+                  handoff={handoff}
+                  workspace={workspace}
+                />
+              )}
+            </>
           )}
         </div>
       )}
